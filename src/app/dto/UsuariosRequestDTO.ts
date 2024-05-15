@@ -1,16 +1,14 @@
+import {Usuarios} from '../bo/Usuarios';
+
 export class UsuariosRequestDTO {
 
-  usuario: string;
-  contrasenia: string;
-  usuarioId: number;
-  accion: string;
-  codigo: string;
+  usuarios: Usuarios;
+  page: number;
+  size: number;
 
-  constructor(usuario: string, contrasenia: string, usuarioId: number, accion: string, codigo: string) {
-    this.usuario = usuario;
-    this.contrasenia = contrasenia;
-    this.usuarioId = usuarioId;
-    this.accion = accion;
-    this.codigo = codigo;
+  constructor(usuarios: Usuarios, page: number, size: number) {
+    this.usuarios = usuarios;
+    this.page = page;
+    this.size = size;
   }
 }

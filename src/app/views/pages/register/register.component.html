@@ -68,7 +68,7 @@
                 <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
               </c-input-group>
               <div class="d-grid">
-                <button [disabled]="form.invalid || mostrarError" cButton color="success" style="color: white"
+                <button [disabled]="form.invalid || contraseniasNoIguales || errorUniques" cButton color="success" style="color: white"
                  (click)="registrarse()">Crear cuenta</button>
               </div>
             </form>

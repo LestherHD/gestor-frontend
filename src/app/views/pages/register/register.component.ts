@@ -6,9 +6,11 @@ import {
   CardBodyComponent,
   CardComponent,
   ColComponent,
-  ContainerComponent, FormCheckComponent,
+  ContainerComponent,
+  FormCheckComponent,
   FormControlDirective,
-  FormDirective, FormFeedbackComponent,
+  FormDirective,
+  FormFeedbackComponent,
   InputGroupComponent,
   InputGroupTextDirective,
   RowComponent,
@@ -27,7 +29,7 @@ import {CommonModule} from '@angular/common';
 import {Usuarios} from '../../../bo/Usuarios';
 import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {Router} from '@angular/router';
-import {UrlField} from '../../../bo/UrlField';
+import {UsuariosRequestDTO} from '../../../dto/UsuariosRequestDTO';
 
 function onlyNumbersAndSpaces(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -51,6 +53,8 @@ export class RegisterComponent implements OnInit{
 
   mostrarError: Boolean;
   mensaje: String;
+  contraseniasNoIguales: Boolean;
+  errorUniques: Boolean;
   timer: any;
   existeUsuario: Boolean;
   form: FormGroup<{
@@ -78,6 +82,9 @@ export class RegisterComponent implements OnInit{
       confirmarContrasenia: new FormControl('', Validators.required)
     });
 
+    this.contraseniasNoIguales = false;
+    this.errorUniques = false;
+
   }
 
   validarRepetirContrasenia(event: KeyboardEvent){
@@ -91,13 +98,16 @@ export class RegisterComponent implements OnInit{
         if (contrasenia != confirmarContrasenia){
           this.mensaje = "Las contraseñas no coinciden";
           this.mostrarError = true;
+          this.contraseniasNoIguales = true;
         } else {
           this.mensaje = "";
           this.mostrarError = false;
+          this.contraseniasNoIguales = false;
         }
       } else {
         this.mostrarError = false;
         this.mensaje = "";
+        this.contraseniasNoIguales = false;
       }
 
     }, 0);
@@ -144,18 +154,41 @@ export class RegisterComponent implements OnInit{
     return 0;
   }
 
-  registrarse() {
+  async registrarse() {
 
     const usuario: Usuarios = this.llenarObjeto(this.form);
-    this.service.saveEntity('usuarios', usuario).subscribe(res => {
+    const usuariosRequest = new UsuariosRequestDTO(usuario, 0, 0);
+    this.errorUniques = false;
+    this.mostrarError = false;
+    this.mensaje = '';
+    await this.service.getFromEntityAndMethodStringPromise('usuarios', 'getValidadorUniques', usuariosRequest).then( res => {
       if (res) {
-        this.functionsUtils.navigateOption(this.router, 'login');
-      } else {
         this.mostrarError = true;
+        this.mensaje = res;
+        this.errorUniques = true;
       }
-    }, error => {
-      console.error(error);
-    });
+    }).catch( error =>{
+      console.error(error)
+    })
+
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.errorUniques = false;
+    }, 1000);
+
+
+    if (!this.mostrarError){
+      this.service.saveEntity('usuarios', usuario).subscribe(res => {
+        if (res) {
+          this.functionsUtils.navigateOption(this.router, 'login');
+        } else {
+          this.mostrarError = true;
+        }
+      }, error => {
+        console.error(error);
+      });
+    }
+
   }
 
 }

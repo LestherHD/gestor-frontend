@@ -264,6 +264,17 @@ export class Services {
     return this.http.post(this.URL + '/' + entity + '/' + method, obj, {headers}).toPromise();
   }
 
+  getFromEntityAndMethodStringPromise(entity: string, method: string, obj: any): Promise<any> {
+
+    const headers = new HttpHeaders({
+      'Access-Control-Allow-Headers' : 'Content-Type',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*'
+    });
+
+    return this.http.post(this.URL + '/' + entity + '/' + method, obj, {headers: headers, responseType: 'text'}).toPromise();
+  }
+
 
 
 }
