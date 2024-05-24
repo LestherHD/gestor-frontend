@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    const usuario = localStorage.getItem('usuario');
     this.loginForm = new FormGroup({
       usuario: new FormControl('', Validators.required),
       contrasenia: new FormControl('', Validators.required)
@@ -64,6 +65,7 @@ export class LoginComponent implements OnInit{
     this.service.getItemsFromEntityByFields('usuarios', 'login', urlFields).subscribe(res => {
       if (res) {
         this.functionsUtils.navigateOption(this.router, 'dashboard');
+        localStorage.setItem('usuario', JSON.stringify(usuario));
       } else {
         this.mostrarError = true;
       }
@@ -74,6 +76,10 @@ export class LoginComponent implements OnInit{
 
   registrarse() {
     this.functionsUtils.navigateOption(this.router, 'register');
+  }
+
+  recuperarContrasenia() {
+    this.functionsUtils.navigateOption(this.router, 'recover-password');
   }
 
   campoRequerido(form: FormGroup, name: string): number{

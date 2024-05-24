@@ -84,5 +84,12 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
+  {
+    path: 'recover-password',
+    loadComponent: () => import('./views/pages/recover-password/recover-password.component').then(m => m.RecoverPasswordComponent),
+    data: {
+      title: 'Recover Password'
+    }
+  },
   { path: '**', redirectTo: 'dashboard' }
 ];

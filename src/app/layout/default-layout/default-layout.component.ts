@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
@@ -51,7 +51,7 @@ function isOverflown(element: HTMLElement) {
     DefaultFooterComponent
   ]
 })
-export class DefaultLayoutComponent implements OnInit{
+export class DefaultLayoutComponent implements OnInit, OnDestroy{
 
   constructor(private service: Services,
               private router: Router,
@@ -60,21 +60,23 @@ export class DefaultLayoutComponent implements OnInit{
 
   ngOnInit(): void {
 
-    const urlFields: UrlField[] = [{
-      fieldName: 'usuario',
-      value: "kfajardo"
-    }];
+    const usuario = localStorage.getItem('usuario');
+    const usuarioJson = JSON.parse(usuario);
 
-    this.service.getItemsFromEntityByFields("usuarios", "getByUsuario", urlFields).subscribe(res => {
-      //si no existe o no está en sesión, redireccionar al login
-      if (!res){
-        this.functionsUtils.navigateOption(this.router, 'login');
-      }
-    }, error => {
-      console.error(error);
-    });
-
+    if (!usuarioJson) {
+      this.functionsUtils.navigateOption(this.router, 'login');
+    }
   }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: BeforeUnloadEvent): void {
+    localStorage.removeItem('usuario');
+  }
+
   public navItems = navItems;
 
   onScrollbarUpdate($event: any) {

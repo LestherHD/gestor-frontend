@@ -157,7 +157,7 @@ export class RegisterComponent implements OnInit{
   async registrarse() {
 
     const usuario: Usuarios = this.llenarObjeto(this.form);
-    const usuariosRequest = new UsuariosRequestDTO(usuario, 0, 0);
+    const usuariosRequest = new UsuariosRequestDTO('','','','',usuario, 0, 0);
     this.errorUniques = false;
     this.mostrarError = false;
     this.mensaje = '';
