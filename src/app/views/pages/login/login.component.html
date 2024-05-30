@@ -5,19 +5,18 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm [formGroup]="loginForm" [cFormFloating]="true">
+              <form cForm [formGroup]="loginForm">
                 <h1>Bienvenido</h1>
                 <p class="text-body-secondary">Inicia sesión con tu usuario o correo electrónico</p>
                   <c-alert *ngIf="mostrarError" color="danger">Usuario o contraseña inválidos</c-alert>
-                <c-input-group class="mb-3">
+                <c-input-group class="mb-2">
                   <div [cFormFloating]="true">
                     <input id="usuario" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('usuario', loginForm)" [valid]="campoRequerido(loginForm, 'usuario') == 1 ? false : null" autoComplete="username" formControlName="usuario" cFormControl placeholder="Usuario o correo" />
                     <label cLabel for="usuario">Usuario</label>
                     <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
                   </div>
-
                 </c-input-group>
-                <c-input-group class="mb-4">
+                <c-input-group class="mb-2">
                   <div [cFormFloating]="true">
                     <input id="contrasenia" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('contrasenia', loginForm)" [valid]="campoRequerido(loginForm, 'contrasenia') == 1 ? false : null"
                            autoComplete="current-password"

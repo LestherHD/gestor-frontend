@@ -10,7 +10,7 @@ import {
   FormCheckComponent,
   FormControlDirective,
   FormDirective,
-  FormFeedbackComponent,
+  FormFeedbackComponent, FormFloatingDirective,
   InputGroupComponent,
   InputGroupTextDirective,
   RowComponent,
@@ -47,7 +47,7 @@ function onlyNumbersAndSpaces(control: AbstractControl): ValidationErrors | null
     styleUrls: ['./register.component.scss'],
     standalone: true,
     imports: [ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective,
-      AlertComponent, CommonModule, ReactiveFormsModule, FormCheckComponent, FormFeedbackComponent]
+      AlertComponent, CommonModule, ReactiveFormsModule, FormCheckComponent, FormFeedbackComponent, FormFloatingDirective]
 })
 export class RegisterComponent implements OnInit{
 
@@ -189,6 +189,10 @@ export class RegisterComponent implements OnInit{
       });
     }
 
+  }
+
+  login(){
+    this.functionsUtils.navigateOption(this.router, 'login');
   }
 
 }
