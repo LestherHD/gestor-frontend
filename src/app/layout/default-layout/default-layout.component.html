@@ -39,3 +39,35 @@
   <!--app footer-->
   <app-default-footer />
 </div>
+
+
+<c-modal [visible]="showModal" backdrop="static" alignment="center">
+  <c-modal-header #staticBackdropModal backdrop="static" id="staticBackdropModal">
+    <h5 cModalTitle>Asignar sucursal</h5>
+    <button (click)="logout()" cButtonClose></button>
+  </c-modal-header>
+  <!--Body principal-->
+
+    <div style="margin: 0 auto;">
+      <c-form-check sizing="xl" switch >
+        <div>
+          <c-modal-body>¿Deseas solicitar asignar la planta principal?
+          </c-modal-body>
+          <input cFormCheckInput checked type="checkbox" [formControl]="principal" />
+          <label *ngIf="principal.value" cFormCheckLabel>Sí</label>
+          <label *ngIf="!principal.value" cFormCheckLabel>No</label>
+        </div>
+
+
+      </c-form-check>
+    </div>
+
+
+
+  <c-modal-footer>
+    <button (click)="logout()" cButton color="secondary">
+      Cancelar
+    </button>
+    <button (click)="avanzar()"  cButton color="primary">Continuar</button>
+  </c-modal-footer>
+</c-modal>

@@ -5,33 +5,35 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm [formGroup]="loginForm">
+              <form cForm [formGroup]="loginForm" [cFormFloating]="true">
                 <h1>Bienvenido</h1>
                 <p class="text-body-secondary">Inicia sesión con tu usuario o correo electrónico</p>
                   <c-alert *ngIf="mostrarError" color="danger">Usuario o contraseña inválidos</c-alert>
                 <c-input-group class="mb-3">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilUser"></svg>
-                  </span>
-                  <input (blur)="functionsUtils.removeSpaces('usuario', loginForm)" [valid]="campoRequerido(loginForm, 'usuario') == 1 ? false : null" autoComplete="username" formControlName="usuario" cFormControl placeholder="Usuario o correo" />
-                  <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+                  <div [cFormFloating]="true">
+                    <input id="usuario" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('usuario', loginForm)" [valid]="campoRequerido(loginForm, 'usuario') == 1 ? false : null" autoComplete="username" formControlName="usuario" cFormControl placeholder="Usuario o correo" />
+                    <label cLabel for="usuario">Usuario</label>
+                    <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+                  </div>
+
                 </c-input-group>
                 <c-input-group class="mb-4">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilLockLocked"></svg>
-                  </span>
-                  <input (blur)="functionsUtils.removeSpaces('contrasenia', loginForm)" [valid]="campoRequerido(loginForm, 'contrasenia') == 1 ? false : null"
-                    autoComplete="current-password"
-                    cFormControl
-                    formControlName="contrasenia"
-                    placeholder="Contraseña"
-                    type="password"
-                  />
-                  <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+                  <div [cFormFloating]="true">
+                    <input id="contrasenia" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('contrasenia', loginForm)" [valid]="campoRequerido(loginForm, 'contrasenia') == 1 ? false : null"
+                           autoComplete="current-password"
+                           cFormControl
+                           formControlName="contrasenia"
+                           placeholder="Contraseña"
+                           type="password"
+                    />
+                    <label cLabel for="contrasenia">Contraseña</label>
+                    <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+                  </div>
+
                 </c-input-group>
                 <c-row>
                   <c-col xs="6">
-                    <button [disabled]="loginForm.invalid" cButton class="px-4" color="primary" (click)="login()">
+                    <button [disabled]="loginForm.invalid" cButton class="px-4" color="primary" (click)="login()" >
                       Iniciar sesión
                     </button>
                   </c-col>

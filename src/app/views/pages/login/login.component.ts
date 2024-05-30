@@ -10,7 +10,7 @@ import {
   ColComponent,
   ContainerComponent,
   FormControlDirective,
-  FormDirective, FormFeedbackComponent,
+  FormDirective, FormFeedbackComponent, FormFloatingDirective,
   InputGroupComponent,
   InputGroupTextDirective,
   RowComponent,
@@ -28,7 +28,7 @@ import {FormGroup, FormControl, ReactiveFormsModule, Validators} from '@angular/
     styleUrls: ['./login.component.scss'],
     standalone: true,
     imports: [ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, NgStyle
-      , AlertComponent, CommonModule, ReactiveFormsModule, FormFeedbackComponent]
+      , AlertComponent, CommonModule, ReactiveFormsModule, FormFeedbackComponent, FormFloatingDirective]
 })
 export class LoginComponent implements OnInit{
 
@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit{
               private router: Router,
               public functionsUtils: FunctionsUtils) {
     this.mostrarError = false;
+    localStorage.removeItem('usuario');
   }
 
   ngOnInit(): void {
@@ -52,8 +53,11 @@ export class LoginComponent implements OnInit{
 
   login() {
 
-    const usuario = this.loginForm.controls.usuario.value;
-    const contrasenia = this.loginForm.controls.contrasenia.value;
+    // const usuario = this.loginForm.controls.usuario.value;
+    // const contrasenia = this.loginForm.controls.contrasenia.value;
+
+    const usuario = 'kfajardo';
+    const contrasenia = 'admin';
 
     const urlFields: UrlField[] = [{
       fieldName: 'usuarioOCorreo',
