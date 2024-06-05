@@ -46,28 +46,80 @@
     <h5 cModalTitle>Asignar sucursal</h5>
     <button (click)="logout()" cButtonClose></button>
   </c-modal-header>
-  <!--Body principal-->
 
-    <div style="margin: 0 auto;">
-      <c-form-check sizing="xl" switch >
-        <div>
-          <c-modal-body>¿Deseas solicitar asignar la planta principal?
-          </c-modal-body>
+    <!--formControl para seleccionar usuario principal -->
+    <div *ngIf="opcion == '1'">
+      <div class="flex-container">
+        <c-modal-body>¿Deseas solicitar asignar la planta principal?
+        </c-modal-body>
+      </div>
+      <div class="flex-container mb-2">
+        <c-form-check sizing="xl" switch >
           <input cFormCheckInput checked type="checkbox" [formControl]="principal" />
           <label *ngIf="principal.value" cFormCheckLabel>Sí</label>
           <label *ngIf="!principal.value" cFormCheckLabel>No</label>
-        </div>
-
-
-      </c-form-check>
+        </c-form-check>
+      </div>
     </div>
 
+    <!--formControl para seleccionar la sucursal-->
+    <div *ngIf="opcion == '2'">
+      <div class="flex-container">
+        <c-modal-body>Seleccione una sucursal
+        </c-modal-body>
+      </div>
+      <div class="mb-2" style="width: 70%; margin: 0 auto;">
+        <select aria-label="Default select example" cSelect sizing="sm">
+          <option>Open this select meaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+    </div>
 
+    <!--formControl para confirmar código de usuario principal-->
+    <div *ngIf="opcion == '3'">
+      <!--FORMULARIO PARA CONFIRMAR CODIGO-->
+      <c-alert *ngIf="isError" color="{{typeAlert}}">{{mensajeError}}</c-alert>
+      <div class="flex-container">
+        <c-modal-body>Contacte con el encargado e ingrese código de confirmación enviado al correo
+        </c-modal-body>
+      </div>
+      <div class="mb-2" style="width: 70%; margin: 0 auto;">
+        <form cForm [formGroup]="formCodigo">
+          <c-input-group>
+            <div [cFormFloating]="true">
+              <input id="codigo" (blur)="functionsUtils.removeSpaces('codigo', formCodigo)" [valid]="campoRequerido(formCodigo, 'codigo') == 1 ? false : null" autoComplete="codigo" formControlName="codigo" cFormControl placeholder="Código" />
+              <label cLabel for="codigo">Código</label>
+              <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+            </div>
+          </c-input-group>
+        </form>
+
+      </div>
+    </div>
 
   <c-modal-footer>
     <button (click)="logout()" cButton color="secondary">
       Cancelar
     </button>
-    <button (click)="avanzar()"  cButton color="primary">Continuar</button>
+    <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones))"  cButton color="primary">Continuar</button>
   </c-modal-footer>
 </c-modal>

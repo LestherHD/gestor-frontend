@@ -127,17 +127,6 @@ export class RegisterComponent implements OnInit{
       null, 'N');
   }
 
-  async existeUsuarioPrincipal(){
-    await this.service.getItemsFromEntityByFieldsPromise('usuarios', 'existeUsuarioPrincipal', []).then(res => {
-      this.existeUsuario = false;
-      if (res) {
-        this.existeUsuario = true;
-      }
-    }).catch(error => {
-      console.error(error);
-    });
-  }
-
   campoRequerido(form: FormGroup, name: string): number{
 
     if (form.controls[name].value.trim() === "" && form.controls[name].touched){
@@ -157,7 +146,7 @@ export class RegisterComponent implements OnInit{
   async registrarse() {
 
     const usuario: Usuarios = this.llenarObjeto(this.form);
-    const usuariosRequest = new UsuariosRequestDTO('','','','',usuario, 0, 0);
+    const usuariosRequest = new UsuariosRequestDTO('','','','', null, usuario, 0, 0);
     this.errorUniques = false;
     this.mostrarError = false;
     this.mensaje = '';

@@ -22,3 +22,17 @@
 //  --scrollbar-thumb-transition: height ease-out 150ms, width ease-out 150ms;
 //  --scrollbar-track-transition: height ease-out 150ms, width ease-out 150ms;
 //}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 80% 20%; /* Ajusta el número de columnas según tus necesidades */
+}
+
+.flex-container {
+  display: flex;
+  align-items: center; /* Centrado vertical */
+  justify-content: center; /* Centrado horizontal (opcional) */
+  //height: 100vh; /* Ajusta la altura según tus necesidades */
+  width: 90%;
+  text-align: center;
+}

@@ -4,7 +4,7 @@ import {
   AlertComponent, ButtonDirective, CardBodyComponent,
   CardComponent, CardGroupComponent,
   ColComponent, ContainerComponent, FormControlDirective, FormDirective,
-  FormFeedbackComponent,
+  FormFeedbackComponent, FormFloatingDirective,
   InputGroupComponent, InputGroupTextDirective,
   RowComponent, TextColorDirective
 } from '@coreui/angular';
@@ -20,7 +20,7 @@ import {Usuarios} from '../../../bo/Usuarios';
   selector: 'app-recover-password',
   standalone: true,
   imports: [ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, NgStyle
-    , AlertComponent, CommonModule, ReactiveFormsModule, FormFeedbackComponent],
+    , AlertComponent, CommonModule, ReactiveFormsModule, FormFeedbackComponent, FormFloatingDirective],
   templateUrl: './recover-password.component.html',
   styleUrl: './recover-password.component.scss'
 })
@@ -95,7 +95,7 @@ export class RecoverPasswordComponent implements OnInit{
 
     let userRequest = null;
 
-    userRequest = new UsuariosRequestDTO(usuarioOCorreo, usuarioOCorreo, '', '', null,
+    userRequest = new UsuariosRequestDTO(usuarioOCorreo, usuarioOCorreo, '', '', 'R', null,
       0,0);
 
     await this.service.getFromEntityAndMethodPromise('usuarios', 'getByUsuarioOrCorreo', userRequest).then((res: any) => {
@@ -117,7 +117,7 @@ export class RecoverPasswordComponent implements OnInit{
       // this.spinner = true;
 
       userRequest = new UsuariosRequestDTO(usuarioOCorreo, usuarioOCorreo, '', '',
-        null, 0, 0);
+        'R', null, 0, 0);
 
       await this.service.getFromEntityAndMethodPromise('usuarios', 'recover-password', userRequest).then((res: any) => {
 
@@ -152,7 +152,7 @@ export class RecoverPasswordComponent implements OnInit{
 
     const codigo = this.formConfirmarCodigo.controls.codigo.value;
 
-    const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, codigo, '', null, 0, 0);
+    const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, codigo, '', 'R',null, 0, 0);
 
     this.service.getFromEntityAndMethod('usuarios', 'update-user-password', userRequest).subscribe((res: any) => {
 
@@ -183,7 +183,7 @@ export class RecoverPasswordComponent implements OnInit{
 
     const contrasenia = this.formConfirmarCambio.controls.contrasenia.value;
 
-    const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, '', contrasenia, null, 0, 0);
+    const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, '', contrasenia, 'R',null, 0, 0);
 
     this.service.getFromEntityAndMethod('usuarios', 'update-user-password', userRequest).subscribe((res: any) => {
 

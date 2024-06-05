@@ -53,11 +53,11 @@ export class LoginComponent implements OnInit{
 
   login() {
 
-    // const usuario = this.loginForm.controls.usuario.value;
-    // const contrasenia = this.loginForm.controls.contrasenia.value;
+    const usuario = this.loginForm.controls.usuario.value;
+    const contrasenia = this.loginForm.controls.contrasenia.value;
 
-    const usuario = 'kfajardo';
-    const contrasenia = 'admin';
+    // const usuario = 'kfajardo';
+    // const contrasenia = 'admin';
 
     const urlFields: UrlField[] = [{
       fieldName: 'usuarioOCorreo',

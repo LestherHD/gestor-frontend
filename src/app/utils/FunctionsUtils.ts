@@ -1,6 +1,7 @@
 import {FormGroup} from '@angular/forms';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -155,7 +156,10 @@ export class FunctionsUtils {
 
   removeSpaces(nameControl: string, form: any): void {
     form.get(nameControl).setValue(form.value[nameControl].toString().trim());
+  }
 
+  removeSpacesFormControl(formControl: FormControl): void {
+    formControl.setValue('');
   }
 
   mostrarContrasenia(input: string): void {

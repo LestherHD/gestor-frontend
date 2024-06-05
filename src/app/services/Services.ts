@@ -9,7 +9,8 @@ import {Observable} from 'rxjs';
 export class Services {
 
   // local
-  URL = 'http://localhost:8082';
+  // URL = 'http://localhost:8082';
+  URL = 'http://192.168.1.6:8082';
 
   // demo heroku
   // URL = 'https://panaderia-backend.herokuapp.com';
