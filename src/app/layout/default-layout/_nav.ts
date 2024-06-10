@@ -30,13 +30,13 @@ export const navItems: INavData[] = [
     title: true
   },
   {
-    name: 'Configuración',
+    name: 'Parametrización',
     url: '/configuration',
-    iconComponent: { name: 'cil-puzzle' },
+    iconComponent: { name: 'cil-settings' },
     children: [
       {
         name: 'Sucursales',
-        url: '/configuration/branches',
+          url: '/configuration/branches',
         icon: 'nav-icon-bullet'
       },
     ]
