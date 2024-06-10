@@ -30,6 +30,7 @@ import {Usuarios} from '../../../bo/Usuarios';
 import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {Router} from '@angular/router';
 import {UsuariosRequestDTO} from '../../../dto/UsuariosRequestDTO';
+import {CustomSpinnerComponent} from '../../utils/custom-spinner/custom-spinner.component';
 
 function onlyNumbersAndSpaces(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -46,12 +47,15 @@ function onlyNumbersAndSpaces(control: AbstractControl): ValidationErrors | null
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
     standalone: true,
-    imports: [ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective,
-      AlertComponent, CommonModule, ReactiveFormsModule, FormCheckComponent, FormFeedbackComponent, FormFloatingDirective]
+    imports: [ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent,
+      FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective,
+      AlertComponent, CommonModule, ReactiveFormsModule, FormCheckComponent, FormFeedbackComponent, FormFloatingDirective,
+      CustomSpinnerComponent]
 })
 export class RegisterComponent implements OnInit{
 
   mostrarError: Boolean;
+  mostrarSuccess: Boolean;
   mensaje: String;
   contraseniasNoIguales: Boolean;
   errorUniques: Boolean;
@@ -62,16 +66,18 @@ export class RegisterComponent implements OnInit{
     usuario: any; contrasenia: any; confirmarContrasenia: any}>;
 
 
-  constructor(private service: Services,
+  constructor(public service: Services,
               private router: Router,
               public functionsUtils: FunctionsUtils) {
     this.mostrarError = false;
     this.mensaje = "";
-
   }
 
   async ngOnInit(): Promise<void>{
 
+    this.service.mostrarSpinner = false;
+    this.service.deshabilitarBotones = false;
+    this.mostrarSuccess = false;
     this.form = new FormGroup({
       nombres: new FormControl('', Validators.required),
       apellidos: new FormControl('', Validators.required),
@@ -167,13 +173,28 @@ export class RegisterComponent implements OnInit{
 
 
     if (!this.mostrarError){
+      this.service.deshabilitarBotones = true;
+      this.mostrarSuccess = true;
+      this.service.mostrarSpinner = true;
       this.service.saveEntity('usuarios', usuario).subscribe(res => {
+        this.service.mostrarSpinner = false;
         if (res) {
-          this.functionsUtils.navigateOption(this.router, 'login');
+          this.mensaje = "Usuario registrado con éxito";
+          clearTimeout(this.timer);
+          this.timer = setTimeout(() => {
+            this.errorUniques = false;
+            this.mostrarSuccess = false;
+            this.service.deshabilitarBotones = false;
+            this.functionsUtils.navigateOption(this.router, 'login');
+          }, 2400);
         } else {
+          this.service.mostrarSpinner = false;
           this.mostrarError = true;
+          this.service.deshabilitarBotones = false;
         }
       }, error => {
+        this.service.deshabilitarBotones = false;
+        this.service.mostrarSpinner = false;
         console.error(error);
       });
     }

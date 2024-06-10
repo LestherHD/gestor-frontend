@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {UrlField} from '../bo/UrlField';
 import {Observable} from 'rxjs';
@@ -12,11 +12,18 @@ export class Services {
   // URL = 'http://localhost:8082';
   URL = 'http://192.168.1.6:8082';
 
+  public eventEmitter: EventEmitter<void> = new EventEmitter();
+  public mostrarSpinner: Boolean;
+  public deshabilitarBotones: Boolean;
   // demo heroku
   // URL = 'https://panaderia-backend.herokuapp.com';
 
   constructor(private http: HttpClient) {
 
+  }
+
+  clicInformacionUsuario() {
+    this.eventEmitter.emit();
   }
 
   getAllItemsFromEntity(entity: string): Observable<any> {

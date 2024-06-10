@@ -32,7 +32,7 @@
                 </c-input-group>
                 <c-row>
                   <c-col xs="6">
-                    <button [disabled]="loginForm.invalid" cButton class="px-4" color="primary" (click)="login()" >
+                    <button [disabled]="loginForm.invalid || this.service.deshabilitarBotones" cButton class="px-4" color="primary" (click)="login()" >
                       Iniciar sesión
                     </button>
                   </c-col>
@@ -63,3 +63,5 @@
     </c-row>
   </c-container>
 </div>
+<app-custom-spinner></app-custom-spinner>
+

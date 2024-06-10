@@ -43,6 +43,9 @@ import {CommonModule} from '@angular/common';
 import {Sucursales} from '../../bo/Sucursales';
 import {SelectComponent} from '../../views/forms/select/select.component';
 import {UsuariosRequestDTO} from '../../dto/UsuariosRequestDTO';
+import {DataUtils} from '../../utils/DataUtils';
+import {UsuariosResponseDTO} from '../../dto/UsuariosResponseDTO';
+import {CustomSpinnerComponent} from '../../views/utils/custom-spinner/custom-spinner.component';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -92,12 +95,14 @@ function isOverflown(element: HTMLElement) {
     FormFeedbackComponent,
     FormDirective, FormFeedbackComponent, FormControlDirective,
     FormFloatingDirective,
-    AlertComponent
+    AlertComponent,
+    CustomSpinnerComponent
   ]
 })
 export class DefaultLayoutComponent implements OnInit, OnDestroy{
 
   showModal: Boolean;
+  showModalUsuario: Boolean;
   principal: FormControl;
   sucursal: FormControl;
   deshabilitarBotones: Boolean;
@@ -115,12 +120,19 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
   mensajeError: any;
   typeAlert: string;
   objRequest: any;
-  private usuario: any;
+  usuario: any;
+  listaSucursales: Sucursales[];
+  infoUsuario: UsuariosResponseDTO;
 
-  constructor(private service: Services,
+  formUsuario: FormGroup<{ nombres: any, usuario: any,
+    correo: any, telefono: any, principal: any, sucursal: any}>;
+
+  constructor(public service: Services,
               private router: Router,
-              public functionsUtils: FunctionsUtils){
-    this.showModal = true;
+              public functionsUtils: FunctionsUtils,
+              public dataUtils: DataUtils){
+    this.showModal = false;
+    this.showModalUsuario = false;
     this.existePrincipal = false;
     this.deshabilitarBotones = false;
 
@@ -128,23 +140,10 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
 
   async ngOnInit(): Promise<void> {
 
-    this.principal = new FormControl(false, Validators.required);
-    this.formCodigo = new FormGroup({
-      codigo: new FormControl('', Validators.required)
-    });
+    this.service.mostrarSpinner = false;
+    this.service.deshabilitarBotones = false;
     const usuario = localStorage.getItem('usuario');
     const usuarioJson = JSON.parse(usuario);
-
-    if (!usuarioJson) {
-      this.functionsUtils.navigateOption(this.router, 'login');
-    }
-
-    this.objRequest= {
-      usuario: usuarioJson,
-      correo: usuarioJson
-    };
-
-    await this.existeUsuarioPrincipal();
 
     const urlFields: UrlField[] = [{
       fieldName: 'usuario',
@@ -154,14 +153,62 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
       value: usuarioJson
     }];
 
+    this.objRequest= {
+      usuario: usuarioJson,
+      correo: usuarioJson
+    };
+
+    this.service.eventEmitter.subscribe(() => {
+        this.service.getFromEntityAndMethod('usuarios', 'getByInfoUsuarioOrCorreo', this.objRequest).subscribe((res: UsuariosResponseDTO) => {
+          this.infoUsuario = res;
+
+          if (this.infoUsuario) {
+
+            console.log('usuario: ', this.infoUsuario);
+            this.formUsuario = new FormGroup({
+              nombres: new FormControl({value: this.infoUsuario.nombreCompleto, disabled: true}, Validators.required),
+              usuario: new FormControl({value: this.infoUsuario.nombreUsuario, disabled: true}, Validators.required),
+              correo: new FormControl({value: this.infoUsuario.correo, disabled: true}, Validators.required),
+              telefono: new FormControl({value: this.infoUsuario.telefono, disabled: true}, Validators.required),
+              principal: new FormControl({value: this.infoUsuario.principal, disabled: true}, Validators.required),
+              sucursal: new FormControl({value: this.infoUsuario.nombreSucursal, disabled: true}, Validators.required)
+              // nombres: any, apellidos: any, usuario: any,
+              // correo: any, telefono: any, principal: any, sucursal: any
+            });
+
+            this.showModalUsuario = true;
+
+          }
+        }, error => {
+          console.error(error);
+        });
+    });
+
+    this.principal = new FormControl(false, Validators.required);
+    this.sucursal = new FormControl('', Validators.required);
+
+    this.formCodigo = new FormGroup({
+      codigo: new FormControl('', Validators.required)
+    });
+
+    this.cargarListas();
+
+
+    if (!usuarioJson) {
+      this.functionsUtils.navigateOption(this.router, 'login');
+    }
+
+    await this.existeUsuarioPrincipal();
+
     await this.service.getFromEntityAndMethodPromise("usuarios", "getByUsuarioOrCorreo", this.objRequest).then(
       res => {
-      if (res){
+      if (res && res.usuario){
+        this.usuario = res.usuario;
         this.showModal = false;
-        if (this.existePrincipal && !res.principal && !res.sucursal) {
+        if (this.existePrincipal && !res.usuario.principal && !res.usuario.sucursal) {
           this.showModal = true;
           this.opcion = '2';
-        } else if (!this.existePrincipal && !res.principal && !res.sucursal){
+        } else if (!this.existePrincipal && !res.usuario.principal && !res.usuario.sucursal){
           this.showModal = true;
           this.opcion = '1'
         }
@@ -172,6 +219,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
+    this.service.eventEmitter.subscribe().unsubscribe();
     window.removeEventListener('beforeunload', this.beforeUnloadHandler);
   }
 
@@ -189,10 +237,14 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
   }
 
   logout() {
+    this.service.mostrarSpinner = true;
     localStorage.removeItem('usuario');
     this.functionsUtils.navigateOption(this.router, 'login');
   }
 
+  //Función reutilizable para el botón avanzar de pantalla mostrada cuando:
+  //El usuario logueado no es ni asignado a sucursal ni asignado como principal
+  //y/o no existe usuario principal en la aplicación web
   async avanzar() {
 
     const usuario = localStorage.getItem('usuario');
@@ -202,10 +254,21 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
       usuario: usuarioJson,
       correo: usuarioJson
     };
-
+    //Condición para aceptar pantalla de selección de sucursal
     if (this.opcion == '2') {
-      this.showModal = false;
-    } else if (this.opcion == '3'){
+      if (this.sucursal && this.sucursal.value){
+        this.usuario.principal = 'N';
+        this.usuario.sucursal = this.listaSucursales.find(x => x.id === this.sucursal.value);
+        this.service.editEntity('usuarios', this.usuario).subscribe( res => {
+        }, error => {
+          console.error(error);
+        });
+        this.showModal = false;
+      }
+    }
+    //Condición para confirmar código enviado a correo para aceptar que el usuario sea principal(usuario que parametrizará
+    //todos los productos y sus característias)
+    else if (this.opcion == '3'){
       this.isError = false;
       this.isConfirmed = false;
       this.deshabilitarBotones = true;
@@ -230,7 +293,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
           this.deshabilitarBotones = false;
           if (!this.isError && res.confirmado){
             this.usuario.principal = 'Y';
-            console.log('this.usuario', this.usuario);
             this.service.editEntity('usuarios', this.usuario).subscribe( res => {
             }, error => {
               console.error(error);
@@ -243,14 +305,18 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
         // this.spinner = false;
         console.error(error);
       });
-    } else {
+    }
+    //Condión para cuando de entrada no existe un usuario principal, o existe usuario principal pero
+    //el usuario logueado no es ni principal y tampoco tiene asignado una sucursal
+    else {
       this.opcion = '3';
       if (this.principal.value){
 
         let userRequest = null;
         userRequest = new UsuariosRequestDTO(this.objRequest.usuario, this.objRequest.correo, '', '',
           '', null, 0, 0);
-
+        //Si en la pantalla principal se seleciona que el usuario va a ser principal entonces generará el código de
+        //confirmación para asignación de usuario principal
         await this.service.getFromEntityAndMethodPromise('usuarios', 'principal-user', userRequest).then((res: any) => {
 
           this.isError = res.error;
@@ -261,7 +327,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
           setTimeout(() => {
             // this.spinner = false;
             this.deshabilitarBotones = false;
-            this.usuario = res.usuario;
+            console.log('entra a presionar');
           } , 1000);
 
         }).catch( error => {
@@ -269,7 +335,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
           console.error(error);
         });
       } else {
-        this.opcion = '2'
+        this.opcion = '2';
       }
     }
   }
@@ -292,6 +358,17 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
     }
 
     return 0;
+  }
+
+  cargarListas(){
+
+    this.service.getAllItemsFromEntity('sucursales').subscribe((res: Sucursales[]) =>{
+      this.listaSucursales = res;
+      this.sucursal.setValue(this.listaSucursales[0].id);
+    }, error => {
+      console.error(error);
+    });
+
   }
 
 }

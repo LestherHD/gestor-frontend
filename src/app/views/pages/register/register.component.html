@@ -8,6 +8,7 @@
               <h1>Registrarse</h1>
               <p class="text-body-secondary">Crea tu cuenta</p>
               <c-alert *ngIf="mostrarError" color="danger">{{mensaje}}</c-alert>
+              <c-alert *ngIf="mostrarSuccess" color="success">{{mensaje}}</c-alert>
               <!--Nombres-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
@@ -70,10 +71,10 @@
                 </div>
               </c-input-group>
               <div class="d-grid">
-                <button [disabled]="form.invalid || contraseniasNoIguales || errorUniques" cButton color="success" style="color: white"
+                <button [disabled]="form.invalid || contraseniasNoIguales || errorUniques || service.deshabilitarBotones" cButton color="success" style="color: white"
                  (click)="registrarse()">Crear cuenta</button>
               </div>
-              <div style="margin: 0 auto; width: 25%;">
+              <div style="margin: 0 auto; text-align: center;">
                 <c-col  >
                   <button cButton class="px-0" color="link" (click)="login()">
                     Iniciar sesión
@@ -87,3 +88,4 @@
     </c-row>
   </c-container>
 </div>
+<app-custom-spinner></app-custom-spinner>

@@ -55,14 +55,14 @@
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>
         <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 rounded-top">
-          Account
+          Cuenta
         </h6>
       </li>
       <li>
-        <a cDropdownItem routerLink="">
+        <a cDropdownItem routerLink="" (click)="informacionUsuario()">
           <svg cIcon class="me-2" name="cilBell"></svg>
-          Updates
-          <c-badge class="ms-2 float-end" color="info"> 42</c-badge>
+          Información
+          <!--<c-badge class="ms-2 float-end" color="info"> 42</c-badge>-->
         </a>
       </li>
       <li></li>
@@ -78,4 +78,6 @@
     </ul>
   </c-dropdown>
 </ng-template>
+
+
 

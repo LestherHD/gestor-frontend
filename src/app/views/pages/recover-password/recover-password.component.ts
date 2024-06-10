@@ -15,12 +15,13 @@ import {IconDirective} from '@coreui/icons-angular';
 import {CommonModule, NgStyle} from '@angular/common';
 import {UsuariosRequestDTO} from '../../../dto/UsuariosRequestDTO';
 import {Usuarios} from '../../../bo/Usuarios';
+import {CustomSpinnerComponent} from '../../utils/custom-spinner/custom-spinner.component';
 
 @Component({
   selector: 'app-recover-password',
   standalone: true,
   imports: [ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, NgStyle
-    , AlertComponent, CommonModule, ReactiveFormsModule, FormFeedbackComponent, FormFloatingDirective],
+    , AlertComponent, CommonModule, ReactiveFormsModule, FormFeedbackComponent, FormFloatingDirective, CustomSpinnerComponent],
   templateUrl: './recover-password.component.html',
   styleUrl: './recover-password.component.scss'
 })
@@ -31,19 +32,19 @@ export class RecoverPasswordComponent implements OnInit{
   formConfirmarCambio: FormGroup<{ contrasenia: any}>;
   isError: boolean;
   isConfirmed: boolean;
-  deshabilitarBotones: boolean;
   mensajeError: string;
   typeAlert: string;
   usuario: Usuarios;
 
-  constructor(private service: Services,
+  constructor(public service: Services,
               private router: Router,
               public functionsUtils: FunctionsUtils){
     this.formUsuario = this.llenarFormUsuario();
     this.formConfirmarCodigo = this.llenarFormConfirmarCodigo();
     this.formConfirmarCambio = this.llenarFormConfirmarCambio();
     this.isError = false;
-    this.deshabilitarBotones = false;
+    this.service.deshabilitarBotones = false;
+    this.service.mostrarSpinner = false;
     this.mensajeError = '';
     this.typeAlert = '';
   }
@@ -84,11 +85,13 @@ export class RecoverPasswordComponent implements OnInit{
 
   async validarUsuario(): Promise<any>{
 
+    this.service.deshabilitarBotones = true;
     if (this.functionsUtils.validarControlsRequeridos(this.formUsuario)){
       return;
-    }
 
+    }
     this.isError = false;
+
     // this.spinner = true;
 
     const usuarioOCorreo = this.formUsuario.controls.usuario.value;
@@ -97,22 +100,26 @@ export class RecoverPasswordComponent implements OnInit{
 
     userRequest = new UsuariosRequestDTO(usuarioOCorreo, usuarioOCorreo, '', '', 'R', null,
       0,0);
+    this.service.mostrarSpinner = true;
 
     await this.service.getFromEntityAndMethodPromise('usuarios', 'getByUsuarioOrCorreo', userRequest).then((res: any) => {
 
       this.isError = res.error;
       this.mensajeError = res.respuesta;
       this.typeAlert = res.error && !this.isConfirmed ? 'danger' : 'success';
-      // this.spinner = false;
+      this.service.deshabilitarBotones = false;
+      this.service.mostrarSpinner = false;
       this.usuario = res.usuario;
 
     }).catch( error => {
-      // this.spinner = false;
+      this.service.deshabilitarBotones = false;
+      this.service.mostrarSpinner = false;
       console.error(error);
     });
 
     if (!this.isError) {
-
+      this.service.deshabilitarBotones = true;
+      this.service.mostrarSpinner = true;
       this.isError = false;
       // this.spinner = true;
 
@@ -127,14 +134,15 @@ export class RecoverPasswordComponent implements OnInit{
         this.typeAlert = res.error && !this.isConfirmed ? 'danger' : 'success';
 
         setTimeout(() => {
-          // this.spinner = false;
-          this.deshabilitarBotones = false;
+          this.service.deshabilitarBotones = false;
+          this.service.mostrarSpinner = false;
           this.usuario = res.usuario;
 
         } , 1000);
 
       }).catch( error => {
-        // this.spinner = false;
+        this.service.deshabilitarBotones = false;
+        this.service.mostrarSpinner = false;
         console.error(error);
       });
     }
@@ -144,15 +152,17 @@ export class RecoverPasswordComponent implements OnInit{
   confirmarCodigo(): void{
     this.isError = false;
     this.isConfirmed = false;
-    this.deshabilitarBotones = true;
 
+    this.service.deshabilitarBotones = true;
     if (this.functionsUtils.validarControlsRequeridos(this.formConfirmarCodigo)){
       return;
+
     }
 
     const codigo = this.formConfirmarCodigo.controls.codigo.value;
 
     const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, codigo, '', 'R',null, 0, 0);
+    this.service.mostrarSpinner = true;
 
     this.service.getFromEntityAndMethod('usuarios', 'update-user-password', userRequest).subscribe((res: any) => {
 
@@ -163,11 +173,13 @@ export class RecoverPasswordComponent implements OnInit{
       setTimeout(() => {
         this.isConfirmed = res.confirmado;
         this.isError = false;
-        this.deshabilitarBotones = false;
+        this.service.deshabilitarBotones = false;
+        this.service.mostrarSpinner = false;
       } , 3000);
 
     }, error => {
-      // this.spinner = false;
+      this.service.deshabilitarBotones = false;
+      this.service.mostrarSpinner = false;
       console.error(error);
     });
 
@@ -175,8 +187,7 @@ export class RecoverPasswordComponent implements OnInit{
 
   cambiarContrasenia(): void{
 
-    this.deshabilitarBotones = true;
-
+    this.service.deshabilitarBotones = true;
     if (this.functionsUtils.validarControlsRequeridos(this.formConfirmarCambio)){
       return;
     }
@@ -185,27 +196,32 @@ export class RecoverPasswordComponent implements OnInit{
 
     const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, '', contrasenia, 'R',null, 0, 0);
 
+    this.service.mostrarSpinner = true;
     this.service.getFromEntityAndMethod('usuarios', 'update-user-password', userRequest).subscribe((res: any) => {
 
       this.isError = res.error;
       this.isConfirmed = res.confirmado;
       this.mensajeError = res.respuesta;
       this.typeAlert = res.error && !this.isConfirmed ? 'danger' : 'success';
-      // this.spinner = false;
 
       if (this.isConfirmed) {
         setTimeout(() => {
-          this.deshabilitarBotones = false;
+          this.service.mostrarSpinner = false;
+          this.service.deshabilitarBotones = false;
           this.functionsUtils.navigateOption(this.router, '/login');
         } , 1600);
       } else {
       }
 
     }, error => {
-      // this.spinner = false;
+      this.service.mostrarSpinner = false;
+      this.service.deshabilitarBotones = false;
       console.error(error);
     });
 
   }
 
+  login() {
+    this.functionsUtils.navigateOption(this.router, 'login');
+  }
 }

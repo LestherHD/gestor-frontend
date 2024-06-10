@@ -17,9 +17,9 @@
     <c-sidebar-nav #overflow [navItems]="navItems" dropdownMode="close" compact />
   </ng-scrollbar>
   @if (!sidebar1.narrow) {
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler></button>
-    </c-sidebar-footer>
+  <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
+    <button cSidebarToggler></button>
+  </c-sidebar-footer>
   }
 </c-sidebar>
 
@@ -33,6 +33,136 @@
   <!--app-body-->
   <div class="body flex-grow-1">
     <c-container breakpoint="lg" class="h-auto px-4">
+
+      <!--MODAL PARA CONFIRMAR SELECCIÓN DE USUARIO PRINCIPAL O SUCURSAL-->
+      <c-modal [visible]="showModal" backdrop="static" alignment="center">
+        <c-modal-header #staticBackdropModal backdrop="static" id="staticBackdropModal">
+          <h5 cModalTitle>Asignar sucursal</h5>
+          <button (click)="logout()" cButtonClose></button>
+        </c-modal-header>
+
+        <!--formControl para seleccionar usuario principal -->
+        <div *ngIf="opcion == '1'">
+          <div class="flex-container">
+            <c-modal-body>¿Deseas solicitar asignar la planta principal?
+            </c-modal-body>
+          </div>
+          <div class="flex-container mb-2">
+            <c-form-check sizing="xl" switch >
+              <input cFormCheckInput checked type="checkbox" [formControl]="principal" />
+              <label *ngIf="principal.value" cFormCheckLabel>Sí</label>
+              <label *ngIf="!principal.value" cFormCheckLabel>No</label>
+            </c-form-check>
+          </div>
+        </div>
+
+        <!--formControl para seleccionar la sucursal-->
+        <div *ngIf="opcion == '2'">
+          <div class="flex-container">
+            <c-modal-body>Seleccione una sucursal
+            </c-modal-body>
+          </div>
+          <div class="mb-2" style="width: 70%; margin: 0 auto;">
+            <select cSelect sizing="sm" [formControl]="sucursal">
+              <option *ngFor="let sucursal of listaSucursales" [value]="sucursal.id">
+                {{ sucursal.nombre }} - {{dataUtils.descripcionPorCodigo(sucursal.departamento)}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!--formControl para confirmar código de usuario principal-->
+        <div *ngIf="opcion == '3'">
+          <!--FORMULARIO PARA CONFIRMAR CODIGO-->
+          <div style="margin: 10px auto -10px auto; max-width: 90%;">
+            <c-alert *ngIf="isError" color="{{typeAlert}}">{{mensajeError}}</c-alert>
+          </div>
+          <div class="flex-container">
+            <c-modal-body>Contacte con el encargado e ingrese código de confirmación enviado al correo
+            </c-modal-body>
+          </div>
+          <div class="mb-2" style="width: 70%; margin: 0 auto;">
+            <form cForm [formGroup]="formCodigo">
+              <c-input-group>
+                <div [cFormFloating]="true">
+                  <input id="codigo" (blur)="functionsUtils.removeSpaces('codigo', formCodigo)" [valid]="campoRequerido(formCodigo, 'codigo') == 1 ? false : null" autoComplete="codigo" formControlName="codigo" cFormControl placeholder="Código" />
+                  <label cLabel for="codigo">Código</label>
+                  <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+                </div>
+              </c-input-group>
+            </form>
+
+          </div>
+        </div>
+
+        <c-modal-footer>
+          <button (click)="logout()" cButton color="secondary">
+            Cancelar
+          </button>
+          <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones)) || (opcion == '2' && !listaSucursales)"  cButton color="primary">Continuar</button>
+        </c-modal-footer>
+      </c-modal>
+
+      <!--MODAL INFORMACIÓN DE USUARIO-->
+      <c-modal [visible]="showModalUsuario" backdrop="static" alignment="center">
+        <c-modal-header #staticBackdropModal backdrop="static" id="staticBackdropModal">
+          <h5 cModalTitle>Información de usuario</h5>
+          <button (click)="showModalUsuario = false;" cButtonClose></button>
+        </c-modal-header>
+
+        <!--FORMULARIO PARA MOSTRAR LOS DATOS DE USUARIO LOGUEADO-->
+        <div class="mb-2" style="width: 70%; margin: 0 auto;">
+          <form cForm [formGroup]="formUsuario" *ngIf="formUsuario">
+            <c-input-group class="mb-3">
+              <br>
+              <div class="row">
+                <div class="col-md-6">
+                  <label cLabel style="font-weight: bold">Nombres</label>
+                </div>
+                <div class="col-md-6">
+                  <label cLabel >{{formUsuario.controls.nombres.value}}</label>
+                </div>
+
+                <div class="col-md-6">
+                  <label cLabel style="font-weight: bold">Usuario</label>
+                </div>
+                <div class="col-md-6">
+                  <label cLabel >{{formUsuario.controls.usuario.value}}</label>
+                </div>
+
+                <div class="col-md-6">
+                  <label cLabel style="font-weight: bold">Correo</label>
+                </div>
+                <div class="col-md-6">
+                  <label cLabel >{{formUsuario.controls.correo.value}}</label>
+                </div>
+
+                <div class="col-md-6">
+                  <label cLabel style="font-weight: bold">Teléfono</label>
+                </div>
+                <div class="col-md-6">
+                  <label cLabel >{{formUsuario.controls.telefono.value}}</label>
+                </div>
+
+                <div class="col-md-6">
+                  <label cLabel style="font-weight: bold">Usuario principal</label>
+                </div>
+                <div class="col-md-6">
+                  <label cLabel >{{formUsuario.controls.principal.value === 'Y' ? 'Sí' : 'No'}}</label>
+                </div>
+
+                <div class="col-md-6">
+                  <label cLabel style="font-weight: bold">Sucursal</label>
+                </div>
+                <div class="col-md-6">
+                  <label cLabel >{{formUsuario.controls.sucursal.value ? formUsuario.controls.sucursal.value : 'N/A'}}</label>
+                </div>
+              </div>
+            </c-input-group>
+          </form>
+
+        </div>
+      </c-modal>
       <router-outlet />
     </c-container>
   </div>
@@ -40,86 +170,7 @@
   <app-default-footer />
 </div>
 
+<app-custom-spinner></app-custom-spinner>
 
-<c-modal [visible]="showModal" backdrop="static" alignment="center">
-  <c-modal-header #staticBackdropModal backdrop="static" id="staticBackdropModal">
-    <h5 cModalTitle>Asignar sucursal</h5>
-    <button (click)="logout()" cButtonClose></button>
-  </c-modal-header>
 
-    <!--formControl para seleccionar usuario principal -->
-    <div *ngIf="opcion == '1'">
-      <div class="flex-container">
-        <c-modal-body>¿Deseas solicitar asignar la planta principal?
-        </c-modal-body>
-      </div>
-      <div class="flex-container mb-2">
-        <c-form-check sizing="xl" switch >
-          <input cFormCheckInput checked type="checkbox" [formControl]="principal" />
-          <label *ngIf="principal.value" cFormCheckLabel>Sí</label>
-          <label *ngIf="!principal.value" cFormCheckLabel>No</label>
-        </c-form-check>
-      </div>
-    </div>
 
-    <!--formControl para seleccionar la sucursal-->
-    <div *ngIf="opcion == '2'">
-      <div class="flex-container">
-        <c-modal-body>Seleccione una sucursal
-        </c-modal-body>
-      </div>
-      <div class="mb-2" style="width: 70%; margin: 0 auto;">
-        <select aria-label="Default select example" cSelect sizing="sm">
-          <option>Open this select meaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-          <option value="3">Three</option>
-        </select>
-      </div>
-    </div>
-
-    <!--formControl para confirmar código de usuario principal-->
-    <div *ngIf="opcion == '3'">
-      <!--FORMULARIO PARA CONFIRMAR CODIGO-->
-      <c-alert *ngIf="isError" color="{{typeAlert}}">{{mensajeError}}</c-alert>
-      <div class="flex-container">
-        <c-modal-body>Contacte con el encargado e ingrese código de confirmación enviado al correo
-        </c-modal-body>
-      </div>
-      <div class="mb-2" style="width: 70%; margin: 0 auto;">
-        <form cForm [formGroup]="formCodigo">
-          <c-input-group>
-            <div [cFormFloating]="true">
-              <input id="codigo" (blur)="functionsUtils.removeSpaces('codigo', formCodigo)" [valid]="campoRequerido(formCodigo, 'codigo') == 1 ? false : null" autoComplete="codigo" formControlName="codigo" cFormControl placeholder="Código" />
-              <label cLabel for="codigo">Código</label>
-              <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
-            </div>
-          </c-input-group>
-        </form>
-
-      </div>
-    </div>
-
-  <c-modal-footer>
-    <button (click)="logout()" cButton color="secondary">
-      Cancelar
-    </button>
-    <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones))"  cButton color="primary">Continuar</button>
-  </c-modal-footer>
-</c-modal>
