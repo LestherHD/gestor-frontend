@@ -1,0 +1,359 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header class="card-header">
+        <div style="display: flex; justify-content: space-between;">
+          <strong>Sucursales</strong>
+          <button cButton color="light">
+            <svg cIcon name="cilMagnifyingGlass"></svg>
+          </button>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <span> Registros por página</span>
+          </div>
+          <div class="col-auto">
+            <select class="form-select form-select-sm" [(ngModel)]="pageSize" (change)="changePageSize($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+            </select>
+          </div>
+        </div>
+      </c-card-header>
+      <c-card-body>
+        <c-container>
+          <div class="text-center scroll">
+            <table [striped]="true" cTable>
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Class</th>
+                <th scope="col">Heading</th>
+                <th scope="col">Heading</th>
+                <th scope="col">Heading</th>
+                <th scope="col">Heading</th>
+                <th scope="col">Heading</th>
+                <th scope="col">Heading</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>MarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMark</td>
+                <td>Otto</td>
+                <td>MarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMar k</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+                <td>&#64;mdo</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row justify-content-center" style="margin-top: 1vh;">
+            <div class="col-auto">
+              <select class="form-select form-select-sm" [(ngModel)]="currentPage" (change)="goToPage($event)">
+                <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <span> de {{ totalPages }}</span>
+            </div>
+          </div>
+
+        </c-container>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
