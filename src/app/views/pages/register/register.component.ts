@@ -123,7 +123,7 @@ export class RegisterComponent implements OnInit{
 
     const id = null;
     const usuario = this.form.controls.usuario.value.toString().trim().toLowerCase();
-    const password = this.form.controls.contrasenia.value.toString().trim();
+    const password = this.service.hashMD5(this.form.controls.contrasenia.value.toString().trim());
     const nombres = this.form.controls.nombres.value.toString().trim();
     const apellidos = this.form.controls.apellidos.value.toString().trim();
     const telefono = this.form.controls.telefono.value.toString().trim();

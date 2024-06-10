@@ -194,7 +194,7 @@ export class RecoverPasswordComponent implements OnInit{
 
     const contrasenia = this.formConfirmarCambio.controls.contrasenia.value;
 
-    const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, '', contrasenia, 'R',null, 0, 0);
+    const userRequest = new UsuariosRequestDTO(this.usuario.usuario, this.usuario.correo, '', this.service.hashMD5(contrasenia), 'R',null, 0, 0);
 
     this.service.mostrarSpinner = true;
     this.service.getFromEntityAndMethod('usuarios', 'update-user-password', userRequest).subscribe((res: any) => {

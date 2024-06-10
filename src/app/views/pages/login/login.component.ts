@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit{
       value: usuario
     }, {
       fieldName: 'contrasenia',
-      value: contrasenia
+      value: this.service.hashMD5(contrasenia)
     }];
     this.service.mostrarSpinner = true;
     this.service.deshabilitarBotones = true;

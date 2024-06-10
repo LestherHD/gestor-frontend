@@ -2,6 +2,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {UrlField} from '../bo/UrlField';
 import {Observable} from 'rxjs';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
@@ -283,6 +284,9 @@ export class Services {
     return this.http.post(this.URL + '/' + entity + '/' + method, obj, {headers: headers, responseType: 'text'}).toPromise();
   }
 
+  hashMD5(value: string): string {
+    return CryptoJS.MD5(value).toString();
+  }
 
 
 }
