@@ -2,22 +2,19 @@
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header class="card-header">
+
         <div style="display: flex; justify-content: space-between;">
           <strong>Sucursales</strong>
-          <button cButton color="light">
-            <svg cIcon name="cilFilter"></svg>
-          </button>
-        </div>
-        <div class="row justify-content-center">
           <div class="col-auto">
-            <span> Registros por página</span>
+            <span>Total: {{pagination.collectionSize}}</span>
           </div>
-          <div class="col-auto">
-            <select class="form-select form-select-sm" [(ngModel)]="pageSize" (change)="changePageSize($event)">
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="30">30</option>
-            </select>
+          <div>
+            <button cButton color="secondary" variant="outline" size="sm">
+              <svg cIcon name="cilFilter"></svg>
+            </button>
+            <button cButton color="success" variant="outline" size="sm">
+              <svg cIcon name="cilPlus"></svg>
+            </button>
           </div>
         </div>
       </c-card-header>
@@ -27,330 +24,48 @@
             <table [striped]="true" cTable>
               <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Class</th>
-                <th scope="col">Heading</th>
-                <th scope="col">Heading</th>
-                <th scope="col">Heading</th>
-                <th scope="col">Heading</th>
-                <th scope="col">Heading</th>
-                <th scope="col">Heading</th>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Departamento</th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>MarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMark</td>
-                <td>Otto</td>
-                <td>MarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMar k</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
-                <td>&#64;mdo</td>
+              <tr *ngFor="let obj of listResponse">
+                <th scope="row">{{obj.id}}</th>
+                <td>{{obj.nombre}}</td>
+                <td>{{obj.descripcion}}</td>
+                <td>{{obj.departamento}}</td>
               </tr>
               </tbody>
             </table>
           </div>
-          <div class="row justify-content-center" style="margin-top: 1vh;">
-            <div class="col-auto">
-              <select class="form-select form-select-sm" [(ngModel)]="currentPage" (change)="goToPage($event)">
-                <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
-              </select>
+          <div class="row col-12">
+            <div class="col-12 col-md-6" style="margin-top: 1vh; text-align: center;">
+              <div class="col-auto">
+                <ngb-pagination [(page)]="pagination.page"
+                                (pageChange)="changePage($event-1)"
+                                [maxSize]="pagination.maxSize"
+                                [pageSize]="pagination.pageSize"
+                                [collectionSize]="pagination.collectionSize"></ngb-pagination>
+              </div>
             </div>
-            <div class="col-auto">
-              <span> de {{ totalPages }}</span>
+            <div class="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-end align-items-center">
+              <div class="col-auto">
+                <span>Registros por página:</span>
+              </div>
+              <div class="col-auto">
+                <select class="form-select form-select-sm" [(ngModel)]="pagination.pageSize" (change)="changeSize($event.target)">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
             </div>
           </div>
+
 
         </c-container>
       </c-card-body>
