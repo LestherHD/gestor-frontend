@@ -1,4 +1,4 @@
-export class TipoProducto {
+export class Caracteristicas {
   id: number;
   nombre: string;
 

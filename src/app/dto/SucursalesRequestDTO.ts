@@ -1,4 +1,3 @@
-import {Usuarios} from '../bo/Usuarios';
 import {Sucursales} from '../bo/Sucursales';
 
 export class SucursalesRequestDTO {

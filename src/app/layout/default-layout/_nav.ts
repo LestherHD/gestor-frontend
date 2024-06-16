@@ -43,6 +43,11 @@ export const navItems: INavData[] = [
         name: 'Tipos de productos',
         url: '/configuration/product-type',
         icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Características',
+        url: '/configuration/characteristics',
+        icon: 'nav-icon-bullet'
       }
     ]
   },

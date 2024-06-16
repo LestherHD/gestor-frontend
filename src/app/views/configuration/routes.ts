@@ -20,7 +20,15 @@ export const routes: Routes = [
         data: {
           title: 'Tipos de productos'
         }
+      },
+      {
+        path: 'characteristics',
+        loadComponent: () => import('./caracteristicas/caracteristicas.component').then(m => m.CaracteristicasComponent),
+        data: {
+          title: 'Tipos de productos'
+        },
       }
+
     ]
   }
 ];

@@ -24,14 +24,14 @@ import {CustomSpinnerComponent} from '../../utils/custom-spinner/custom-spinner.
 import {ModalCrudComponent} from '../../utils/modal-crud/modal-crud.component';
 import {ModalDeleteComponent} from '../../utils/modal-delete/modal-delete.component';
 import {ModalFiltersComponent} from '../../utils/modal-filters/modal-filters.component';
-import {TipoProducto} from '../../../bo/TipoProducto';
+import {Caracteristicas} from '../../../bo/Caracteristicas';
 import {Services} from '../../../services/Services';
 import {DataUtils} from '../../../utils/DataUtils';
 import {FunctionsUtils} from '../../../utils/FunctionsUtils';
-import {TipoProductoRequestDTO} from '../../../dto/TipoProductoRequestDTO';
+import {CaracteristicasRequestDTO} from '../../../dto/CaracteristicasRequestDTO';
 
 @Component({
-  selector: 'app-tipo-producto',
+  selector: 'app-caracteristicas',
   standalone: true,
   imports: [CardHeaderComponent, CardBodyComponent, ContainerComponent,
     CardComponent, RowComponent, ColComponent, TableDirective, PaginationComponent,
@@ -39,12 +39,12 @@ import {TipoProductoRequestDTO} from '../../../dto/TipoProductoRequestDTO';
     FormSelectDirective, NgbPaginationModule, CustomSpinnerComponent, ModalCrudComponent,
     FormFeedbackComponent, InputGroupComponent, AlertComponent, CommonModule, FormFloatingDirective, FormControlDirective,
     ReactiveFormsModule, ModalDeleteComponent, ModalFiltersComponent],
-  templateUrl: './tipo-producto.component.html',
-  styleUrl: './tipo-producto.component.scss'
+  templateUrl: './caracteristicas.component.html',
+  styleUrl: './caracteristicas.component.scss'
 })
-export class TipoProductoComponent implements OnInit {
+export class CaracteristicasComponent implements OnInit {
 
-  listResponse: TipoProducto[];
+  listResponse: Caracteristicas[];
   form: FormGroup<{ id: any; nombre: any}>;
   formFiltros: FormGroup<{ id: any; nombre: any;}>;
   formFiltrosBK: FormGroup<{ id: any; nombre: any; }>;
@@ -117,10 +117,10 @@ export class TipoProductoComponent implements OnInit {
 
   getValuesByPage(idValue: any, nombreValue: string, pageValue: any, sizeValue: any): void{
     this.pagination.page = pageValue + 1;
-    const request = new TipoProductoRequestDTO(new TipoProducto(idValue, nombreValue), pageValue, sizeValue);
+    const request = new CaracteristicasRequestDTO(new Caracteristicas(idValue, nombreValue), pageValue, sizeValue);
 
     this.service.mostrarSpinner = true;
-    this.service.getFromEntityByPage('tipoProducto', request).subscribe( res => {
+    this.service.getFromEntityByPage('caracteristicas', request).subscribe( res => {
       this.listResponse = res.content;
       this.pagination.collectionSize = res.totalElements;
       this.service.mostrarSpinner = false;
@@ -158,8 +158,8 @@ export class TipoProductoComponent implements OnInit {
     });
   }
 
-  llenarObjeto(form: any): TipoProducto{
-    const obj = new TipoProducto(form.controls.id.value,
+  llenarObjeto(form: any): Caracteristicas{
+    const obj = new Caracteristicas(form.controls.id.value,
       form.controls.nombre.value.toString().trim());
     return obj;
   }
@@ -204,8 +204,8 @@ export class TipoProductoComponent implements OnInit {
     if (this.modo === 1){
       if (this.form && this.form.valid){
 
-        const obj: TipoProducto = this.llenarObjeto(this.form);
-        this.service.saveEntity('tipoProducto', obj).subscribe( res => {
+        const obj: Caracteristicas = this.llenarObjeto(this.form);
+        this.service.saveEntity('caracteristicas', obj).subscribe( res => {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
@@ -234,7 +234,7 @@ export class TipoProductoComponent implements OnInit {
     } else if (this.modo === 2){
       if (this.form && this.form.valid){
         const obj = this.llenarObjeto(this.form);
-        this.service.editEntity('tipoProducto', obj).subscribe( res => {
+        this.service.editEntity('caracteristicas', obj).subscribe( res => {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
@@ -266,7 +266,7 @@ export class TipoProductoComponent implements OnInit {
 
   async eliminar() {
 
-    this.service.deleteEntity('tipoProducto', this.formEliminar.controls.id.value).subscribe(res => {
+    this.service.deleteEntity('caracteristicas', this.formEliminar.controls.id.value).subscribe(res => {
       this.type = res.error ? 'danger' : 'success';
       this.mensaje = res.mensaje;
       this.deshabilitarBotones = true;
