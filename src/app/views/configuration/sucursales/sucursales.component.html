@@ -9,10 +9,10 @@
             <span>Total: {{pagination.collectionSize}}</span>
           </div>
           <div>
-            <button cButton color="secondary" variant="outline" size="sm">
+            <button cButton color="secondary" variant="outline" size="sm" (click)="showModalFilters()">
               <svg cIcon name="cilFilter"></svg>
             </button>
-            <button cButton color="success" variant="outline" size="sm">
+            <button cButton color="success" variant="outline" size="sm" (click)="modal(1, null)">
               <svg cIcon name="cilPlus"></svg>
             </button>
           </div>
@@ -28,14 +28,27 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Departamento</th>
+                <th scope="col">Acciones</th>
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let obj of listResponse">
-                <th scope="row">{{obj.id}}</th>
-                <td>{{obj.nombre}}</td>
-                <td>{{obj.descripcion}}</td>
-                <td>{{obj.departamento}}</td>
+              <tr *ngFor="let item of listResponse">
+                <td>{{item.id}}</td>
+                <td>{{item.nombre}}</td>
+                <td>{{item.descripcion}}</td>
+                <td>{{dataUtils.descripcionPorCodigo(item.departamento)}}</td>
+                <td>
+                  <button cButton color="success" variant="outline" size="sm" (click)="modal(3, item)">
+                    <svg cIcon name="cilZoom"></svg>
+                  </button>
+                  <button cButton color="info" variant="outline" size="sm" (click)="modal(2, item)">
+                    <svg cIcon name="cilPencil"></svg>
+                  </button>
+                  <button cButton color="danger" variant="outline" size="sm" (click)="modalEliminar(item)">
+                    <svg cIcon name="cilTrash"></svg>
+                  </button>
+
+                </td>
               </tr>
               </tbody>
             </table>
@@ -72,3 +85,110 @@
     </c-card>
   </c-col>
 </c-row>
+<app-custom-spinner></app-custom-spinner>
+<app-modal-crud [showModal]="mostrarModalCrud" (close)="closeModal()" (submit)="guardar()" [tittle]="this.nombreAccion"
+[disabledSubmit]="form.invalid || deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">
+  <div class="d-flex justify-content-center">
+    <div class="col-10 ">
+      <form cForm [formGroup]="form">
+        <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
+        <div class="col-auto">
+          <c-input-group class="mb-2" *ngIf="modo !== 1">
+            <div class="col-12">
+              <label class="fw-bold" for="id">Id</label>
+              <input id="id"
+                     autoComplete="id" formControlName="id" cFormControl/>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>
+              <input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"
+                     [maxLength]="70"
+                     [valid]="functionsUtils.campoRequerido(form, 'nombre') == 1 ? false : null"
+                     autoComplete="nombre" formControlName="nombre" cFormControl/>
+              <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" class="fw-bold" for="descripcion">Descripción {{modo === 1 ? '*' : ''}}</label>
+              <textarea id="descripcion" (blur)="functionsUtils.removeSpaces('descripcion', form)"
+                     [maxLength]="160"
+                     [valid]="functionsUtils.campoRequerido(form, 'descripcion') == 1 ? false : null"
+                        autoComplete="descripcion" formControlName="descripcion" cFormControl></textarea>
+              <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="departamento">Departamento {{modo === 1 ? '*' : ''}}</label>
+              <select id="departamento" cSelect formControlName="departamento">
+                <option *ngFor="let departamento of dataUtils.listaDepartamentos" [value]="departamento.codigo">
+                  {{dataUtils.descripcionPorCodigo(departamento.codigo)}}
+                </option>
+              </select>
+              <!--<input id="departamento" (blur)="functionsUtils.removeSpaces('departamento', form)"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'departamento') == 1 ? false : null"-->
+                     <!--formControlName="departamento" cFormControl/>-->
+              <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+            </div>
+          </c-input-group>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-modal-crud>
+<app-modal-delete [showModal]="mostrarModalEliminar" (close)="closeModalDelete()" (submit)="eliminar()" [tittle]="nombreAccion"
+  [disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">
+  <div class="justify-content-center col-11">
+    <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
+    <form [formGroup]="formEliminar" *ngIf="formEliminar" >
+        <span style="word-wrap: break-word;">Confirmar eliminar el registro: {{this.formEliminar.controls.id.value}} - {{this.formEliminar.controls.nombre.value}}</span>
+    </form>
+  </div>
+</app-modal-delete>
+<app-modal-filters [showModal]="mostrarModalFiltro" (close)="closeModalFilters()" (submit)="filtrar()" [tittle]="nombreAccion"
+                   [disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">
+
+  <div class="justify-content-center col-11">
+    <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
+    <form [formGroup]="formFiltros" *ngIf="formFiltros" >
+      <form cForm [formGroup]="formFiltros">
+        <div class="col-auto">
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="id">Id</label>
+              <input (blur)="functionsUtils.removeSpaces('nombre', formFiltros)"
+                     autoComplete="id" formControlName="id" cFormControl/>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>
+              <input (blur)="functionsUtils.removeSpaces('nombre', formFiltros)"
+                     [maxLength]="70"
+                     autoComplete="nombre" formControlName="nombre" cFormControl/>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="departamento">Departamento {{modo === 1 ? '*' : ''}}</label>
+              <select cSelect formControlName="departamento">
+                <option *ngFor="let departamento of dataUtils.listaDepartamentos" [value]="departamento.codigo">
+                  {{dataUtils.descripcionPorCodigo(departamento.codigo)}}
+                </option>
+              </select>
+            </div>
+          </c-input-group>
+        </div>
+      </form>
+    </form>
+  </div>
+
+</app-modal-filters>

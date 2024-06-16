@@ -127,6 +127,16 @@ export class Services {
     return this.http.post(this.URL + '/' + entity, body, {headers});
   }
 
+  saveEntityMethod(entity: string, body: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Access-Control-Allow-Headers' : 'Content-Type',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*'
+    });
+
+    return this.http.post(this.URL + '/' + entity + '/save', body, {headers});
+  }
+
   cambiarStockMateriaPrima(idMateriaPrima: any, cantidad: any, agregar: boolean, usuario: string): Observable<any> {
     const headers = new HttpHeaders({
       'Access-Control-Allow-Headers' : 'Content-Type',

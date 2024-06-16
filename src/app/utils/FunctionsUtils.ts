@@ -176,5 +176,33 @@ export class FunctionsUtils {
     router.navigateByUrl(opcion);
   }
 
+  campoRequerido(form: FormGroup, name: string): number {
+    const value = form.controls[name].value;
+
+    if (value !== null && value !== undefined) {
+      const strValue = typeof value === 'number' ? value.toString() : value;
+
+      // Campo requerido
+      if (typeof strValue === 'string' && strValue.trim() === "" && form.controls[name].touched) {
+        return 1;
+      }
+
+      // Email inválido
+      if (form.controls[name]?.touched && form.controls[name]?.hasError('email')) {
+        return 2;
+      }
+
+      // Teléfono inválido
+      if (form.controls[name].touched) {
+        if ((typeof strValue === 'string' && !/^[0-9\s]+$/.test(strValue.trim())) || (typeof strValue === 'number' && isNaN(strValue))) {
+          return 3;
+        }
+      }
+    }
+
+    return 0;
+  }
+
+
 
 }

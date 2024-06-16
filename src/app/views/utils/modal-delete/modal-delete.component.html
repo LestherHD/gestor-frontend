@@ -1,0 +1,15 @@
+<c-modal [visible]="showModal" backdrop="static" alignment="center">
+  <c-modal-header #staticBackdropModal backdrop="static" id="staticBackdropModal">
+    <h5 cModalTitle>{{tittle}}</h5>
+    <button [disabled]="disabledOthersButtons" (click)="onClose()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <ng-content></ng-content>
+  </c-modal-body>
+  <c-modal-footer>
+    <button [disabled]="disabledOthersButtons" (click)="onClose()" cButton color="secondary">
+      Cancelar
+    </button>
+    <button *ngIf="showSubmit" (click)="onSubmit()" [disabled]="disabledSubmit"  cButton color="primary">Aceptar</button>
+  </c-modal-footer>
+</c-modal>

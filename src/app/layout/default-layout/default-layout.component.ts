@@ -258,7 +258,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
     if (this.opcion == '2') {
       if (this.sucursal && this.sucursal.value){
         this.usuario.principal = 'N';
-        this.usuario.sucursal = this.listaSucursales.find(x => x.id === this.sucursal.value);
+        this.usuario.sucursal = this.listaSucursales.find(x => x.id === Number(this.sucursal.value));
         this.service.editEntity('usuarios', this.usuario).subscribe( res => {
         }, error => {
           console.error(error);
