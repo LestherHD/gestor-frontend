@@ -14,6 +14,13 @@ export const routes: Routes = [
           title: 'Sucursales'
         }
       },
+      {
+        path: 'product-type',
+        loadComponent: () => import('./tipo-producto/tipo-producto.component').then(m => m.TipoProductoComponent),
+        data: {
+          title: 'Tipos de productos'
+        }
+      }
     ]
   }
 ];

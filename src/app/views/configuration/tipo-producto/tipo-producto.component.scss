@@ -1,0 +1,34 @@
+.scroll{
+  max-height: 55vh;
+  overflow: scroll;
+}
+
+/* Media query para celulares */
+@media only screen and (max-width: 767px) {
+  td{
+    word-wrap: break-word;
+    max-width: 50vw;
+  }
+}
+
+/* Media query para tabletas */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  td{
+    word-wrap: break-word;
+    max-width: 40vw;
+  }
+}
+
+/* Media query para dispositivos más grandes */
+@media only screen and (min-width: 1024px) {
+  td{
+    word-wrap: break-word;
+    max-width: 10vw;
+  }
+}
+
+li {
+  cursor: pointer;
+}
+
+

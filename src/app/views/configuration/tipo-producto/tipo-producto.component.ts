@@ -6,8 +6,10 @@ import {
   CardComponent,
   CardHeaderComponent,
   ColComponent,
-  ContainerComponent, FormControlDirective, FormFeedbackComponent, FormFloatingDirective,
-  FormSelectDirective, InputGroupComponent,
+  ContainerComponent, FormControlDirective,
+  FormFeedbackComponent, FormFloatingDirective,
+  FormSelectDirective,
+  InputGroupComponent,
   PaginationComponent,
   PaginationModule,
   RowComponent,
@@ -17,19 +19,19 @@ import {CommonModule} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SelectComponent} from '../../forms/select/select.component';
-import {Sucursales} from '../../../bo/Sucursales';
 import {NgbPagination, NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
-import {Services} from '../../../services/Services';
-import {SucursalesRequestDTO} from '../../../dto/SucursalesRequestDTO';
-import {DataUtils} from '../../../utils/DataUtils';
-import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {CustomSpinnerComponent} from '../../utils/custom-spinner/custom-spinner.component';
 import {ModalCrudComponent} from '../../utils/modal-crud/modal-crud.component';
 import {ModalDeleteComponent} from '../../utils/modal-delete/modal-delete.component';
 import {ModalFiltersComponent} from '../../utils/modal-filters/modal-filters.component';
+import {TipoProducto} from '../../../bo/TipoProducto';
+import {Services} from '../../../services/Services';
+import {DataUtils} from '../../../utils/DataUtils';
+import {FunctionsUtils} from '../../../utils/FunctionsUtils';
+import {TipoProductoRequestDTO} from '../../../dto/TipoProductoRequestDTO';
 
 @Component({
-  selector: 'app-sucursales',
+  selector: 'app-tipo-producto',
   standalone: true,
   imports: [CardHeaderComponent, CardBodyComponent, ContainerComponent,
     CardComponent, RowComponent, ColComponent, TableDirective, PaginationComponent,
@@ -37,15 +39,15 @@ import {ModalFiltersComponent} from '../../utils/modal-filters/modal-filters.com
     FormSelectDirective, NgbPaginationModule, CustomSpinnerComponent, ModalCrudComponent,
     FormFeedbackComponent, InputGroupComponent, AlertComponent, CommonModule, FormFloatingDirective, FormControlDirective,
     ReactiveFormsModule, ModalDeleteComponent, ModalFiltersComponent],
-  templateUrl: './sucursales.component.html',
-  styleUrl: './sucursales.component.scss'
+  templateUrl: './tipo-producto.component.html',
+  styleUrl: './tipo-producto.component.scss'
 })
-export class SucursalesComponent implements OnInit{
+export class TipoProductoComponent implements OnInit {
 
-  listResponse: Sucursales[];
-  form: FormGroup<{ id: any; nombre: any; descripcion: any; departamento: any }>;
-  formFiltros: FormGroup<{ id: any; nombre: any; departamento: any }>;
-  formFiltrosBK: FormGroup<{ id: any; nombre: any; departamento: any }>;
+  listResponse: TipoProducto[];
+  form: FormGroup<{ id: any; nombre: any; descripcion: any; }>;
+  formFiltros: FormGroup<{ id: any; nombre: any;}>;
+  formFiltrosBK: FormGroup<{ id: any; nombre: any; }>;
 
   formEliminar: FormGroup<{ id: any; nombre: any}>;
 
@@ -83,9 +85,8 @@ export class SucursalesComponent implements OnInit{
     this.resetFormFiltros();
     this.formFiltrosBK = this.formFiltros;
     this.resetForm();
-    this.getValuesByPage('', '', '',
+    this.getValuesByPage('', '',
       this.pagination.page, this.pagination.pageSize);
-
   }
 
 
@@ -94,37 +95,32 @@ export class SucursalesComponent implements OnInit{
     this.deshabilitarBotones = true;
     this.formFiltrosBK = new FormGroup({
       id: new FormControl({value: this.formFiltros.controls.id.value.toString().trim(), disabled: true}),
-      nombre: new FormControl({value: this.formFiltros.controls.nombre.value.toString().trim(), disabled: true}),
-      departamento: new FormControl({value: this.formFiltros.controls.departamento.value.toString().trim(), disabled: true})
+      nombre: new FormControl({value: this.formFiltros.controls.nombre.value.toString().trim(), disabled: true})
     });
     this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
-      this.formFiltrosBK.controls.nombre.value.toString(), this.formFiltrosBK.controls.departamento.value.toString()
-        .trim(),
+      this.formFiltrosBK.controls.nombre.value.toString(),
       0, this.pagination.pageSize);
   }
 
   changePage(event: any): void {
     this.pagination.page = event;
     this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
-      this.formFiltrosBK.controls.nombre.value.toString(), this.formFiltrosBK.controls.departamento.value.toString()
-        .trim(), this.pagination.page, this.pagination.pageSize);
+      this.formFiltrosBK.controls.nombre.value.toString(), this.pagination.page, this.pagination.pageSize);
   }
 
   changeSize(size: any): void {
 
     this.pagination.pageSize = size.value;
     this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
-      this.formFiltrosBK.controls.nombre.value.toString(), this.formFiltrosBK.controls.departamento.value.toString()
-        .trim(), 0, this.pagination.pageSize);
+      this.formFiltrosBK.controls.nombre.value.toString(), 0, this.pagination.pageSize);
   }
 
-  getValuesByPage(idValue: any, nombreValue: string, departamentoValue: string, pageValue: any, sizeValue: any): void{
+  getValuesByPage(idValue: any, nombreValue: string, pageValue: any, sizeValue: any): void{
     this.pagination.page = pageValue + 1;
-    const request = new SucursalesRequestDTO(new Sucursales(idValue, nombreValue, '',
-      departamentoValue === '' ? null : departamentoValue), pageValue, sizeValue);
+    const request = new TipoProductoRequestDTO(new TipoProducto(idValue, nombreValue, ''), pageValue, sizeValue);
 
     this.service.mostrarSpinner = true;
-    this.service.getFromEntityByPage('sucursales', request).subscribe( res => {
+    this.service.getFromEntityByPage('tipoProducto', request).subscribe( res => {
       this.listResponse = res.content;
       this.pagination.collectionSize = res.totalElements;
       this.service.mostrarSpinner = false;
@@ -137,8 +133,7 @@ export class SucursalesComponent implements OnInit{
   resetFormFiltros(){
     this.formFiltros = new FormGroup({
       id: new FormControl(''),
-      nombre: new FormControl(''),
-      departamento: new FormControl('')
+      nombre: new FormControl('')
     });
   }
 
@@ -146,8 +141,7 @@ export class SucursalesComponent implements OnInit{
     this.form = new FormGroup({
       id: new FormControl({value: '', disabled: true}),
       nombre: new FormControl('', Validators.required),
-      descripcion: new FormControl('', Validators.required),
-      departamento: new FormControl('', Validators.required)
+      descripcion: new FormControl('', Validators.required)
     });
   }
 
@@ -155,8 +149,7 @@ export class SucursalesComponent implements OnInit{
     this.form = new FormGroup({
       id: new FormControl({value: item.id, disabled: true}),
       nombre: new FormControl(item.nombre, Validators.required),
-      descripcion: new FormControl(item.descripcion, Validators.required),
-      departamento: new FormControl(item.departamento, Validators.required)
+      descripcion: new FormControl(item.descripcion, Validators.required)
     });
   }
 
@@ -164,16 +157,14 @@ export class SucursalesComponent implements OnInit{
     this.form = new FormGroup({
       id: new FormControl({value: item.id, disabled: true}),
       nombre: new FormControl({value: item.nombre, disabled: true}, Validators.required),
-      descripcion: new FormControl({value: item.descripcion, disabled: true}, Validators.required),
-      departamento: new FormControl({value: item.departamento, disabled: true}, Validators.required)
+      descripcion: new FormControl({value: item.descripcion, disabled: true}, Validators.required)
     });
   }
 
-  llenarObjeto(form: any): Sucursales{
-    const obj = new Sucursales(form.controls.id.value,
+  llenarObjeto(form: any): TipoProducto{
+    const obj = new TipoProducto(form.controls.id.value,
       form.controls.nombre.value.toString().trim(),
-      form.controls.descripcion.value.toString().trim(),
-      form.controls.departamento.value.toString().trim());
+      form.controls.descripcion.value.toString().trim());
     return obj;
   }
 
@@ -217,8 +208,8 @@ export class SucursalesComponent implements OnInit{
     if (this.modo === 1){
       if (this.form && this.form.valid){
 
-        const obj: Sucursales = this.llenarObjeto(this.form);
-        this.service.saveEntity('sucursales', obj).subscribe( res => {
+        const obj: TipoProducto = this.llenarObjeto(this.form);
+        this.service.saveEntity('tipoProducto', obj).subscribe( res => {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
@@ -230,11 +221,10 @@ export class SucursalesComponent implements OnInit{
             if (!res.error){
               this.resetFormFiltros();
               this.getValuesByPage(this.formFiltros.controls.id.value.toString().trim(),
-                this.formFiltros.controls.nombre.value.toString(), this.formFiltros.controls.departamento.value.toString().trim(),
+                this.formFiltros.controls.nombre.value.toString(),
                 0, this.pagination.pageSize);
             }
           } , 2000);
-
         }, error1 => {
           this.type = 'danger';
           this.mensaje = 'Ha ocurrido un error al insertar los datos';
@@ -248,7 +238,7 @@ export class SucursalesComponent implements OnInit{
     } else if (this.modo === 2){
       if (this.form && this.form.valid){
         const obj = this.llenarObjeto(this.form);
-        this.service.editEntity('sucursales', obj).subscribe( res => {
+        this.service.editEntity('tipoProducto', obj).subscribe( res => {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
@@ -260,10 +250,11 @@ export class SucursalesComponent implements OnInit{
             if (!res.error) {
               this.resetFormFiltros();
               this.getValuesByPage(this.formFiltros.controls.id.value.toString().trim(),
-                this.formFiltros.controls.nombre.value.toString(), this.formFiltros.controls.departamento.value.toString().trim(),
+                this.formFiltros.controls.nombre.value.toString(),
                 0, this.pagination.pageSize);
             }
           } , 2000);
+
         }, error1 => {
           this.type = 'danger';
           this.mensaje = 'Ha ocurrido un error al actualizar los datos';
@@ -279,7 +270,7 @@ export class SucursalesComponent implements OnInit{
 
   async eliminar() {
 
-    this.service.deleteEntity('sucursales', this.formEliminar.controls.id.value).subscribe(res => {
+    this.service.deleteEntity('tipoProducto', this.formEliminar.controls.id.value).subscribe(res => {
       this.type = res.error ? 'danger' : 'success';
       this.mensaje = res.mensaje;
       this.deshabilitarBotones = true;
@@ -290,7 +281,7 @@ export class SucursalesComponent implements OnInit{
         this.mostrarMensaje = false;
       } , 2000);
       this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
-        this.formFiltrosBK.controls.nombre.value.toString(), this.formFiltrosBK.controls.departamento.value.toString().trim(),
+        this.formFiltrosBK.controls.nombre.value.toString(),
         0, this.pagination.pageSize);
     }, error => {
       this.type = 'danger';
