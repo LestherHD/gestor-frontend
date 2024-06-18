@@ -27,6 +27,13 @@ export const routes: Routes = [
         data: {
           title: 'Tipos de productos'
         },
+      },
+      {
+        path: 'products',
+        loadComponent: () => import('./productos/productos.component').then(m => m.ProductosComponent),
+        data: {
+          title: 'Productos'
+        },
       }
 
     ]

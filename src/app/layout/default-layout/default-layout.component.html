@@ -99,7 +99,7 @@
           <button (click)="logout()" cButton color="secondary">
             Cancelar
           </button>
-          <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones)) || (opcion == '2' && !listaSucursales)"  cButton color="primary">Continuar</button>
+          <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones)) || (opcion == '2' && (listaSucursales && listaSucursales.length == 0))"  cButton color="primary">Continuar</button>
         </c-modal-footer>
       </c-modal>
 

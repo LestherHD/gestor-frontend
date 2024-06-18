@@ -30,6 +30,13 @@ export class DataUtils {
     { codigo: '22', descripcion: 'Jutiapa' }
   ];
 
+  listaRangoPrecios: { codigo: number, descripcion: string }[] = [
+    { codigo: 50, descripcion: '50' },
+    { codigo: 100, descripcion: '100' },
+    { codigo: 300, descripcion: '300' },
+    { codigo: 500, descripcion: '500' }
+  ];
+
   constructor(){
   }
 
