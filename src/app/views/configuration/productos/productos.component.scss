@@ -1,0 +1,83 @@
+.listas:hover {
+  cursor: pointer; /* Cambia el cursor a una mano al pasar el mouse sobre un <li> */
+}
+
+//.listas {
+//  display: inline-block;
+//  white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+//  overflow: hidden; /* Ocultar el texto que se desborda */
+//  text-overflow: ellipsis; /* Mostrar puntos suspensivos (...) cuando el texto se desborda */
+//}
+//
+///* Estilos para el tooltip */
+//.listas:hover {
+//  position: relative;
+//  overflow: visible;
+//}
+
+//.listas:hover::before {
+//  content: attr(data-tooltip); /* Mostrar el texto completo como tooltip */
+//  position: absolute;
+//  top: 100%;
+//  left: 50%;
+//  transform: translateX(-50%);
+//  background-color: rgba(0, 0, 0, 0.8);
+//  color: white;
+//  padding: 5px 10px;
+//  border-radius: 5px;
+//  white-space: normal;
+//  z-index: 9999;
+//}
+
+
+.contenedor-con-fondo {
+  background-color: #f8f9fa; /* color de fondo deseado */
+  padding: 20px; /* ajusta el espacio alrededor del contenido si es necesario */
+  height: 300px; /* alto fijo */
+  overflow-y: scroll; /* agregar desplazamiento vertical */
+  white-space: normal; /* Permite que el texto se divida en varias líneas */
+  word-wrap: break-word; /* Permite que las palabras largas se dividan y ajusten a la línea */
+  overflow-wrap: break-word; /* Hace lo mismo que word-wrap, pero es más moderno */
+}
+
+.col-2,
+.col-4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll{
+  max-height: 55vh;
+  overflow: scroll;
+}
+
+/* Media query para celulares */
+@media only screen and (max-width: 767px) {
+  td{
+    word-wrap: break-word;
+    max-width: 50vw;
+  }
+}
+
+/* Media query para tabletas */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  td{
+    word-wrap: break-word;
+    max-width: 40vw;
+  }
+}
+
+/* Media query para dispositivos más grandes */
+@media only screen and (min-width: 1024px) {
+  td{
+    word-wrap: break-word;
+    max-width: 10vw;
+  }
+}
+
+li {
+  cursor: pointer;
+}
+
+

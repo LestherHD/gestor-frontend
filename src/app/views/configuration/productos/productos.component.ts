@@ -1,19 +1,27 @@
 import {Component, OnInit} from '@angular/core';
 import {
+  AccordionButtonDirective,
+  AccordionComponent,
+  AccordionItemComponent,
   AlertComponent,
   ButtonDirective,
   CardBodyComponent,
   CardComponent,
   CardHeaderComponent,
   ColComponent,
-  ContainerComponent, FormControlDirective,
-  FormFeedbackComponent, FormFloatingDirective,
+  ContainerComponent,
+  FormControlDirective,
+  FormFeedbackComponent,
+  FormFloatingDirective,
   FormSelectDirective,
   InputGroupComponent,
+  ListGroupItemDirective,
+  ListGroupModule,
   PaginationComponent,
   PaginationModule,
   RowComponent,
-  TableDirective
+  TableDirective,
+  TemplateIdDirective
 } from '@coreui/angular';
 import {CommonModule} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
@@ -31,6 +39,8 @@ import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {ProductosRequestDTO} from '../../../dto/ProductosRequestDTO';
 import {Sucursales} from '../../../bo/Sucursales';
 import {TipoProducto} from '../../../bo/TipoProducto';
+import {Caracteristicas} from '../../../bo/Caracteristicas';
+import {ProductosCaracteristicas} from '../../../bo/ProductosCaracteristicas';
 
 @Component({
   selector: 'app-productos',
@@ -40,7 +50,9 @@ import {TipoProducto} from '../../../bo/TipoProducto';
     PaginationModule, CommonModule, ButtonDirective, IconDirective, FormsModule, SelectComponent,
     FormSelectDirective, NgbPaginationModule, CustomSpinnerComponent, ModalCrudComponent,
     FormFeedbackComponent, InputGroupComponent, AlertComponent, CommonModule, FormFloatingDirective, FormControlDirective,
-    ReactiveFormsModule, ModalDeleteComponent, ModalFiltersComponent],
+    ReactiveFormsModule, ModalDeleteComponent, ModalFiltersComponent, ListGroupModule, ListGroupItemDirective,
+    ListGroupItemDirective, AccordionButtonDirective, AccordionComponent,
+    AccordionItemComponent, TemplateIdDirective],
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.scss'
 })
@@ -48,6 +60,10 @@ export class ProductosComponent implements OnInit {
 
   listResponse: Productos[];
   listaTipoProducto: TipoProducto[];
+  listaCaracteristicas: Caracteristicas[];
+  listaCaracteristicasSeleccionadas: Caracteristicas[];
+  listaCaracteristicasProducto: ProductosCaracteristicas[];
+  listaCaracteristicasProducto2: ProductosCaracteristicas[];
   form: FormGroup<{ id: any; nombre: any; descripcion: any; precio: any; imagen: any; tipoProducto: any;}>;
   formFiltros: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any;}>;
   formFiltrosBK: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any;}>;
@@ -65,6 +81,11 @@ export class ProductosComponent implements OnInit {
   mostrarModalFiltro: boolean;
   mostrarModalCrud: boolean;
   mostrarModalEliminar: boolean;
+
+  itemsLeft = ['1', '2', '3', '4', '5'];
+  itemsRight = [];
+
+  public valorCaracteristica: FormControl;
 
   constructor(public service: Services, public  dataUtils: DataUtils,
               public functionsUtils: FunctionsUtils) {
@@ -92,8 +113,8 @@ export class ProductosComponent implements OnInit {
       this.pagination.page, this.pagination.pageSize);
 
     this.cargarListas();
+    this.valorCaracteristica = new FormControl('');
   }
-
 
   filtrar(): void {
     this.mostrarModalFiltro = false;
@@ -209,25 +230,73 @@ export class ProductosComponent implements OnInit {
       console.error(error);
     });
 
+    this.service.getAllItemsFromEntity('caracteristicas').subscribe( (res: Caracteristicas[]) => {
+      this.listaCaracteristicas = res;
+      if (this.listaCaracteristicas && this.listaCaracteristicas.length > 0){
+        this.listaCaracteristicas.forEach(x => {
+          x.seleccionado = false;
+        });
+      }
+    }, error => {
+      console.error(error);
+    });
+
+    this.listaCaracteristicasSeleccionadas = [];
+
   }
 
   modal(modo: number, item: any): void {
     this.mostrarModalCrud = true;
     this.modo = modo;
     this.deshabilitarBotones = false;
-    const inputCodigo = document.getElementById('inputCodigo');
-    if (inputCodigo) {
-      inputCodigo.focus();
+
+    if (this.listaCaracteristicasSeleccionadas){
+      this.listaCaracteristicasSeleccionadas.forEach(caracteristica => {
+        caracteristica.seleccionado = true;
+      });
+
+      this.moverAIzquierda();
+    }
+
+    if (this.listaCaracteristicas){
+      this.listaCaracteristicas.forEach(caracteristica => {
+        if (item && item.caracteristicas){
+          const found = item.caracteristicas.some(
+            item => item.caracteristica.id === caracteristica.id
+          );
+          if (found) {
+            caracteristica.seleccionado = true;
+          } else {
+            caracteristica.seleccionado = false;
+          }
+        }
+      });
+      this.moverADerecha();
     }
 
     if (this.modo === 1) {
       this.nombreAccion = 'Agregar';
       this.resetForm();
     } else if (this.modo === 2) {
+      console.log(item.caracteristicas);
+      this.listaCaracteristicasProducto = item.caracteristicas;
+      if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
+        let id = 1;
+        this.listaCaracteristicasProducto2 = [];
+        this.listaCaracteristicasProducto.forEach(x => x.idTemporal = id++);
+        this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto;
+      }
       this.nombreAccion = 'Editar';
       // this.resetForm();
       this.llenarForm(item);
     } else if (this.modo === 3) {
+      this.listaCaracteristicasProducto = item.caracteristicas;
+      if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
+        let id = 1;
+        this.listaCaracteristicasProducto2 = [];
+        this.listaCaracteristicasProducto.forEach(x => x.idTemporal = id++);
+        this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto;
+      }
       this.nombreAccion = 'Ver';
       // this.resetForm();
       this.llenarFormDisabled(item);
@@ -366,4 +435,63 @@ export class ProductosComponent implements OnInit {
     this.mostrarModalFiltro = false;
   }
 
+  moverADerecha() {
+    const lista = this.listaCaracteristicas.filter(x => x.seleccionado === true);
+    if (lista && lista.length > 0) {
+      lista.forEach(x => {
+        this.listaCaracteristicasSeleccionadas.push(x);
+      });
+      this.listaCaracteristicas = this.listaCaracteristicas.filter(x => x.seleccionado === false);
+      this.listaCaracteristicasSeleccionadas.forEach(x => x.seleccionado = false);
+      this.listaCaracteristicasSeleccionadas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+    }
+  }
+
+  moverAIzquierda() {
+    const lista = this.listaCaracteristicasSeleccionadas.filter(x=> x.seleccionado === true);
+    if (lista && lista.length > 0){
+      lista.forEach(x => {
+        this.listaCaracteristicas.push(x);
+      });
+      this.listaCaracteristicasSeleccionadas = this.listaCaracteristicasSeleccionadas.filter(x=> x.seleccionado === false);
+      this.listaCaracteristicas.forEach(x => x.seleccionado = false);
+      this.listaCaracteristicas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    }
+  }
+
+  eliminarCaracteristicaProducto(item: any) {
+
+    console.log(this.listaCaracteristicasProducto.filter(x => x.idTemporal !== Number(item.idTemporal)));
+    this.listaCaracteristicasProducto = this.listaCaracteristicasProducto.filter(x => x.idTemporal !== Number(item.idTemporal));
+    this.filtrarCaracteristicasProducto(item.caracteristica);
+  }
+
+  agregarCaracteristicaProducto(caracteristica: any, valor: string) {
+    const productoCaracteristica: ProductosCaracteristicas = new ProductosCaracteristicas(null, null, caracteristica, valor);
+    productoCaracteristica.idTemporal = this.listaCaracteristicasProducto.length + 1;
+    this.listaCaracteristicasProducto.push(productoCaracteristica);
+    this.filtrarCaracteristicasProducto(caracteristica);
+    this.valorCaracteristica.setValue('');
+  }
+
+  filtrarCaracteristicasProducto(item: any){
+    this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto.filter(x=> x.caracteristica.id === Number(item.id));
+  }
+
+
+  validarSeleccionados(): Boolean {
+   if (this.listaCaracteristicas){
+     let count = 0;
+     this.listaCaracteristicas.forEach(x => {
+       if (x.seleccionado){
+         count++;
+       }
+     });
+     if (count === 5 || ( this.listaCaracteristicasSeleccionadas.length + count == 5)){
+       return true;
+     }
+   }
+    return false;
+  }
 }

@@ -87,9 +87,9 @@
 </c-row>
 <app-custom-spinner></app-custom-spinner>
 <app-modal-crud [showModal]="mostrarModalCrud" (close)="closeModal()" (submit)="guardar()" [tittle]="this.nombreAccion"
-                [disabledSubmit]="form.invalid || deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">
+                [disabledSubmit]="form.invalid || deshabilitarBotones || !listaCaracteristicasSeleccionadas || listaCaracteristicasSeleccionadas.length === 0" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">
   <div class="d-flex justify-content-center">
-    <div class="col-10 ">
+    <div class="col-12">
       <form cForm [formGroup]="form">
         <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
         <div class="col-auto">
@@ -103,7 +103,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" for="nombre">Nombre {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"
                      [maxLength]="100"
                      [valid]="functionsUtils.campoRequerido(form, 'nombre') == 1 ? false : null"
@@ -114,7 +114,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" for="descripcion">Descripción {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" for="descripcion">Descripción {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <textarea id="descripcion" (blur)="functionsUtils.removeSpaces('descripcion', form)"
                      [maxLength]="300"
                      [valid]="functionsUtils.campoRequerido(form, 'descripcion') == 1 ? false : null"
@@ -125,7 +125,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" for="precio">Precio {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" for="precio">Precio {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <input id="precio" (blur)="functionsUtils.removeSpaces('precio', form)"
                      [maxLength]="6"
                      [valid]="functionsUtils.campoRequerido(form, 'precio') == 1 ? false : null"
@@ -135,7 +135,7 @@
           </c-input-group>
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" for="tipoProducto">Tipo de producto {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" for="tipoProducto">Tipo de producto {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <select id="tipoProducto" cSelect formControlName="tipoProducto">
                 <option *ngFor="let obj of listaTipoProducto" [value]="obj.id">
                   {{obj.nombre}}
@@ -144,7 +144,33 @@
               <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
             </div>
           </c-input-group>
+          <label class="fw-bold" for="tipoProducto">Caracteristicas {{modo === 1 || modo === 2 ? '*' : ''}}</label>
+          <div class="contenedor-con-fondo">
+            <c-input-group class="mb-2 col-12 row">
+              <div class="col-4">
+                <div cListGroup style="max-width: 100%; overflow: auto;">
+                  <a (click)="item.seleccionado = !item.seleccionado;" class="listas" cListGroupItem [active]="item.seleccionado"
+                     *ngFor="let item of listaCaracteristicas" [disabled]="!item.seleccionado && validarSeleccionados()">{{item.nombre}}</a>
 
+                </div>
+              </div>
+              <div class="col-2" >
+                <button cButton [disabled]="!this.listaCaracteristicas || (this.listaCaracteristicas && this.listaCaracteristicas.length === 0) || (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length > 4)" (click)="moverADerecha()">></button>
+              </div>
+              <div class="col-2">
+                <button cButton [disabled]="!this.listaCaracteristicasSeleccionadas || this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0" (click)="moverAIzquierda()"><</button>
+              </div>
+              <div class="col-4">
+                <div cListGroup style="max-width: 100%; overflow: auto;">
+                  <a (click)="item.seleccionado = !item.seleccionado" class="listas" cListGroupItem [active]="item.seleccionado" *ngFor="let item of listaCaracteristicasSeleccionadas">{{item.nombre}}</a>
+                </div>
+              </div>
+            </c-input-group>
+          </div>
+          <div *ngIf="listaCaracteristicasSeleccionadas && listaCaracteristicasSeleccionadas.length > 0">
+            <ng-container *ngTemplateOutlet="innerDiv">
+            </ng-container>
+          </div>
         </div>
       </form>
     </div>
@@ -178,7 +204,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" >Nombre {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" >Nombre</label>
               <input (blur)="functionsUtils.removeSpaces('nombre', formFiltros)"
                      [maxLength]="50"
                      autoComplete="nombre" formControlName="nombre" cFormControl/>
@@ -187,7 +213,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" >Precio inicio {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" >Precio inicio</label>
               <select cSelect formControlName="precioInicio">
                 <option *ngFor="let obj of dataUtils.listaRangoPrecios" [value]="obj.codigo">
                   {{obj.descripcion}}
@@ -198,7 +224,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" >Precio fin {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" >Precio fin</label>
               <select cSelect formControlName="precioFin">
                 <option *ngFor="let obj of dataUtils.listaRangoPrecios" [value]="obj.codigo">
                   {{obj.descripcion}}
@@ -209,7 +235,7 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" for="tipoProducto">Tipo de producto {{modo === 1 ? '*' : ''}}</label>
+              <label class="fw-bold" for="tipoProducto">Tipo de producto</label>
               <select cSelect formControlName="tipoProducto">
                 <option *ngFor="let obj of listaTipoProducto" [value]="obj.id">
                   {{obj.nombre}}
@@ -223,3 +249,29 @@
     </form>
   </div>
 </app-modal-filters>
+
+<ng-template #innerDiv>
+  <c-accordion [flush]="true" >
+    <c-accordion-item #item0="cAccordionItem" [visible]="false" *ngFor="let obj of listaCaracteristicasSeleccionadas">
+      <ng-template cTemplateId="accordionHeaderTemplate">
+        <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj)" [collapsed]="!item0.visible" cAccordionButton>
+          {{obj.nombre}}
+        </button>
+      </ng-template>
+      <ng-template cTemplateId="accordionBodyTemplate">
+        <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2">
+            <input cFormControl type="text" [value]="obj2.valor" class="form-control" [disabled]="modo === 3">
+            <button cButton color="danger" variant="outline" size="sm" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3">
+              <svg cIcon name="cilTrash"></svg>
+            </button>
+        </div>
+        <div class="col-12 col d-flex align-items-center" *ngIf="listaCaracteristicasProducto2.length < 5 && modo !== 3">
+          <input cFormControl type="text" [formControl]="valorCaracteristica" class="form-control">
+          <button cButton color="success" variant="outline" size="sm" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value)">
+            <svg cIcon name="cilPlus"></svg>
+          </button>
+        </div>
+      </ng-template>
+    </c-accordion-item>
+  </c-accordion>
+</ng-template>
