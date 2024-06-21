@@ -86,10 +86,10 @@
   </c-col>
 </c-row>
 <app-custom-spinner></app-custom-spinner>
-<app-modal-crud [showModal]="mostrarModalCrud" (close)="closeModal()" (submit)="guardar()" [tittle]="this.nombreAccion"
-                [disabledSubmit]="form.invalid || deshabilitarBotones || !listaCaracteristicasSeleccionadas || listaCaracteristicasSeleccionadas.length === 0" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">
-  <div class="d-flex justify-content-center">
-    <div class="col-12">
+<app-modal-crud  [showModal]="mostrarModalCrud" (close)="closeModal()" (submit)="guardar()" [tittle]="this.nombreAccion"
+                [disabledSubmit]="form.invalid || deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">
+  <div class="d-flex justify-content-center" #topElement>
+    <div class="col-12" >
       <form cForm [formGroup]="form">
         <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
         <div class="col-auto">
@@ -145,20 +145,25 @@
             </div>
           </c-input-group>
           <label class="fw-bold" for="tipoProducto">Caracteristicas {{modo === 1 || modo === 2 ? '*' : ''}}</label>
-          <div class="contenedor-con-fondo">
+          <div *ngIf="modo !== 3" class="contenedor-con-fondo">
             <c-input-group class="mb-2 col-12 row">
               <div class="col-4">
                 <div cListGroup style="max-width: 100%; overflow: auto;">
                   <a (click)="item.seleccionado = !item.seleccionado;" class="listas" cListGroupItem [active]="item.seleccionado"
-                     *ngFor="let item of listaCaracteristicas" [disabled]="!item.seleccionado && validarSeleccionados()">{{item.nombre}}</a>
+                     *ngFor="let item of listaCaracteristicas2" [disabled]="!item.seleccionado && validarSeleccionados()">{{item.nombre}}</a>
 
                 </div>
               </div>
+              <!--boton >-->
               <div class="col-2" >
-                <button cButton [disabled]="!this.listaCaracteristicas || (this.listaCaracteristicas && this.listaCaracteristicas.length === 0) || (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length > 4)" (click)="moverADerecha()">></button>
+                <button cButton [disabled]="!this.listaCaracteristicas2 ||
+                (this.listaCaracteristicas2 && this.listaCaracteristicas2.length === 0) ||
+                (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length > 4)" (click)="moverADerecha()">></button>
               </div>
+              <!--boton <-->
               <div class="col-2">
-                <button cButton [disabled]="!this.listaCaracteristicasSeleccionadas || this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0" (click)="moverAIzquierda()"><</button>
+                <button cButton [disabled]="!this.listaCaracteristicasSeleccionadas ||
+                this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0" (click)="moverAIzquierda()"><</button>
               </div>
               <div class="col-4">
                 <div cListGroup style="max-width: 100%; overflow: auto;">
@@ -259,15 +264,17 @@
         </button>
       </ng-template>
       <ng-template cTemplateId="accordionBodyTemplate">
-        <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2">
-            <input cFormControl type="text" [value]="obj2.valor" class="form-control" [disabled]="modo === 3">
-            <button cButton color="danger" variant="outline" size="sm" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3">
+        <div *ngIf="listaCaracteristicasProducto2">
+          <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2">
+            <input cFormControl type="text" [(ngModel)]="obj2.valor" class="form-control" [disabled]="modo === 3 || deshabilitarBotones">
+            <button cButton color="danger" variant="outline" size="sm" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3" [disabled]="deshabilitarBotones">
               <svg cIcon name="cilTrash"></svg>
             </button>
+          </div>
         </div>
-        <div class="col-12 col d-flex align-items-center" *ngIf="listaCaracteristicasProducto2.length < 5 && modo !== 3">
-          <input cFormControl type="text" [formControl]="valorCaracteristica" class="form-control">
-          <button cButton color="success" variant="outline" size="sm" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value)">
+        <div class="col-12 col d-flex align-items-center" *ngIf="listaCaracteristicasProducto2 && listaCaracteristicasProducto2.length < 5 && modo !== 3">
+          <input cFormControl type="text" [formControl]="valorCaracteristica" class="form-control" [disabled]="true">
+          <button cButton color="success" variant="outline" size="sm" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value)" [disabled]="deshabilitarBotones">
             <svg cIcon name="cilPlus"></svg>
           </button>
         </div>

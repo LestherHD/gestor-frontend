@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {
   AccordionButtonDirective,
   AccordionComponent,
@@ -58,10 +58,15 @@ import {ProductosCaracteristicas} from '../../../bo/ProductosCaracteristicas';
 })
 export class ProductosComponent implements OnInit {
 
+  @ViewChild('topElement', { static: true }) topElement: ElementRef;
+
   listResponse: Productos[];
   listaTipoProducto: TipoProducto[];
+
   listaCaracteristicas: Caracteristicas[];
+  listaCaracteristicas2: Caracteristicas[];
   listaCaracteristicasSeleccionadas: Caracteristicas[];
+
   listaCaracteristicasProducto: ProductosCaracteristicas[];
   listaCaracteristicasProducto2: ProductosCaracteristicas[];
   form: FormGroup<{ id: any; nombre: any; descripcion: any; precio: any; imagen: any; tipoProducto: any;}>;
@@ -219,6 +224,7 @@ export class ProductosComponent implements OnInit {
       form.controls.imagen.value,
       this.listaTipoProducto ? this.listaTipoProducto.find(x => x.id === Number(form.controls.tipoProducto.value.toString().trim())) : null,
       0, 0, null);
+    obj.caracteristicas = this.listaCaracteristicasProducto2;
     return obj;
   }
 
@@ -230,6 +236,7 @@ export class ProductosComponent implements OnInit {
       console.error(error);
     });
 
+    this.listaCaracteristicas = [];
     this.service.getAllItemsFromEntity('caracteristicas').subscribe( (res: Caracteristicas[]) => {
       this.listaCaracteristicas = res;
       if (this.listaCaracteristicas && this.listaCaracteristicas.length > 0){
@@ -241,25 +248,36 @@ export class ProductosComponent implements OnInit {
       console.error(error);
     });
 
+    this.listaCaracteristicas2 = [];
+    this.listaCaracteristicasProducto = [];
+    this.listaCaracteristicasProducto2 = [];
     this.listaCaracteristicasSeleccionadas = [];
 
   }
 
   modal(modo: number, item: any): void {
+    this.listaCaracteristicasProducto = [];
+    this.listaCaracteristicasProducto2 = [];
+
+    this.listaCaracteristicas2 = this.listaCaracteristicas;
+    this.listaCaracteristicasSeleccionadas = [];
+
+    this.valorCaracteristica = new FormControl('');
+
     this.mostrarModalCrud = true;
     this.modo = modo;
     this.deshabilitarBotones = false;
 
-    if (this.listaCaracteristicasSeleccionadas){
-      this.listaCaracteristicasSeleccionadas.forEach(caracteristica => {
-        caracteristica.seleccionado = true;
-      });
+    // if (this.listaCaracteristicasSeleccionadas){
+    //   this.listaCaracteristicasSeleccionadas.forEach(caracteristica => {
+    //     caracteristica.seleccionado = true;
+    //   });
+    //
+    //   this.moverAIzquierda();
+    // }
 
-      this.moverAIzquierda();
-    }
-
-    if (this.listaCaracteristicas){
-      this.listaCaracteristicas.forEach(caracteristica => {
+    if (this.listaCaracteristicas2){
+      this.listaCaracteristicas2.forEach(caracteristica => {
         if (item && item.caracteristicas){
           const found = item.caracteristicas.some(
             item => item.caracteristica.id === caracteristica.id
@@ -278,7 +296,6 @@ export class ProductosComponent implements OnInit {
       this.nombreAccion = 'Agregar';
       this.resetForm();
     } else if (this.modo === 2) {
-      console.log(item.caracteristicas);
       this.listaCaracteristicasProducto = item.caracteristicas;
       if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
         let id = 1;
@@ -316,7 +333,33 @@ export class ProductosComponent implements OnInit {
 
 
   guardar() {
-
+    this.mostrarMensaje = false;
+    if (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0){
+      this.mostrarMensaje = true;
+      this.type = 'danger';
+      this.mensaje = 'Error, debe seleccionar al menos una característica y un valor para cada característica; mínimo 1 característica y 1 valor por característica y máximo 5 características y 5 valores por característica';
+      this.topElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        this.mostrarMensaje = false;
+      } , 7000);
+      return;
+    } else if (this.listaCaracteristicasProducto2){
+      this.listaCaracteristicasSeleccionadas.forEach(car=> {
+        const obj = this.listaCaracteristicasProducto2.filter(x=> x.caracteristica.id === car.id);
+        if (!obj || (obj && obj.length === 0)){
+          this.mostrarMensaje = true;
+        }
+      });
+      if (this.mostrarMensaje){
+        this.type = 'danger';
+        this.mensaje = 'Error, debe seleccionar al menos una característica y un valor para cada característica; mínimo 1 característica y 1 valor por característica y máximo 5 características y 5 valores por característica';
+        this.topElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          this.mostrarMensaje = false;
+        } , 7000);
+        return;
+      }
+    }
     if (this.modo === 1){
       if (this.form && this.form.valid){
 
@@ -325,11 +368,17 @@ export class ProductosComponent implements OnInit {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
+          this.valorCaracteristica.disable();
           this.mostrarMensaje = true;
           setTimeout(() => {
             this.mostrarMensaje = false;
             this.mostrarModalCrud = res.error ? true : false;
             this.deshabilitarBotones = res.error ? false : true;
+
+            this.valorCaracteristica.enable();
+            if (this.deshabilitarBotones)
+              this.valorCaracteristica.disable();
+
             if (!res.error){
               this.resetFormFiltros();
               this.getValuesByPage(this.formFiltros.controls.id.value.toString().trim(),
@@ -356,11 +405,17 @@ export class ProductosComponent implements OnInit {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
+          this.valorCaracteristica.disable();
           this.mostrarMensaje = true;
           setTimeout(() => {
             this.mostrarMensaje = false;
             this.mostrarModalCrud = res.error ? true : false;
             this.deshabilitarBotones = res.error ? false : true;
+
+            this.valorCaracteristica.enable();
+            if (this.deshabilitarBotones)
+              this.valorCaracteristica.disable();
+
             if (!res.error) {
               this.resetFormFiltros();
               this.getValuesByPage(this.formFiltros.controls.id.value.toString().trim(),
@@ -382,6 +437,7 @@ export class ProductosComponent implements OnInit {
         });
       }
     }
+    this.topElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async eliminar() {
@@ -436,12 +492,12 @@ export class ProductosComponent implements OnInit {
   }
 
   moverADerecha() {
-    const lista = this.listaCaracteristicas.filter(x => x.seleccionado === true);
+    const lista = this.listaCaracteristicas2.filter(x => x.seleccionado === true);
     if (lista && lista.length > 0) {
       lista.forEach(x => {
         this.listaCaracteristicasSeleccionadas.push(x);
       });
-      this.listaCaracteristicas = this.listaCaracteristicas.filter(x => x.seleccionado === false);
+      this.listaCaracteristicas2 = this.listaCaracteristicas2.filter(x => x.seleccionado === false);
       this.listaCaracteristicasSeleccionadas.forEach(x => x.seleccionado = false);
       this.listaCaracteristicasSeleccionadas.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
@@ -452,17 +508,16 @@ export class ProductosComponent implements OnInit {
     const lista = this.listaCaracteristicasSeleccionadas.filter(x=> x.seleccionado === true);
     if (lista && lista.length > 0){
       lista.forEach(x => {
-        this.listaCaracteristicas.push(x);
+        this.listaCaracteristicas2.push(x);
       });
       this.listaCaracteristicasSeleccionadas = this.listaCaracteristicasSeleccionadas.filter(x=> x.seleccionado === false);
-      this.listaCaracteristicas.forEach(x => x.seleccionado = false);
-      this.listaCaracteristicas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      this.listaCaracteristicas2.forEach(x => x.seleccionado = false);
+      this.listaCaracteristicas2.sort((a, b) => a.nombre.localeCompare(b.nombre));
     }
   }
 
   eliminarCaracteristicaProducto(item: any) {
 
-    console.log(this.listaCaracteristicasProducto.filter(x => x.idTemporal !== Number(item.idTemporal)));
     this.listaCaracteristicasProducto = this.listaCaracteristicasProducto.filter(x => x.idTemporal !== Number(item.idTemporal));
     this.filtrarCaracteristicasProducto(item.caracteristica);
   }
