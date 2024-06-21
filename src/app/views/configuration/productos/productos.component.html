@@ -172,8 +172,8 @@
               </div>
             </c-input-group>
           </div>
-          <div *ngIf="listaCaracteristicasSeleccionadas && listaCaracteristicasSeleccionadas.length > 0">
-            <ng-container *ngTemplateOutlet="innerDiv">
+          <div *ngIf="listaCaracteristicasSeleccionadas && listaCaracteristicasSeleccionadas.length > 0 && mostrarAccordion">
+            <ng-container *ngTemplateOutlet="innerDiv" >
             </ng-container>
           </div>
         </div>
@@ -259,13 +259,13 @@
   <c-accordion [flush]="true" >
     <c-accordion-item #item0="cAccordionItem" [visible]="false" *ngFor="let obj of listaCaracteristicasSeleccionadas">
       <ng-template cTemplateId="accordionHeaderTemplate">
-        <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj)" [collapsed]="!item0.visible" cAccordionButton>
+        <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj);" [collapsed]="!item0.visible" cAccordionButton>
           {{obj.nombre}}
         </button>
       </ng-template>
       <ng-template cTemplateId="accordionBodyTemplate">
         <div *ngIf="listaCaracteristicasProducto2">
-          <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2">
+          <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2" (show)="filtrarCaracteristicasProducto(obj)">
             <input cFormControl type="text" [(ngModel)]="obj2.valor" class="form-control" [disabled]="modo === 3 || deshabilitarBotones">
             <button cButton color="danger" variant="outline" size="sm" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3" [disabled]="deshabilitarBotones">
               <svg cIcon name="cilTrash"></svg>

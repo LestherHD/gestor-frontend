@@ -91,6 +91,7 @@ export class ProductosComponent implements OnInit {
   itemsRight = [];
 
   public valorCaracteristica: FormControl;
+  mostrarAccordion: boolean;
 
   constructor(public service: Services, public  dataUtils: DataUtils,
               public functionsUtils: FunctionsUtils) {
@@ -224,7 +225,7 @@ export class ProductosComponent implements OnInit {
       form.controls.imagen.value,
       this.listaTipoProducto ? this.listaTipoProducto.find(x => x.id === Number(form.controls.tipoProducto.value.toString().trim())) : null,
       0, 0, null);
-    obj.caracteristicas = this.listaCaracteristicasProducto2;
+    obj.caracteristicas = this.listaCaracteristicasProducto;
     return obj;
   }
 
@@ -242,6 +243,7 @@ export class ProductosComponent implements OnInit {
       if (this.listaCaracteristicas && this.listaCaracteristicas.length > 0){
         this.listaCaracteristicas.forEach(x => {
           x.seleccionado = false;
+          x.visible = false;
         });
       }
     }, error => {
@@ -256,6 +258,7 @@ export class ProductosComponent implements OnInit {
   }
 
   modal(modo: number, item: any): void {
+    this.mostrarAccordion = true;
     this.listaCaracteristicasProducto = [];
     this.listaCaracteristicasProducto2 = [];
 
@@ -267,14 +270,6 @@ export class ProductosComponent implements OnInit {
     this.mostrarModalCrud = true;
     this.modo = modo;
     this.deshabilitarBotones = false;
-
-    // if (this.listaCaracteristicasSeleccionadas){
-    //   this.listaCaracteristicasSeleccionadas.forEach(caracteristica => {
-    //     caracteristica.seleccionado = true;
-    //   });
-    //
-    //   this.moverAIzquierda();
-    // }
 
     if (this.listaCaracteristicas2){
       this.listaCaracteristicas2.forEach(caracteristica => {
@@ -300,8 +295,11 @@ export class ProductosComponent implements OnInit {
       if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
         let id = 1;
         this.listaCaracteristicasProducto2 = [];
-        this.listaCaracteristicasProducto.forEach(x => x.idTemporal = id++);
-        this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto;
+        this.listaCaracteristicasProducto.forEach(x => {
+          x.idTemporal = id++
+          this.filtrarCaracteristicasProducto(x.caracteristica);
+        });
+
       }
       this.nombreAccion = 'Editar';
       // this.resetForm();
@@ -311,8 +309,10 @@ export class ProductosComponent implements OnInit {
       if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
         let id = 1;
         this.listaCaracteristicasProducto2 = [];
-        this.listaCaracteristicasProducto.forEach(x => x.idTemporal = id++);
-        this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto;
+        this.listaCaracteristicasProducto.forEach(x => {
+          x.idTemporal = id++
+          this.filtrarCaracteristicasProducto(x.caracteristica);
+        });
       }
       this.nombreAccion = 'Ver';
       // this.resetForm();
@@ -343,9 +343,9 @@ export class ProductosComponent implements OnInit {
         this.mostrarMensaje = false;
       } , 7000);
       return;
-    } else if (this.listaCaracteristicasProducto2){
+    } else if (this.listaCaracteristicasProducto){
       this.listaCaracteristicasSeleccionadas.forEach(car=> {
-        const obj = this.listaCaracteristicasProducto2.filter(x=> x.caracteristica.id === car.id);
+        const obj = this.listaCaracteristicasProducto.filter(x=> x.caracteristica.id === car.id);
         if (!obj || (obj && obj.length === 0)){
           this.mostrarMensaje = true;
         }
@@ -376,8 +376,10 @@ export class ProductosComponent implements OnInit {
             this.deshabilitarBotones = res.error ? false : true;
 
             this.valorCaracteristica.enable();
-            if (this.deshabilitarBotones)
+            if (this.deshabilitarBotones){
               this.valorCaracteristica.disable();
+              this.mostrarAccordion = false;
+            }
 
             if (!res.error){
               this.resetFormFiltros();
@@ -413,8 +415,10 @@ export class ProductosComponent implements OnInit {
             this.deshabilitarBotones = res.error ? false : true;
 
             this.valorCaracteristica.enable();
-            if (this.deshabilitarBotones)
+            if (this.deshabilitarBotones){
+              this.mostrarAccordion = false;
               this.valorCaracteristica.disable();
+            }
 
             if (!res.error) {
               this.resetFormFiltros();
@@ -478,6 +482,7 @@ export class ProductosComponent implements OnInit {
 
   closeModal(){
     this.resetForm();
+    this.mostrarAccordion = false;
     this.mostrarModalCrud = false;
   }
 
@@ -533,7 +538,6 @@ export class ProductosComponent implements OnInit {
   filtrarCaracteristicasProducto(item: any){
     this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto.filter(x=> x.caracteristica.id === Number(item.id));
   }
-
 
   validarSeleccionados(): Boolean {
    if (this.listaCaracteristicas){
