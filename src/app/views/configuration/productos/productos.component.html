@@ -259,22 +259,22 @@
   <c-accordion [flush]="true" >
     <c-accordion-item #item0="cAccordionItem" [visible]="false" *ngFor="let obj of listaCaracteristicasSeleccionadas">
       <ng-template cTemplateId="accordionHeaderTemplate">
-        <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj);" [collapsed]="!item0.visible" cAccordionButton>
+        <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj);" [collapsed]="true" cAccordionButton>
           {{obj.nombre}}
         </button>
       </ng-template>
       <ng-template cTemplateId="accordionBodyTemplate">
         <div *ngIf="listaCaracteristicasProducto2">
-          <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2" (show)="filtrarCaracteristicasProducto(obj)">
-            <input cFormControl type="text" [(ngModel)]="obj2.valor" class="form-control" [disabled]="modo === 3 || deshabilitarBotones">
-            <button cButton color="danger" variant="outline" size="sm" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3" [disabled]="deshabilitarBotones">
+          <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2" (show)="filtrarCaracteristicasProducto(obj)" >
+            <input cFormControl type="text" [(ngModel)]="obj2.valor" class="form-control" [disabled]="modo === 3 || deshabilitarBotones" style="z-index: 9999999999;">
+            <button cButton  color="danger" variant="outline" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3" [disabled]="deshabilitarBotones" style="z-index: 9999999999;">
               <svg cIcon name="cilTrash"></svg>
             </button>
           </div>
         </div>
         <div class="col-12 col d-flex align-items-center" *ngIf="listaCaracteristicasProducto2 && listaCaracteristicasProducto2.length < 5 && modo !== 3">
-          <input cFormControl type="text" [formControl]="valorCaracteristica" class="form-control" [disabled]="true">
-          <button cButton color="success" variant="outline" size="sm" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value)" [disabled]="deshabilitarBotones">
+          <input cFormControl type="text" [formControl]="valorCaracteristica" class="form-control" [disabled]="true" style="z-index: 9999999999; display: flex">
+          <button cButton color="success" variant="outline" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value)" [disabled]="deshabilitarBotones" style="z-index: 9999999999;">
             <svg cIcon name="cilPlus"></svg>
           </button>
         </div>
