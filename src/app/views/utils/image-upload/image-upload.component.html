@@ -1,0 +1,22 @@
+<div class="container">
+  <form [formGroup]="imageForm">
+    <div class="form-group" *ngIf="modo !== 3">
+      <label for="imageUpload">Cargar Imagen</label>
+      <input
+        type="file"
+        class="form-control"
+        id="imageUpload"
+        (change)="onFileChange($event)"
+        accept=".jpg, .jpeg, .png">
+    </div>
+
+    <div *ngIf="imagePreview" class="justify-content-center d-flex">
+      <img [src]="imagePreview" alt="Vista Previa" class="img-thumbnail" style="max-width: 350px; max-height: 270px;">
+    </div>
+
+    <div *ngIf="errorMessage && modo !== 3" class="alert alert-danger" >
+      {{ errorMessage }}
+    </div>
+
+  </form>
+</div>

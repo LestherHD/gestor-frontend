@@ -13,6 +13,8 @@
   },
   "files": [
     "src/test.ts",
+    ,
+    "node_modules/@types/node/globals.d.ts"
   ],
   "include": [
     "src/**/*.spec.ts",

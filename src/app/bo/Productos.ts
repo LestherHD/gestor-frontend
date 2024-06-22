@@ -13,6 +13,9 @@ export class Productos {
   rangoPrecioInicio: number;
   rangoPrecioFin: number;
 
+  //Para guardar imagen
+  imageSrc: string;
+
   constructor(id: number, nombre: string, descripcion: string, precio: number, imagen: any,
               tipoProducto: TipoProducto, rangoPrecioInicio: number, rangoPrecioFin: number, caracteristicas: any) {
     this.id = id;

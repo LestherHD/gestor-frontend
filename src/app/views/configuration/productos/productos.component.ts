@@ -41,6 +41,7 @@ import {Sucursales} from '../../../bo/Sucursales';
 import {TipoProducto} from '../../../bo/TipoProducto';
 import {Caracteristicas} from '../../../bo/Caracteristicas';
 import {ProductosCaracteristicas} from '../../../bo/ProductosCaracteristicas';
+import {ImageUploadComponent} from '../../utils/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-productos',
@@ -52,7 +53,7 @@ import {ProductosCaracteristicas} from '../../../bo/ProductosCaracteristicas';
     FormFeedbackComponent, InputGroupComponent, AlertComponent, CommonModule, FormFloatingDirective, FormControlDirective,
     ReactiveFormsModule, ModalDeleteComponent, ModalFiltersComponent, ListGroupModule, ListGroupItemDirective,
     ListGroupItemDirective, AccordionButtonDirective, AccordionComponent,
-    AccordionItemComponent, TemplateIdDirective],
+    AccordionItemComponent, TemplateIdDirective, ImageUploadComponent],
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.scss'
 })
@@ -80,6 +81,7 @@ export class ProductosComponent implements OnInit {
   mensaje: string;
   modo: number;
   deshabilitarBotones = false;
+  deshabilitarFuncionalidadValores = false;
   mostrarMensaje = false;
 
   public pagination: NgbPagination;
@@ -94,6 +96,9 @@ export class ProductosComponent implements OnInit {
   public valorCaracteristica: FormControl;
   public valorCaracteristicaLista: FormControl;
   mostrarAccordion: boolean;
+
+  imageSrc: string;
+  mostrarImagen: boolean;
 
   constructor(public service: Services, public  dataUtils: DataUtils,
               public functionsUtils: FunctionsUtils, public cdr: ChangeDetectorRef) {
@@ -111,6 +116,7 @@ export class ProductosComponent implements OnInit {
     this.pagination.page = 0;
     this.pagination.pageSize = 10;
     this.pagination.maxSize = 4;
+    this.mostrarImagen = false;
   }
 
   ngOnInit(): void {
@@ -123,6 +129,7 @@ export class ProductosComponent implements OnInit {
     this.cargarListas();
     this.valorCaracteristica = new FormControl('');
     this.valorCaracteristicaLista = new FormControl('', Validators.required);
+    this.mostrarImagen = false;
   }
 
   filtrar(): void {
@@ -229,6 +236,7 @@ export class ProductosComponent implements OnInit {
       this.listaTipoProducto ? this.listaTipoProducto.find(x => x.id === Number(form.controls.tipoProducto.value.toString().trim())) : null,
       0, 0, null);
     obj.caracteristicas = this.listaCaracteristicasProducto;
+    obj.imageSrc = this.imageSrc;
     return obj;
   }
 
@@ -262,6 +270,8 @@ export class ProductosComponent implements OnInit {
   }
 
   modal(modo: number, item: any): void {
+    this.mostrarImagen = true;
+    this.imageSrc = item ? item.imagen : '';
     this.mostrarAccordion = true;
     this.listaCaracteristicasProducto = [];
     this.listaCaracteristicasProductoBK = [];
@@ -298,36 +308,33 @@ export class ProductosComponent implements OnInit {
     } else if (this.modo === 2) {
       this.listaCaracteristicasProductoBK = item.caracteristicas;
 
-      this.listaCaracteristicasSeleccionadas.forEach(x=>{
-        this.listaCaracteristicasProductoBK.filter(a=> a.caracteristica.id === x.id).forEach(a=>{
-          this.listaCaracteristicasProducto.push(a);
-        })
-      });
+      this.filtrarListadoFinalCaracteristicasProducto();
 
       if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
         let id = 1;
         this.listaCaracteristicasProducto2 = [];
         this.listaCaracteristicasProducto.forEach(x => {
-          x.idTemporal = id++
+          x.idTemporal = id++;
           this.filtrarCaracteristicasProducto(x.caracteristica);
         });
 
       }
       this.nombreAccion = 'Editar';
-      // this.resetForm();
       this.llenarForm(item);
     } else if (this.modo === 3) {
-      this.listaCaracteristicasProducto = item.caracteristicas;
+      this.listaCaracteristicasProductoBK = item.caracteristicas;
+
+      this.filtrarListadoFinalCaracteristicasProducto();
+
       if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
         let id = 1;
         this.listaCaracteristicasProducto2 = [];
         this.listaCaracteristicasProducto.forEach(x => {
-          x.idTemporal = id++
+          x.idTemporal = id++;
           this.filtrarCaracteristicasProducto(x.caracteristica);
         });
       }
       this.nombreAccion = 'Ver';
-      // this.resetForm();
       this.llenarFormDisabled(item);
     }
   }
@@ -391,6 +398,7 @@ export class ProductosComponent implements OnInit {
             if (this.deshabilitarBotones){
               this.valorCaracteristica.disable();
               this.mostrarAccordion = false;
+              this.mostrarImagen = false;
             }
 
             if (!res.error){
@@ -430,6 +438,7 @@ export class ProductosComponent implements OnInit {
             if (this.deshabilitarBotones){
               this.mostrarAccordion = false;
               this.valorCaracteristica.disable();
+              this.mostrarImagen = false;
             }
 
             if (!res.error) {
@@ -493,6 +502,8 @@ export class ProductosComponent implements OnInit {
   }
 
   closeModal(){
+    this.filtrar();
+    this.mostrarImagen = false;
     this.resetForm();
     this.mostrarAccordion = false;
     this.mostrarModalCrud = false;
@@ -582,14 +593,18 @@ export class ProductosComponent implements OnInit {
   }
 
   removeSpacesString(value: string, obj: any): void {
-    this.deshabilitarBotones = false;
+    this.deshabilitarFuncionalidadValores = false;
     obj.valor = value.toString().trim();
     if (obj.valor === ''){
-      this.deshabilitarBotones = true;
+      this.deshabilitarFuncionalidadValores = true;
     }
   }
 
   removeSpacesFormControl(formControl: FormControl): void {
     this.valorCaracteristica.setValue(this.valorCaracteristica.value.toString().trim());
+  }
+
+  recibirImagen(value: string){
+    this.imageSrc = value;
   }
 }
