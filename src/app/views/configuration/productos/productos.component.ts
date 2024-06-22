@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {
   AccordionButtonDirective,
   AccordionComponent,
@@ -68,6 +68,7 @@ export class ProductosComponent implements OnInit {
   listaCaracteristicasSeleccionadas: Caracteristicas[];
 
   listaCaracteristicasProducto: ProductosCaracteristicas[];
+  listaCaracteristicasProductoBK: ProductosCaracteristicas[];
   listaCaracteristicasProducto2: ProductosCaracteristicas[];
   form: FormGroup<{ id: any; nombre: any; descripcion: any; precio: any; imagen: any; tipoProducto: any;}>;
   formFiltros: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any;}>;
@@ -91,10 +92,11 @@ export class ProductosComponent implements OnInit {
   itemsRight = [];
 
   public valorCaracteristica: FormControl;
+  public valorCaracteristicaLista: FormControl;
   mostrarAccordion: boolean;
 
   constructor(public service: Services, public  dataUtils: DataUtils,
-              public functionsUtils: FunctionsUtils) {
+              public functionsUtils: FunctionsUtils, public cdr: ChangeDetectorRef) {
     this.listResponse = [];
     this.type = '';
     this.mensaje = '';
@@ -120,6 +122,7 @@ export class ProductosComponent implements OnInit {
 
     this.cargarListas();
     this.valorCaracteristica = new FormControl('');
+    this.valorCaracteristicaLista = new FormControl('', Validators.required);
   }
 
   filtrar(): void {
@@ -252,6 +255,7 @@ export class ProductosComponent implements OnInit {
 
     this.listaCaracteristicas2 = [];
     this.listaCaracteristicasProducto = [];
+    this.listaCaracteristicasProductoBK = [];
     this.listaCaracteristicasProducto2 = [];
     this.listaCaracteristicasSeleccionadas = [];
 
@@ -260,6 +264,7 @@ export class ProductosComponent implements OnInit {
   modal(modo: number, item: any): void {
     this.mostrarAccordion = true;
     this.listaCaracteristicasProducto = [];
+    this.listaCaracteristicasProductoBK = [];
     this.listaCaracteristicasProducto2 = [];
 
     this.listaCaracteristicas2 = this.listaCaracteristicas;
@@ -291,7 +296,14 @@ export class ProductosComponent implements OnInit {
       this.nombreAccion = 'Agregar';
       this.resetForm();
     } else if (this.modo === 2) {
-      this.listaCaracteristicasProducto = item.caracteristicas;
+      this.listaCaracteristicasProductoBK = item.caracteristicas;
+
+      this.listaCaracteristicasSeleccionadas.forEach(x=>{
+        this.listaCaracteristicasProductoBK.filter(a=> a.caracteristica.id === x.id).forEach(a=>{
+          this.listaCaracteristicasProducto.push(a);
+        })
+      });
+
       if (this.listaCaracteristicasProducto && this.listaCaracteristicasProducto.length > 0){
         let id = 1;
         this.listaCaracteristicasProducto2 = [];
@@ -497,6 +509,7 @@ export class ProductosComponent implements OnInit {
   }
 
   moverADerecha() {
+
     const lista = this.listaCaracteristicas2.filter(x => x.seleccionado === true);
     if (lista && lista.length > 0) {
       lista.forEach(x => {
@@ -507,9 +520,12 @@ export class ProductosComponent implements OnInit {
       this.listaCaracteristicasSeleccionadas.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
     }
+    this.filtrarListadoFinalCaracteristicasProducto();
+
   }
 
   moverAIzquierda() {
+
     const lista = this.listaCaracteristicasSeleccionadas.filter(x=> x.seleccionado === true);
     if (lista && lista.length > 0){
       lista.forEach(x => {
@@ -519,6 +535,7 @@ export class ProductosComponent implements OnInit {
       this.listaCaracteristicas2.forEach(x => x.seleccionado = false);
       this.listaCaracteristicas2.sort((a, b) => a.nombre.localeCompare(b.nombre));
     }
+    this.filtrarListadoFinalCaracteristicasProducto();
   }
 
   eliminarCaracteristicaProducto(item: any) {
@@ -536,6 +553,7 @@ export class ProductosComponent implements OnInit {
   }
 
   filtrarCaracteristicasProducto(item: any){
+    this.valorCaracteristica.setValue('');
     this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto.filter(x=> x.caracteristica.id === Number(item.id));
   }
 
@@ -552,5 +570,26 @@ export class ProductosComponent implements OnInit {
      }
    }
     return false;
+  }
+
+  filtrarListadoFinalCaracteristicasProducto(){
+    this.listaCaracteristicasProducto = [];
+    this.listaCaracteristicasSeleccionadas.forEach(x=>{
+      this.listaCaracteristicasProductoBK.filter(a=> a.caracteristica.id === x.id).forEach(a=>{
+        this.listaCaracteristicasProducto.push(a);
+      })
+    });
+  }
+
+  removeSpacesString(value: string, obj: any): void {
+    this.deshabilitarBotones = false;
+    obj.valor = value.toString().trim();
+    if (obj.valor === ''){
+      this.deshabilitarBotones = true;
+    }
+  }
+
+  removeSpacesFormControl(formControl: FormControl): void {
+    this.valorCaracteristica.setValue(this.valorCaracteristica.value.toString().trim());
   }
 }

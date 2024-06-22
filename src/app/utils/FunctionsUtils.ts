@@ -1,5 +1,5 @@
 import {FormGroup} from '@angular/forms';
-import {Injectable} from '@angular/core';
+import {ChangeDetectorRef, Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 
@@ -159,7 +159,13 @@ export class FunctionsUtils {
   }
 
   removeSpacesFormControl(formControl: FormControl): void {
-    formControl.setValue('');
+    formControl.setValue(formControl.value.toString().trim());
+  }
+
+  removeSpacesString(value: string, obj: any, cdr: ChangeDetectorRef): void {
+    obj.valor = value.toString().trim();
+    console.log('value: ', obj.valor);
+    cdr.detectChanges();
   }
 
   mostrarContrasenia(input: string): void {
@@ -197,6 +203,44 @@ export class FunctionsUtils {
         if ((typeof strValue === 'string' && !/^[0-9\s]+$/.test(strValue.trim())) || (typeof strValue === 'number' && isNaN(strValue))) {
           return 3;
         }
+      }
+
+      const pattern = /^\d{1,4}(\.\d{1,2})?$/;
+      if (!pattern.test(value)) {
+        return 4;
+      }
+    }
+
+    return 0;
+  }
+
+  campoRequeridoFormControl(formControl: FormControl): number {
+    const value = formControl.value;
+
+    if (value !== null && value !== undefined) {
+      const strValue = typeof value === 'number' ? value.toString() : value;
+
+      // Campo requerido
+      if (typeof strValue === 'string' && strValue.trim() === "" && formControl.touched) {
+        return 1;
+      }
+
+      // Email inválido
+      if (formControl?.touched && formControl?.hasError('email')) {
+        return 2;
+      }
+
+      // Teléfono inválido
+      if (formControl.touched) {
+        if ((typeof strValue === 'string' && !/^[0-9\s]+$/.test(strValue.trim())) || (typeof strValue === 'number' && isNaN(strValue))) {
+          return 3;
+        }
+      }
+
+      // Validar decimales, 4 enteros y 2 decimales
+      const pattern = /^\d{1,4}(\.\d{1,2})?$/;
+      if (!pattern.test(value)) {
+        return 4;
       }
     }
 
