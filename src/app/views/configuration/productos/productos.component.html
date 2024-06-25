@@ -37,7 +37,7 @@
                 <td>{{item.id}}</td>
                 <td>{{item.nombre}}</td>
                 <td>{{item.descripcion}}</td>
-                <td>{{functionsUtils.formatPrice(item.precio)}}</td>
+                <td>Q{{functionsUtils.formatPrice(item.precio)}}</td>
                 <td>{{item.tipoProducto ? item.tipoProducto.nombre : ''}}</td>
                 <td>
                   <button cButton color="success" variant="outline" size="sm" (click)="modal(3, item)">
