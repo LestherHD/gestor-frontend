@@ -15,7 +15,7 @@ import {
   FormDirective,
   FormFeedbackComponent,
   FormFloatingDirective,
-  FormSelectDirective,
+  FormSelectDirective, INavData,
   InputGroupComponent,
   InputGroupTextDirective,
   ModalBodyComponent,
@@ -46,6 +46,7 @@ import {UsuariosRequestDTO} from '../../dto/UsuariosRequestDTO';
 import {DataUtils} from '../../utils/DataUtils';
 import {UsuariosResponseDTO} from '../../dto/UsuariosResponseDTO';
 import {CustomSpinnerComponent} from '../../views/utils/custom-spinner/custom-spinner.component';
+import {remove} from 'lodash-es';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -106,6 +107,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
   principal: FormControl;
   sucursal: FormControl;
   deshabilitarBotones: Boolean;
+  navItems: INavData[];
 
   // 1 = Seleccionar si el usuario es principal o no
   // 2 = Si no es principal seleccionar sucursal
@@ -153,6 +155,8 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
       value: usuarioJson
     }];
 
+    this.navItems = navItems.filter(x => x.url !== '/configuration');
+
     this.objRequest= {
       usuario: usuarioJson,
       correo: usuarioJson
@@ -164,7 +168,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
 
           if (this.infoUsuario) {
 
-            console.log('usuario: ', this.infoUsuario);
             this.formUsuario = new FormGroup({
               nombres: new FormControl({value: this.infoUsuario.nombreCompleto, disabled: true}, Validators.required),
               usuario: new FormControl({value: this.infoUsuario.nombreUsuario, disabled: true}, Validators.required),
@@ -211,6 +214,10 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
         } else if (!this.existePrincipal && !res.usuario.principal && !res.usuario.sucursal){
           this.showModal = true;
           this.opcion = '1'
+        } else {
+          if (this.usuario && this.usuario.principal == 'Y'){
+            this.navItems = navItems;
+          }
         }
       }
     }).catch(error => {
@@ -228,7 +235,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
     localStorage.removeItem('usuario');
   }
 
-  public navItems = navItems;
+
 
   onScrollbarUpdate($event: any) {
     // if ($event.verticalUsed) {
@@ -327,7 +334,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
           setTimeout(() => {
             // this.spinner = false;
             this.deshabilitarBotones = false;
-            console.log('entra a presionar');
           } , 1000);
 
         }).catch( error => {
