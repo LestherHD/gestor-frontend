@@ -8,6 +8,11 @@ export const routes: Routes = [
     },
     children: [
       {
+        path: '',
+        redirectTo: 'products',
+        pathMatch: 'full'
+      },
+      {
         path: 'branches',
         loadComponent: () => import('./sucursales/sucursales.component').then(m => m.SucursalesComponent),
         data: {
