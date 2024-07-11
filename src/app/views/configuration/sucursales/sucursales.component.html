@@ -106,7 +106,7 @@
               <label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>
               <input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"
                      [maxLength]="70"
-                     [valid]="functionsUtils.campoRequerido(form, 'nombre') == 1 ? false : null"
+                     [valid]="functionsUtils.campoRequerido(form, 'nombre', 'CR') == 1 ? false : null"
                      autoComplete="nombre" formControlName="nombre" cFormControl/>
               <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
             </div>
@@ -117,7 +117,7 @@
               <label class="fw-bold" class="fw-bold" for="descripcion">Descripción {{modo === 1 ? '*' : ''}}</label>
               <textarea id="descripcion" (blur)="functionsUtils.removeSpaces('descripcion', form)"
                      [maxLength]="160"
-                     [valid]="functionsUtils.campoRequerido(form, 'descripcion') == 1 ? false : null"
+                     [valid]="functionsUtils.campoRequerido(form, 'descripcion', 'CR') == 1 ? false : null"
                         autoComplete="descripcion" formControlName="descripcion" cFormControl></textarea>
               <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
             </div>

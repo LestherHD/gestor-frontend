@@ -108,7 +108,7 @@
               <label class="fw-bold" for="nombre">Nombre {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"
                      [maxLength]="100"
-                     [valid]="functionsUtils.campoRequerido(form, 'nombre') == 1 ? false : null"
+                     [valid]="functionsUtils.campoRequerido(form, 'nombre', 'CR') == 1 ? false : null"
                      autoComplete="nombre" formControlName="nombre" cFormControl/>
               <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
             </div>
@@ -119,7 +119,7 @@
               <label class="fw-bold" for="descripcion">Descripción {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <textarea id="descripcion" (blur)="functionsUtils.removeSpaces('descripcion', form)"
                      [maxLength]="300"
-                     [valid]="functionsUtils.campoRequerido(form, 'descripcion') == 1 ? false : null"
+                     [valid]="functionsUtils.campoRequerido(form, 'descripcion', 'CR') == 1 ? false : null"
                         autoComplete="descripcion" formControlName="descripcion" cFormControl></textarea>
               <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
             </div>
@@ -130,10 +130,10 @@
               <label class="fw-bold" for="precio">Precio {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <input id="precio" (blur)="functionsUtils.removeSpaces('precio', form)"
                      [maxLength]="7"
-                     [valid]="functionsUtils.campoRequerido(form, 'precio') == 1 || functionsUtils.campoRequerido(form, 'precio') == 4 ? false : null"
+                     [valid]="functionsUtils.campoRequerido(form, 'precio', 'CR') == 1 || functionsUtils.campoRequerido(form, 'precio', 'DI') == 4 ? false : null"
                      autoComplete="precio" formControlName="precio" cFormControl/>
-              <c-form-feedback *ngIf="functionsUtils.campoRequerido(form, 'precio') == 1" [valid]="false">Campo requerido.</c-form-feedback>
-              <c-form-feedback *ngIf="functionsUtils.campoRequerido(form, 'precio') == 4" [valid]="false">Solo se permiten valores numéricos, máximo 4 enteros y 2 decimales</c-form-feedback>
+              <c-form-feedback *ngIf="functionsUtils.getValueMap('precio') == 1" [valid]="false">Campo requerido.</c-form-feedback>
+              <c-form-feedback *ngIf="functionsUtils.getValueMap('precio') == 4" [valid]="false">Solo se permiten valores numéricos, máximo 4 enteros y 2 decimales</c-form-feedback>
             </div>
           </c-input-group>
           <c-input-group class="mb-2">

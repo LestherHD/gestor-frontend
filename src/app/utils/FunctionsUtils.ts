@@ -9,9 +9,18 @@ import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 export class FunctionsUtils {
 
   time: any;
+  map: { [key: string]: number } = {};
 
   constructor() {
     this.time = '';
+  }
+
+  setValueMap(key: string, value: number): void {
+    this.map[key] = value;
+  }
+
+  getValueMap(key: string): number {
+    return this.map[key];
   }
 
   validarControlsRequeridos(form: FormGroup): boolean {
@@ -182,35 +191,40 @@ export class FunctionsUtils {
     router.navigateByUrl(opcion);
   }
 
-  campoRequerido(form: FormGroup, name: string): number {
+  campoRequerido(form: FormGroup, name: string, tipo: string): number {
+    console.log('entra: ', name);
     const value = form.controls[name].value;
 
     if (value !== null && value !== undefined) {
       const strValue = typeof value === 'number' ? value.toString() : value;
 
       // Campo requerido
-      if (typeof strValue === 'string' && strValue.trim() === "" && form.controls[name].touched) {
+      if (typeof strValue === 'string' && strValue.trim() === "" && form.controls[name].touched && tipo === 'CR') {
+        this.setValueMap(name, 1);
         return 1;
       }
 
       // Email inválido
-      if (form.controls[name]?.touched && form.controls[name]?.hasError('email')) {
+      if (form.controls[name]?.touched && form.controls[name]?.hasError('email') && tipo === 'EI') {
+        this.setValueMap(name, 2);
         return 2;
       }
 
       // Teléfono inválido
-      if (form.controls[name].touched) {
+      if (form.controls[name].touched && tipo === 'TI') {
         if ((typeof strValue === 'string' && !/^[0-9\s]+$/.test(strValue.trim())) || (typeof strValue === 'number' && isNaN(strValue))) {
+          this.setValueMap(name, 3);
           return 3;
         }
       }
 
+      // Decimal inválido
       const pattern = /^\d{1,4}(\.\d{1,2})?$/;
-      if (!pattern.test(value)) {
+      if (!pattern.test(value) && tipo === 'DI') {
+        this.setValueMap(name, 4);
         return 4;
       }
     }
-
     return 0;
   }
 

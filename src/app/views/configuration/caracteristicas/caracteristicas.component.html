@@ -100,7 +100,7 @@
               <label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>
               <input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"
                      [maxLength]="50"
-                     [valid]="functionsUtils.campoRequerido(form, 'nombre') == 1 ? false : null"
+                     [valid]="functionsUtils.campoRequerido(form, 'nombre', 'CR') == 1 ? false : null"
                      autoComplete="nombre" formControlName="nombre" cFormControl/>
               <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
             </div>
