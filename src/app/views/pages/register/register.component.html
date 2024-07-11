@@ -12,7 +12,7 @@
               <!--Nombres-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="nombres" (blur)="functionsUtils.removeSpaces('nombres', form)" [valid]="(campoRequerido(form, 'nombres') == 1 ? false : null)" autoComplete="name" [maxLength]="70" cFormControl placeholder="Nombres" formControlName="nombres" />
+                  <input id="nombres" (blur)="functionsUtils.removeSpaces('nombres', form)" [valid]="(functionsUtils.campoRequerido(form, 'nombres', 'CR') == 1 ? false : null)" autoComplete="name" [maxLength]="70" cFormControl placeholder="Nombres" formControlName="nombres" />
                   <label cLabel for="nombres">Nombres</label>
                   <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
                 </div>
@@ -20,7 +20,7 @@
               <!--Apellidos-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="apellidos" (blur)="functionsUtils.removeSpaces('apellidos', form)" [valid]="campoRequerido(form, 'apellidos') == 1 ? false : null" autoComplete="name" [maxLength]="60" cFormControl placeholder="Apellidos" formControlName="apellidos" />
+                  <input id="apellidos" (blur)="functionsUtils.removeSpaces('apellidos', form)" [valid]="functionsUtils.campoRequerido(form, 'apellidos', 'CR') == 1 ? false : null" autoComplete="name" [maxLength]="60" cFormControl placeholder="Apellidos" formControlName="apellidos" />
                   <label cLabel for="apellidos">Apellidos</label>
                   <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
                 </div>
@@ -28,27 +28,27 @@
               <!--Telefono-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="telefono" (blur)="functionsUtils.removeSpaces('telefono', form)" [valid]="campoRequerido(form, 'telefono') == 1 ? false :
-                 campoRequerido(form, 'telefono') == 3 ? false : null" autoComplete="telefono" [maxLength]="8" cFormControl placeholder="Teléfono" formControlName="telefono"/>
+                  <input id="telefono" (blur)="functionsUtils.removeSpaces('telefono', form)" [valid]="functionsUtils.campoRequerido(form, 'telefono', 'CR') == 1 ? false :
+                 functionsUtils.campoRequerido(form, 'telefono', 'TI') == 3 ? false : null" autoComplete="telefono" [maxLength]="8" cFormControl placeholder="Teléfono" formControlName="telefono"/>
                   <label cLabel for="telefono">Teléfono</label>
-                  <c-form-feedback *ngIf="campoRequerido(form, 'telefono') == 1" [valid]="false">Campo requerido.</c-form-feedback>
-                  <c-form-feedback *ngIf="campoRequerido(form, 'telefono') == 3" [valid]="false">Solo se permiten valores numéricos del 0 al 9 con longitud máxima de 8 carácteres</c-form-feedback>
+                  <c-form-feedback *ngIf="functionsUtils.getValueMap('telefono') == 1" [valid]="false">Campo requerido.</c-form-feedback>
+                  <c-form-feedback *ngIf="functionsUtils.getValueMap('telefono') == 3" [valid]="false">Solo se permiten valores numéricos del 0 al 9 con longitud máxima de 8 carácteres</c-form-feedback>
                 </div>
               </c-input-group>
               <!--Correo-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="correo" (blur)="functionsUtils.removeSpaces('correo', form)" [valid]="campoRequerido(form, 'correo') == 1 ? false :
-                 campoRequerido(form, 'correo') == 2 ? false : null" autoComplete="email" [maxLength]="60" type="email" cFormControl placeholder="Correo electrónico" formControlName="correo" />
+                  <input id="correo" (blur)="functionsUtils.removeSpaces('correo', form)" [valid]="functionsUtils.campoRequerido(form, 'correo', 'CR') == 1 ? false :
+                 functionsUtils.campoRequerido(form, 'correo', 'TI') == 2 ? false : null" autoComplete="email" [maxLength]="60" type="email" cFormControl placeholder="Correo electrónico" formControlName="correo" />
                   <label cLabel for="correo">Correo</label>
-                  <c-form-feedback *ngIf="campoRequerido(form, 'correo') === 1" [valid]="false">Campo requerido.</c-form-feedback>
-                  <c-form-feedback *ngIf="campoRequerido(form, 'correo') === 2" [valid]="false">Correo inválido.</c-form-feedback>
+                  <c-form-feedback *ngIf="functionsUtils.getValueMap('correo') === 1" [valid]="false">Campo requerido.</c-form-feedback>
+                  <c-form-feedback *ngIf="functionsUtils.getValueMap('correo') === 2" [valid]="false">Correo inválido.</c-form-feedback>
                 </div>
               </c-input-group>
               <!--Usuario-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="usuario" (blur)="functionsUtils.removeSpaces('usuario', form)" [valid]="campoRequerido(form, 'usuario') == 1 ? false : null" autoComplete="name" [maxLength]="25" cFormControl placeholder="Usuario" formControlName="usuario" />
+                  <input id="usuario" (blur)="functionsUtils.removeSpaces('usuario', form)" [valid]="functionsUtils.campoRequerido(form, 'usuario', 'CR') == 1 ? false : null" autoComplete="name" [maxLength]="25" cFormControl placeholder="Usuario" formControlName="usuario" />
                   <label cLabel for="usuario">Usuario</label>
                   <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
                 </div>
@@ -56,7 +56,7 @@
               <!--Contrasenña-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="contrasenia" (blur)="functionsUtils.removeSpaces('contrasenia', form)" [valid]="campoRequerido(form, 'contrasenia') == 1 ? false : null" autoComplete="new-password" (keyup)="validarRepetirContrasenia($event)" [maxLength]="35" cFormControl placeholder="Contraseña" type="password"  formControlName="contrasenia"/>
+                  <input id="contrasenia" (blur)="functionsUtils.removeSpaces('contrasenia', form)" [valid]="functionsUtils.campoRequerido(form, 'contrasenia', 'CR') == 1 ? false : null" autoComplete="new-password" (keyup)="validarRepetirContrasenia($event)" [maxLength]="35" cFormControl placeholder="Contraseña" type="password"  formControlName="contrasenia"/>
                   <label cLabel for="contrasenia">Contraseña</label>
                   <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
                 </div>
@@ -64,7 +64,7 @@
               <!--Confirmar contraseña-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
-                  <input id="confirmarContrasenia" (blur)="functionsUtils.removeSpaces('confirmarContrasenia', form)" [valid]="campoRequerido(form, 'confirmarContrasenia') == 1 ? false : null" autoComplete="new-password" (keyup)="validarRepetirContrasenia($event)" [maxLength]="35" cFormControl placeholder="Confirmar contraseña" type="password"
+                  <input id="confirmarContrasenia" (blur)="functionsUtils.removeSpaces('confirmarContrasenia', form)" [valid]="functionsUtils.campoRequerido(form, 'confirmarContrasenia', 'CR') == 1 ? false : null" autoComplete="new-password" (keyup)="validarRepetirContrasenia($event)" [maxLength]="35" cFormControl placeholder="Confirmar contraseña" type="password"
                          formControlName="confirmarContrasenia"/>
                   <label cLabel for="confirmarContrasenia">Confirmar contraseña</label>
                   <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>

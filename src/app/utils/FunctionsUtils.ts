@@ -212,7 +212,7 @@ export class FunctionsUtils {
 
       // Teléfono inválido
       if (form.controls[name].touched && tipo === 'TI') {
-        if ((typeof strValue === 'string' && !/^[0-9\s]+$/.test(strValue.trim())) || (typeof strValue === 'number' && isNaN(strValue))) {
+        if((!/^[0-9\s]+$/.test(form.controls[name].value.trim())) || form.controls[name].value.length < 8){
           this.setValueMap(name, 3);
           return 3;
         }

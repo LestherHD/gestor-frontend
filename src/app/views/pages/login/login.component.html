@@ -13,7 +13,7 @@
                   <div [cFormFloating]="true">
                     <input id="usuario" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('usuario', loginForm)"
                            [maxLength]="25"
-                           [valid]="campoRequerido(loginForm, 'usuario') == 1 ? false : null" autoComplete="username" formControlName="usuario" cFormControl placeholder="Usuario o correo" />
+                           [valid]="functionsUtils.campoRequerido(loginForm, 'usuario', 'CR') == 1 ? false : null" autoComplete="username" formControlName="usuario" cFormControl placeholder="Usuario o correo" />
                     <label cLabel for="usuario">Usuario</label>
                     <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
                   </div>
@@ -21,7 +21,7 @@
                 <c-input-group class="mb-2">
                   <div [cFormFloating]="true">
                     <input [maxLength]="35"
-                      id="contrasenia" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('contrasenia', loginForm)" [valid]="campoRequerido(loginForm, 'contrasenia') == 1 ? false : null"
+                      id="contrasenia" (keyup.enter)="login()" (blur)="functionsUtils.removeSpaces('contrasenia', loginForm)" [valid]="functionsUtils.campoRequerido(loginForm, 'contrasenia', 'CR') == 1 ? false : null"
                            autoComplete="current-password"
                            cFormControl
                            formControlName="contrasenia"
