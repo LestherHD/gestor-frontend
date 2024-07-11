@@ -29,6 +29,7 @@
                 <th scope="col">Descripción</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Tipo de producto</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
               </tr>
               </thead>
@@ -39,14 +40,15 @@
                 <td>{{item.descripcion}}</td>
                 <td>Q{{functionsUtils.formatPrice(item.precio)}}</td>
                 <td>{{item.tipoProducto ? item.tipoProducto.nombre : ''}}</td>
+                <td>{{item.estado === 'A' ? 'Activo' : 'Inactivo'}}</td>
                 <td>
                   <button cButton color="success" variant="outline" size="sm" (click)="modal(3, item)">
                     <svg cIcon name="cilZoom"></svg>
                   </button>
-                  <button cButton color="info" variant="outline" size="sm" (click)="modal(2, item)">
+                  <button cButton color="info" variant="outline" size="sm" (click)="modal(2, item)" *ngIf="item.estado === 'A'">
                     <svg cIcon name="cilPencil"></svg>
                   </button>
-                  <button cButton color="danger" variant="outline" size="sm" (click)="modalEliminar(item)">
+                  <button cButton color="danger" variant="outline" size="sm" (click)="modalEliminar(item)" *ngIf="item.estado === 'A'">
                     <svg cIcon name="cilTrash"></svg>
                   </button>
 

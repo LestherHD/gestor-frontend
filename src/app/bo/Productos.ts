@@ -8,6 +8,7 @@ export class Productos {
   imagen: any;
   tipoProducto: TipoProducto;
   caracteristicas: any;
+  estado: string;
 
   //Se usarán para filtros únicamente
   rangoPrecioInicio: number;
@@ -17,7 +18,8 @@ export class Productos {
   imageSrc: string;
 
   constructor(id: number, nombre: string, descripcion: string, precio: number, imagen: any,
-              tipoProducto: TipoProducto, rangoPrecioInicio: number, rangoPrecioFin: number, caracteristicas: any) {
+              tipoProducto: TipoProducto, rangoPrecioInicio: number, rangoPrecioFin: number, caracteristicas: any,
+              estado) {
     this.id = id;
     this.nombre = nombre;
     this.descripcion = descripcion;
@@ -26,6 +28,7 @@ export class Productos {
     this.tipoProducto = tipoProducto;
     this.rangoPrecioInicio = rangoPrecioInicio;
     this.rangoPrecioFin = rangoPrecioFin;
-    this.caracteristicas = caracteristicas
+    this.caracteristicas = caracteristicas;
+    this.estado = estado;
   }
 }

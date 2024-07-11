@@ -173,7 +173,7 @@ export class ProductosComponent implements OnInit {
     const request = new ProductosRequestDTO(new Productos(idValue, nombreValue, '', 0, null,
       tipoProducto === '' ? null : (this.listaTipoProducto ? this.listaTipoProducto.find(x => x.id === Number(tipoProducto)) : null),
       precioInicio === '' || precioInicio === null ? null : Number(precioInicio),
-      precioFin === '' || precioFin === null ? null : Number(precioFin), null), pageValue, sizeValue);
+      precioFin === '' || precioFin === null ? null : Number(precioFin), null, null), pageValue, sizeValue);
 
     this.service.mostrarSpinner = true;
     this.service.getFromEntityByPage('productos', request).subscribe( res => {
@@ -234,7 +234,7 @@ export class ProductosComponent implements OnInit {
       form.controls.nombre.value, form.controls.descripcion.value.toString().trim(), form.controls.precio.value,
       form.controls.imagen.value,
       this.listaTipoProducto ? this.listaTipoProducto.find(x => x.id === Number(form.controls.tipoProducto.value.toString().trim())) : null,
-      0, 0, null);
+      0, 0, null, 'A');
     obj.caracteristicas = this.listaCaracteristicasProducto;
     obj.imageSrc = this.imageSrc;
     return obj;
