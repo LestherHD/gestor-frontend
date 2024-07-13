@@ -235,8 +235,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
     localStorage.removeItem('usuario');
   }
 
-
-
   onScrollbarUpdate($event: any) {
     // if ($event.verticalUsed) {
     // console.log('verticalUsed', $event.verticalUsed);
@@ -370,7 +368,9 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
 
     this.service.getAllItemsFromEntity('sucursales').subscribe((res: Sucursales[]) =>{
       this.listaSucursales = res;
-      this.sucursal.setValue(this.listaSucursales[0].id);
+      if (this.listaSucursales && this.listaSucursales.length > 0){
+        this.sucursal.setValue(this.listaSucursales[0].id);
+      }
     }, error => {
       console.error(error);
     });

@@ -39,7 +39,7 @@
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
                   <input id="correo" (blur)="functionsUtils.removeSpaces('correo', form)" [valid]="functionsUtils.campoRequerido(form, 'correo', 'CR') == 1 ? false :
-                 functionsUtils.campoRequerido(form, 'correo', 'TI') == 2 ? false : null" autoComplete="email" [maxLength]="60" type="email" cFormControl placeholder="Correo electrónico" formControlName="correo" />
+                 functionsUtils.campoRequerido(form, 'correo', 'EI') == 2 ? false : null" autoComplete="email" [maxLength]="60" type="email" cFormControl placeholder="Correo electrónico" formControlName="correo" />
                   <label cLabel for="correo">Correo</label>
                   <c-form-feedback *ngIf="functionsUtils.getValueMap('correo') === 1" [valid]="false">Campo requerido.</c-form-feedback>
                   <c-form-feedback *ngIf="functionsUtils.getValueMap('correo') === 2" [valid]="false">Correo inválido.</c-form-feedback>

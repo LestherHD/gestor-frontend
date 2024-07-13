@@ -16,7 +16,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/dashboard-pedidos/routes').then((m) => m.routes)
       },
       {
         path: 'theme',
