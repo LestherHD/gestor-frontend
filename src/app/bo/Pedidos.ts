@@ -12,12 +12,13 @@ export class Pedidos {
   metodoPago: string;
   detallePedido: DetallePedido[];
   total: number;
+  fecha: Date;
 
 
   constructor(id: number, estado: string, nombres: string,
               apellidos: string, telefono: string,
               departamento: string, sucursal: Sucursales, metodoPago: string,
-              detallePedido: DetallePedido[], total: number) {
+              detallePedido: DetallePedido[], total: number, fecha: Date) {
     this.id = id;
     this.estado = estado;
     this.nombres = nombres;
@@ -28,5 +29,6 @@ export class Pedidos {
     this.metodoPago = metodoPago;
     this.detallePedido = detallePedido;
     this.total = total;
+    this.fecha = fecha;
   }
 }

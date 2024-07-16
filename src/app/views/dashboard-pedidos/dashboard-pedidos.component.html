@@ -1,17 +1,16 @@
-<div class="d-flex justify-content-center">
-  <c-button-group aria-label="Basic outlined example" role="group">
-    <button cButton color="primary" (click)="cambiarEstado('N')" [active]="estado.value === 'N'" variant="outline">
+<div class="d-flex justify-content-center grupo-botones">
+  <c-button-group aria-label="Basic outlined example" role="group" class="d-flex w-100">
+    <button cButton (click)="cambiarEstado('N')" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
       Nuevos
     </button>
-    <button cButton color="primary" (click)="cambiarEstado('P')" [active]="estado.value === 'P'" variant="outline">
+    <button cButton (click)="cambiarEstado('P')" [ngClass]="{'button-active': estado.value === 'P', 'button-inactive': estado.value !== 'P'}" class="flex-fill no-border">
       En proceso
     </button>
-    <button cButton color="primary" (click)="cambiarEstado('E')" [active]="estado.value === 'E'" variant="outline">
+    <button cButton (click)="cambiarEstado('E')" [ngClass]="{'button-active': estado.value === 'E', 'button-inactive': estado.value !== 'E'}" class="flex-fill no-border">
       Entregados
     </button>
   </c-button-group>
 </div>
-
 
 <div class="d-flex justify-content-center flex-column align-items-center">
   <c-card class="my-5 ancho-personalizado" *ngIf="listResponse && listResponse.length">
@@ -19,11 +18,29 @@
       <c-card class="card-item" *ngFor="let obj of listResponse" >
         <div (click)="viajarADetalle(obj)">
           <div class="justify-content-center d-flex">
-            <span cCardTitle class="fw-bold m-2 card-title-custom">{{obj.nombres}}</span>
+            <span cCardTitle class="fw-bold m-2 card-title-custom">{{obj.nombres + ', ' + obj.apellidos}}</span>
           </div>
           <c-card-body class="card-body-custom text-center">
             <p cCardText>
+              <span class="fw-bold">Departamento</span>
+              {{dataUtils.descripcionPorCodigo(obj.departamento)}}
+              <br>
+              <span class="fw-bold">Sucursal</span>
+              {{obj.sucursal.nombre}}
+              <br>
+              <span class="fw-bold">Fecha</span>
+              {{functionsUtils.formatDateInTimeZone(obj.fecha)}}
+              <br>
+              <br>
+              <span class="fw-bold">Total</span>
+              <br>
+              {{'Q'+functionsUtils.formatPrice(obj.total)}}
             </p>
+            <div class="justify-content-center" style="padding-top: 30px;">
+              <button  cButton color="primary" class="btn-footer no-border w-50" style="margin-bottom: 5px;">Detalle</button>
+              <br>
+              <button  cButton color="primary" class="btn-footer no-border w-50">Cambiar estado</button>
+            </div>
           </c-card-body>
           <br>
         </div>
@@ -41,9 +58,10 @@
   </div>
   <c-card class="my-5 ancho-personalizado" *ngIf="!listResponse || (listResponse && listResponse.length === 0)">
     <c-card-body class="d-flex justify-content-center flex-column align-items-center align-content-center" >
-      <h4 *ngIf="estado">No existen pedidos: {{estado.value === 'N' ? 'Nuevos' :
-                                estado.value === 'P' ? 'En proceso' :
-                                estado.value === 'E' ? 'Entregados' : ''}}</h4>
+      <h4 *ngIf="estado">No existen pedidos:
+        <span class="fw-bold">{{estado.value === 'N' ? 'Nuevos' :
+        estado.value === 'P' ? 'En proceso' :
+          estado.value === 'E' ? 'Entregados' : ''}}</span></h4>
     </c-card-body>
   </c-card>
 </div>

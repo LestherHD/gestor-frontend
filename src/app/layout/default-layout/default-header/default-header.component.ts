@@ -36,6 +36,7 @@ import {Services} from '../../../services/Services';
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
+  styleUrls: ['./default-header.component.scss'],
   standalone: true,
   imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent,
     NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent,

@@ -20,6 +20,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {Usuarios} from '../../bo/Usuarios';
 import {UrlField} from '../../bo/UrlField';
+import {DataUtils} from '../../utils/DataUtils';
 
 @Component({
   selector: 'app-dashboard-pedidos',
@@ -32,7 +33,7 @@ import {UrlField} from '../../bo/UrlField';
 export class DashboardPedidosComponent {
 
   usuario: Usuarios;
-  estadoSeleccionado: string = ''
+  estadoSeleccionado: string = '';
 
   listResponse: Pedidos[];
   pagination: NgbPagination;
@@ -44,7 +45,7 @@ export class DashboardPedidosComponent {
 
 
   constructor(private service: Services, public functionsUtils: FunctionsUtils, private router: Router,
-              private titleService: Title) {
+              private titleService: Title, public dataUtils: DataUtils) {
     this.pagination = new NgbPagination();
     this.pagination.page = 0;
     this.pagination.pageSize = 30;
@@ -97,10 +98,6 @@ export class DashboardPedidosComponent {
 
   }
 
-  filtrar(): void {
-    this.getValuesByPage(Number(this.sucursalId.value), this.estado.value, 0, this.pagination.pageSize);
-  }
-
   changePage(event: any): void {
     this.pagination.page = event;
     this.getValuesByPage(Number(this.sucursalId.value.value), this.estado.value, this.pagination.page, this.pagination.pageSize);
@@ -116,9 +113,11 @@ export class DashboardPedidosComponent {
 
     }
 
+    console.log('sucursal: ', sucursal);
+
     this.pagination.page = pageValue + 1;
     const request = new PedidosRequestDTO(new Pedidos(null, estado, null, null, null,
-      null,sucursal, null, null, null), null, null,  pageValue, sizeValue);
+      null,sucursal, null, null, null, null), null, null,  pageValue, sizeValue);
 
     this.service.mostrarSpinner = true;
     this.service.getFromEntityByPage('pedidos', request).subscribe( res => {
@@ -144,5 +143,7 @@ export class DashboardPedidosComponent {
   cambiarEstado(estado: string) {
     this.estadoSeleccionado = estado;
     this.estado.setValue(estado);
+    this.pagination.page = 0;
+    this.getValuesByPage(Number(this.sucursalId.value.value), this.estado.value, this.pagination.page, this.pagination.pageSize);
   }
 }

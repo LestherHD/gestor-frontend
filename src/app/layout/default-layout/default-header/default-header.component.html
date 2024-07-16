@@ -1,15 +1,19 @@
 <!--<c-header class="mb-4 d-print-none" position="sticky">-->
 <ng-container>
-  <c-container [fluid]="true" class="border-bottom px-4">
+  <c-container [fluid]="true" class="border-bottom px-4" style="background-color: rgb(0, 179, 186)">
     <button
       [cSidebarToggle]="sidebarId"
       cHeaderToggler
-      class="btn"
+      class="btn text-white"
       toggle="visible"
       style="margin-inline-start: -14px;"
     >
       <svg cIcon name="cilMenu" size="lg"></svg>
     </button>
+
+    <div class="logo">
+      <img src="/assets/images/logo-blanco.png" class="logo-img">
+    </div>
 
     <!--<c-header-nav class="d-none d-md-flex ms-auto ">-->
       <!--<a cNavLink>-->
@@ -44,13 +48,13 @@
 <ng-template #userDropdown>
   <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
     <button [caret]="false" cDropdownToggle class="py-0 pe-0">
-      <c-avatar
-        shape="rounded-1"
-        [size]="'md'"
-        src="./assets/images/avatars/8.jpg"
-        status="success"
-        textColor="primary"
-      />
+      <svg width="5vw" height="5vh" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="white">
+        <circle opacity="0.8" cx="12" cy="9" r="3" stroke="white" stroke-width="1.5"/>
+        <circle opacity="0.8" cx="12" cy="12" r="10" stroke="white" stroke-width="1.5"/>
+        <path opacity="0.8" d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+
+
     </button>
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>

@@ -36,3 +36,19 @@
   width: 90%;
   text-align: center;
 }
+
+c-sidebar-header {
+  justify-content: center; /* Centra horizontalmente */
+  width: 100%; /* Asegúrate de que el contenedor tenga altura suficiente */
+}
+
+.icono img{
+  width: auto;
+  height: auto;
+  max-width: 10vw;
+  max-height: 10vh;
+  display: flex;
+  border-radius: 50px;
+  justify-content: center;
+  align-items: center;
+}

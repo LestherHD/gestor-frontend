@@ -276,6 +276,43 @@ export class FunctionsUtils {
     return price.toFixed(2);
   }
 
+    parseDateString(dateString: Date): Date {
+    // Separar la fecha y la hora
+    const [datePart, timePart] = dateString.toString().split(' ');
+
+    // Separar el día, mes y año
+    const [day, month, year] = datePart.split('/').map(Number);
+
+    // Separar las horas, minutos y segundos
+    const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+    // Crear un objeto Date con la fecha y hora especificada
+    // Los meses en JavaScript son base 0 (enero es 0, febrero es 1, etc.)
+    return new Date(year, month - 1, day, hours, minutes, seconds);
+  }
+
+  formatDateInTimeZone(date: Date): string {
+    const utcDate = new Date(date.toString());
+
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: 'America/Guatemala',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+
+    const formattedDate = new Intl.DateTimeFormat('es-GT', options).format(utcDate);
+
+    return formattedDate;
+  }
+
+
+  // const zonedDate = utcToZonedTime(date, guatemalaTimeZone);
+
 
 
 }

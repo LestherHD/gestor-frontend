@@ -1,33 +1,16 @@
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+  color: rgb(0, 179, 186, 0.9) !important;
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+  background-color: rgb(0, 179, 186, 0.9) !important;
+  border-color: rgb(0, 179, 186, 0.5) !important;;
+}
+
 .listas:hover {
   cursor: pointer; /* Cambia el cursor a una mano al pasar el mouse sobre un <li> */
 }
-
-//.listas {
-//  display: inline-block;
-//  white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
-//  overflow: hidden; /* Ocultar el texto que se desborda */
-//  text-overflow: ellipsis; /* Mostrar puntos suspensivos (...) cuando el texto se desborda */
-//}
-//
-///* Estilos para el tooltip */
-//.listas:hover {
-//  position: relative;
-//  overflow: visible;
-//}
-
-//.listas:hover::before {
-//  content: attr(data-tooltip); /* Mostrar el texto completo como tooltip */
-//  position: absolute;
-//  top: 100%;
-//  left: 50%;
-//  transform: translateX(-50%);
-//  background-color: rgba(0, 0, 0, 0.8);
-//  color: white;
-//  padding: 5px 10px;
-//  border-radius: 5px;
-//  white-space: normal;
-//  z-index: 9999;
-//}
 
 
 .contenedor-con-fondo {
