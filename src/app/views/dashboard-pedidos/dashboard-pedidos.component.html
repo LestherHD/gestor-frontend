@@ -13,12 +13,17 @@
 </div>
 
 <div class="d-flex justify-content-center flex-column align-items-center">
-  <c-card class="my-5 ancho-personalizado" *ngIf="listResponse && listResponse.length">
-    <c-card-body class="card-container" >
-      <c-card class="card-item" *ngFor="let obj of listResponse" >
+    <c-card-body class="card-container ancho-personalizado my-5" >
+      <c-card class="card-item" *ngFor="let obj of listResponse" style="color: white;"
+              [ngClass]="{
+                'blue': obj.estado === 'N',
+                'yellow': obj.estado === 'P',
+                'green': obj.estado === 'E'
+              }"
+      >
         <div (click)="viajarADetalle(obj)">
-          <div class="justify-content-center d-flex">
-            <span cCardTitle class="fw-bold m-2 card-title-custom">{{obj.nombres + ', ' + obj.apellidos}}</span>
+          <div class="d-flex">
+            <h4 class="fw-bold m-2">{{obj.nombres + ', ' + obj.apellidos}}</h4>
           </div>
           <c-card-body class="card-body-custom text-center">
             <p cCardText>
@@ -37,16 +42,15 @@
               {{'Q'+functionsUtils.formatPrice(obj.total)}}
             </p>
             <div class="justify-content-center" style="padding-top: 30px;">
-              <button  cButton color="primary" class="btn-footer no-border w-50" style="margin-bottom: 5px;">Detalle</button>
+              <button  cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;">Detalle</button>
               <br>
-              <button  cButton color="primary" class="btn-footer no-border w-50">Cambiar estado</button>
+              <button  cButton color="primary" class="btn-footer no-border w-75">Cambiar estado</button>
             </div>
           </c-card-body>
           <br>
         </div>
       </c-card>
     </c-card-body>
-  </c-card>
   <div class="d-flex justify-content-center" *ngIf="listResponse && listResponse.length">
     <div class="col-auto">
       <ngb-pagination [(page)]="pagination.page"

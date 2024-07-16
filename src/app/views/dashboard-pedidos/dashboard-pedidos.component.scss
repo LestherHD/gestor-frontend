@@ -4,6 +4,20 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Valor por defecto */
 }
 
+.blue {
+  background-color: rgba(0, 41, 153, 0.65);
+}
+
+
+.green {
+  background-color: rgba(0, 128, 0, 0.72);
+}
+
+.yellow {
+  background-color: rgb(249, 177, 21, 0.8);
+}
+
+
 
 .card-item{
   border-color: rgba(0, 0, 0, 0.1);
@@ -59,8 +73,9 @@
 }
 
 .btn-footer{
-  font-size: 12px;
-  background-color: rgb(0, 179, 186, 0.9);
+  font-size: 14px;
+  height: 50px;
+  background-color: rgb(255, 255, 255, 0.3);
 }
 
 ngb-pagination ::ng-deep ul > li:not(.active) > a {
