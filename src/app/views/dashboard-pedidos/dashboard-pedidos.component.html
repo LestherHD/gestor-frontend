@@ -102,18 +102,18 @@
         <table [striped]="true" cTable>
           <thead>
           <tr>
-            <th scope="col">Descripción</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Precio</th>
-            <th scope="col">Total</th>
+            <th scope="col" class="text-start mx-2">Descripción</th>
+            <th scope="col" class="text-start mx-2">Cantidad</th>
+            <th scope="col" class="text-start mx-2">Precio</th>
+            <th scope="col" class="text-start mx-2">Total</th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let item of listDetallePedido | paginate: { itemsPerPage: paginationDetail.pageSize, currentPage: paginationDetail.page }">
             <td class="text-start mx-2" [innerHTML]="item.descripcion"></td>
-            <td>{{item.cantidad}}</td>
-            <td>Q{{functionsUtils.formatPrice(item.precio)}}</td>
-            <td>Q{{functionsUtils.formatPrice(item.precio * item.cantidad)}}</td>
+            <td class="text-start mx-2">{{item.cantidad}}</td>
+            <td class="text-start mx-2">Q{{functionsUtils.formatPrice(item.precio)}}</td>
+            <td class="text-start mx-2">Q{{functionsUtils.formatPrice(item.precio * item.cantidad)}}</td>
           </tr>
           </tbody>
         </table>
