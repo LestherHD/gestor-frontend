@@ -132,14 +132,6 @@ export class DashboardPedidosComponent {
     });
   }
 
-  viajarADetalle(obj: Pedidos) {
-    this.service.mostrarSpinner = true;
-    let navigationExtras: NavigationExtras = {
-      queryParams: { idPedido: obj.id}
-    };
-    this.functionsUtils.navigateOptionWithNavigationExtras(this.router, 'product-detail', navigationExtras);
-  }
-
   cambiarEstado(estado: string) {
     this.estadoSeleccionado = estado;
     this.estado.setValue(estado);

@@ -21,32 +21,36 @@
                 'green': obj.estado === 'E'
               }"
       >
-        <div (click)="viajarADetalle(obj)">
+        <div>
           <div class="d-flex">
             <h4 class="fw-bold m-2">{{obj.nombres + ', ' + obj.apellidos}}</h4>
           </div>
           <c-card-body class="card-body-custom text-center">
-            <p cCardText>
-              <span class="fw-bold">Departamento</span>
-              {{dataUtils.descripcionPorCodigo(obj.departamento)}}
-              <br>
-              <span class="fw-bold">Sucursal</span>
-              {{obj.sucursal.nombre}}
-              <br>
-              <span class="fw-bold">Fecha</span>
-              {{functionsUtils.formatDateInTimeZone(obj.fecha)}}
-              <br>
-              <br>
-              <span class="fw-bold">Total</span>
-              <br>
-              {{'Q'+functionsUtils.formatPrice(obj.total)}}
-            </p>
+            <div class="credits-container">
+              <div class="credits-item">
+                <span class="fw-bold">Departamento:</span>
+                <span>{{dataUtils.descripcionPorCodigo(obj.departamento)}}</span>
+              </div>
+              <div class="credits-item">
+                <span class="fw-bold">Sucursal:</span>
+                <span>{{obj.sucursal.nombre}}</span>
+              </div>
+              <div class="credits-item">
+                <span class="fw-bold">Fecha:</span>
+                <span>{{functionsUtils.formatDateInTimeZone(obj.fecha)}}</span>
+              </div>
+              <div class="credits-item">
+                <span class="fw-bold">Total:</span>
+                <span>{{'Q' + functionsUtils.formatPrice(obj.total)}}</span>
+              </div>
+            </div>
             <div class="justify-content-center" style="padding-top: 30px;">
-              <button  cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;">Detalle</button>
+              <button cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;">Detalle</button>
               <br>
-              <button  cButton color="primary" class="btn-footer no-border w-75">Cambiar estado</button>
+              <button cButton color="primary" class="btn-footer no-border w-75">Cambiar estado</button>
             </div>
           </c-card-body>
+
           <br>
         </div>
       </c-card>

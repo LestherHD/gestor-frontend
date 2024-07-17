@@ -36,6 +36,39 @@
   height: 100px;
 }
 
+.credits-container {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.credits-item {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.credits-item span {
+  position: absolute;
+}
+
+.credits-item span:first-child {
+  left: 52%;
+  transform: translateX(-100%);
+  text-align: right;
+  padding-right: 10px;
+}
+
+.credits-item span:last-child {
+  left: 48%;
+  transform: translateX(0);
+  text-align: left;
+  padding-left: 10px;
+}
+
+
 .ancho-personalizado {
   width: 80%;
 }
