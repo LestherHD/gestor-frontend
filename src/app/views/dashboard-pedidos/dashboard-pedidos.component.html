@@ -110,7 +110,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let item of listDetallePedido | paginate: { itemsPerPage: paginationDetail.pageSize, currentPage: paginationDetail.page }">
-            <td>{{item.descripcion}}</td>
+            <td class="text-start mx-2" [innerHTML]="item.descripcion"></td>
             <td>{{item.cantidad}}</td>
             <td>Q{{functionsUtils.formatPrice(item.precio)}}</td>
             <td>Q{{functionsUtils.formatPrice(item.precio * item.cantidad)}}</td>
