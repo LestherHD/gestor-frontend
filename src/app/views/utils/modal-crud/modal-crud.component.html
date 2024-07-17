@@ -1,4 +1,4 @@
-<c-modal [visible]="showModal" backdrop="static" alignment="center">
+<c-modal [visible]="showModal" backdrop="static" alignment="center" class="{{modalSize}}">
   <c-modal-header #staticBackdropModal backdrop="static" id="staticBackdropModal">
     <h5 cModalTitle>{{tittle}}</h5>
     <button [disabled]="disabledOthersButtons" (click)="onClose()" cButtonClose></button>

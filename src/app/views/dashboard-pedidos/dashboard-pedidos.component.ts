@@ -3,7 +3,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Services} from '../../services/Services';
 import {FunctionsUtils} from '../../utils/FunctionsUtils';
-import {NavigationExtras, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {Pedidos} from '../../bo/Pedidos';
 import {PedidosRequestDTO} from '../../dto/PedidosRequestDTO';
@@ -15,18 +15,23 @@ import {
   ButtonGroupModule,
   CardBodyComponent,
   CardComponent,
-  FormDirective
+  FormControlDirective,
+  FormDirective,
+  TableDirective
 } from '@coreui/angular';
 import {CommonModule} from '@angular/common';
 import {Usuarios} from '../../bo/Usuarios';
 import {UrlField} from '../../bo/UrlField';
 import {DataUtils} from '../../utils/DataUtils';
+import {ModalCrudComponent} from '../utils/modal-crud/modal-crud.component';
+import {DetallePedido} from '../../bo/DetallePedido';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-dashboard-pedidos',
   standalone: true,
   imports: [CustomSpinnerComponent, CardBodyComponent, CardComponent, NgbPagination, CommonModule, FormDirective, ReactiveFormsModule,
-  ButtonGroupComponent, ButtonGroupModule, ButtonDirective],
+  ButtonGroupComponent, ButtonGroupModule, ButtonDirective, ModalCrudComponent, FormControlDirective, TableDirective, NgxPaginationModule ],
   templateUrl: './dashboard-pedidos.component.html',
   styleUrl: './dashboard-pedidos.component.scss'
 })
@@ -42,6 +47,12 @@ export class DashboardPedidosComponent {
 
   sucursalId: FormControl;
   estado: FormControl;
+  mostrarModalCrud: boolean;
+
+  listDetallePedido: DetallePedido[];
+  paginationDetail: NgbPagination;
+  nombreAccion: string;
+  pedido: Pedidos;
 
 
   constructor(private service: Services, public functionsUtils: FunctionsUtils, private router: Router,
@@ -51,6 +62,12 @@ export class DashboardPedidosComponent {
     this.pagination.pageSize = 30;
     this.pagination.maxSize = 6;
     this.listaSucursales = [];
+    this.mostrarModalCrud = false;
+
+    this.paginationDetail = new NgbPagination();
+    this.paginationDetail.page = 0;
+    this.paginationDetail.pageSize = 7;
+    this.paginationDetail.maxSize = 6;
   }
 
   async ngOnInit(): Promise<void> {
@@ -137,5 +154,25 @@ export class DashboardPedidosComponent {
     this.estado.setValue(estado);
     this.pagination.page = 0;
     this.getValuesByPage(Number(this.sucursalId.value.value), this.estado.value, this.pagination.page, this.pagination.pageSize);
+  }
+
+  closeModal() {
+    this.nombreAccion = '';
+    this.mostrarModalCrud = false;
+    this.listDetallePedido = [];
+  }
+
+  detallePedido(pedido: Pedidos) {
+    this.pedido = pedido;
+    this.nombreAccion = 'Detalle de pedido';
+    this.mostrarModalCrud = true;
+
+    this.listDetallePedido = pedido.detallePedido;
+    this.paginationDetail.collectionSize = this.listDetallePedido.length;
+  }
+
+  changePageDetail(event: any): void {
+    this.paginationDetail.page = event;
+
   }
 }

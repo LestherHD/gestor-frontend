@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="justify-content-center" style="padding-top: 30px;">
-              <button cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;">Detalle</button>
+              <button cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;" (click)="detallePedido(obj)">Detalle</button>
               <br>
               <button cButton color="primary" class="btn-footer no-border w-75">Cambiar estado</button>
             </div>
@@ -74,4 +74,107 @@
   </c-card>
 </div>
 <app-custom-spinner></app-custom-spinner>
+<app-modal-crud [modalSize]="'modal-xl'" [showModal]="mostrarModalCrud" (close)="closeModal()" [tittle]="nombreAccion" [showSubmit]="false">
+  <div class="d-flex justify-content-center" *ngIf="pedido">
+    <div class="col-12 ">
+      <div  class="d-flex justify-content-center">
+        <div class="col-4 row text-start">
+          <span class="fw-semibold">Cliente: </span>
+          <span>
+            {{this.pedido.nombres}} {{this.pedido.apellidos}}
+          </span>
+        </div>
+        <div class="col-4 row text-start">
+          <span class="fw-semibold">Fecha: </span>
+          <span>
+            {{functionsUtils.formatDateInTimeZone(this.pedido.fecha)}}
+          </span>
+        </div>
+        <div class="col-14 row text-center align-content-center">
+          <span class="fw-semibold">Total de pedido: </span>
+          <span>
+            Q{{functionsUtils.formatPrice(this.pedido.total)}}
+          </span>
+        </div>
+      </div>
+      <div class="text-center scroll">
+        <table [striped]="true" cTable>
+          <thead>
+          <tr>
+            <th scope="col">Descripción</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Total</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of listDetallePedido | paginate: { itemsPerPage: paginationDetail.pageSize, currentPage: paginationDetail.page }">
+            <td>{{item.descripcion}}</td>
+            <td>{{item.cantidad}}</td>
+            <td>Q{{functionsUtils.formatPrice(item.precio)}}</td>
+            <td>Q{{functionsUtils.formatPrice(item.precio * item.cantidad)}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <br>
+      <div class="d-flex justify-content-center" *ngIf="listResponse && listResponse.length">
+        <div class="col-auto">
+
+          <ngb-pagination [(page)]="paginationDetail.page"
+                          (pageChange)="paginationDetail.page = $event"
+                          [maxSize]="paginationDetail.maxSize"
+                          [pageSize]="paginationDetail.pageSize"
+                          [collectionSize]="paginationDetail.collectionSize"></ngb-pagination>
+        </div>
+      </div>
+      <!--<form cForm [formGroup]="form">-->
+        <!--<c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>-->
+        <!--<div class="col-auto">-->
+          <!--<c-input-group class="mb-2" *ngIf="modo !== 1">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="id">Id</label>-->
+              <!--<input id="id"-->
+                     <!--autoComplete="id" formControlName="id" cFormControl/>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"-->
+                     <!--[maxLength]="70"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'nombre', 'CR') == 1 ? false : null"-->
+                     <!--autoComplete="nombre" formControlName="nombre" cFormControl/>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" class="fw-bold" for="descripcion">Descripción {{modo === 1 ? '*' : ''}}</label>-->
+              <!--<textarea id="descripcion" (blur)="functionsUtils.removeSpaces('descripcion', form)"-->
+                        <!--[maxLength]="160"-->
+                        <!--[valid]="functionsUtils.campoRequerido(form, 'descripcion', 'CR') == 1 ? false : null"-->
+                        <!--autoComplete="descripcion" formControlName="descripcion" cFormControl></textarea>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="departamento">Departamento {{modo === 1 ? '*' : ''}}</label>-->
+              <!--<select id="departamento" cSelect formControlName="departamento">-->
+                <!--<option *ngFor="let departamento of dataUtils.listaDepartamentos" [value]="departamento.codigo">-->
+                  <!--{{dataUtils.descripcionPorCodigo(departamento.codigo)}}-->
+                <!--</option>-->
+              <!--</select>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+        <!--</div>-->
+      <!--</form>-->
+    </div>
+  </div>
+</app-modal-crud>
 

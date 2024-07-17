@@ -17,8 +17,6 @@ export class Services {
   public eventEmitter: EventEmitter<void> = new EventEmitter();
   public mostrarSpinner: Boolean;
   public deshabilitarBotones: Boolean;
-  // demo heroku
-  // URL = 'https://panaderia-backend.herokuapp.com';
 
   constructor(private http: HttpClient) {
 

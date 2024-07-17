@@ -26,6 +26,7 @@ export class ModalCrudComponent implements OnInit{
   @Input() showModal: boolean;
   @Input() showSubmit: boolean;
   @Input() tittle: string;
+  @Input() modalSize: string;
   @Input() disabledSubmit: boolean;
   @Input() disabledOthersButtons: boolean;
   @Output() close = new EventEmitter<void>();

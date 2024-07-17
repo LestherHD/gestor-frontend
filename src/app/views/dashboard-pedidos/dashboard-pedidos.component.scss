@@ -29,7 +29,6 @@
 .card-item:hover {
   box-shadow: 0 0px 6px rgba(0, 0, 0, 0.2);
   transform: translateY(-0px);
-  cursor: pointer;
 }
 
 .card-body-custom{
@@ -109,6 +108,10 @@
   font-size: 14px;
   height: 50px;
   background-color: rgb(255, 255, 255, 0.3);
+}
+
+.btn-footer:hover {
+  background-color: rgb(255, 255, 255, 0.5);
 }
 
 ngb-pagination ::ng-deep ul > li:not(.active) > a {
@@ -236,6 +239,38 @@ ngb-pagination ::ng-deep ul > li.active > a {
   }
 
 }
+
+//Para temas de grid
+.scroll{
+  max-height: 55vh;
+  overflow: scroll;
+}
+
+/* Media query para celulares */
+@media only screen and (max-width: 767px) {
+  td{
+    word-wrap: break-word;
+    max-width: 70vw;
+  }
+}
+
+/* Media query para tabletas */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  td{
+    word-wrap: break-word;
+    max-width: 60vw;
+  }
+}
+
+/* Media query para dispositivos más grandes */
+@media only screen and (min-width: 1024px) {
+  td{
+    word-wrap: break-word;
+    max-width: 30vw;
+  }
+}
+
+
 
 
 
