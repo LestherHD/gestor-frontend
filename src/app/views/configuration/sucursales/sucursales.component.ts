@@ -213,7 +213,8 @@ export class SucursalesComponent implements OnInit{
 
 
   guardar() {
-
+    this.service.mostrarSpinner = true;
+    this.deshabilitarBotones = true;
     if (this.modo === 1){
       if (this.form && this.form.valid){
 
@@ -223,6 +224,7 @@ export class SucursalesComponent implements OnInit{
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
           this.mostrarMensaje = true;
+          this.service.mostrarSpinner = false;
           setTimeout(() => {
             this.mostrarMensaje = false;
             this.mostrarModalCrud = res.error ? true : false;
@@ -236,6 +238,8 @@ export class SucursalesComponent implements OnInit{
           } , 2000);
 
         }, error1 => {
+          this.service.mostrarSpinner = false;
+          this.deshabilitarBotones = false;
           this.type = 'danger';
           this.mensaje = 'Ha ocurrido un error al insertar los datos';
           this.mostrarMensaje = true;
@@ -253,6 +257,7 @@ export class SucursalesComponent implements OnInit{
           this.mensaje = res.mensaje;
           this.deshabilitarBotones = true;
           this.mostrarMensaje = true;
+          this.service.mostrarSpinner = false;
           setTimeout(() => {
             this.mostrarMensaje = false;
             this.mostrarModalCrud = res.error ? true : false;
@@ -265,6 +270,8 @@ export class SucursalesComponent implements OnInit{
             }
           } , 2000);
         }, error1 => {
+          this.service.mostrarSpinner = false;
+          this.deshabilitarBotones = false;
           this.type = 'danger';
           this.mensaje = 'Ha ocurrido un error al actualizar los datos';
           this.mostrarMensaje = true;
@@ -278,7 +285,8 @@ export class SucursalesComponent implements OnInit{
   }
 
   async eliminar() {
-
+    this.service.mostrarSpinner = true;
+    this.deshabilitarBotones = true;
     this.service.deleteEntity('sucursales', this.formEliminar.controls.id.value).subscribe(res => {
       this.type = res.error ? 'danger' : 'success';
       this.mensaje = res.mensaje;
@@ -286,6 +294,7 @@ export class SucursalesComponent implements OnInit{
       this.mostrarMensaje = true;
       setTimeout(() => {
         this.mostrarModalEliminar = res.error ? true : false;
+        this.service.mostrarSpinner = false;
         this.deshabilitarBotones = false;
         this.mostrarMensaje = false;
       } , 2000);
@@ -293,6 +302,7 @@ export class SucursalesComponent implements OnInit{
         this.formFiltrosBK.controls.nombre.value.toString(), this.formFiltrosBK.controls.departamento.value.toString().trim(),
         0, this.pagination.pageSize);
     }, error => {
+      this.service.mostrarSpinner = false;
       this.type = 'danger';
       this.deshabilitarBotones = false;
       this.mensaje = 'Ha ocurrido un error al eliminar el registro';

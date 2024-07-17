@@ -352,6 +352,8 @@ export class ProductosComponent implements OnInit {
 
 
   guardar() {
+    this.service.mostrarSpinner = true;
+    this.deshabilitarBotones = true;
     this.mostrarMensaje = false;
     if (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0){
       this.mostrarMensaje = true;
@@ -389,11 +391,11 @@ export class ProductosComponent implements OnInit {
           this.deshabilitarBotones = true;
           this.valorCaracteristica.disable();
           this.mostrarMensaje = true;
+          this.service.mostrarSpinner = false;
           setTimeout(() => {
             this.mostrarMensaje = false;
             this.mostrarModalCrud = res.error ? true : false;
             this.deshabilitarBotones = res.error ? false : true;
-
             this.valorCaracteristica.enable();
             if (this.deshabilitarBotones){
               this.valorCaracteristica.disable();
@@ -429,11 +431,11 @@ export class ProductosComponent implements OnInit {
           this.deshabilitarBotones = true;
           this.valorCaracteristica.disable();
           this.mostrarMensaje = true;
+          this.service.mostrarSpinner = false;
           setTimeout(() => {
             this.mostrarMensaje = false;
             this.mostrarModalCrud = res.error ? true : false;
             this.deshabilitarBotones = res.error ? false : true;
-
             this.valorCaracteristica.enable();
             if (this.deshabilitarBotones){
               this.mostrarAccordion = false;
@@ -452,6 +454,8 @@ export class ProductosComponent implements OnInit {
           } , 2000);
 
         }, error1 => {
+          this.service.mostrarSpinner = false;
+          this.deshabilitarBotones = false;
           this.type = 'danger';
           this.mensaje = 'Ha ocurrido un error al actualizar los datos';
           this.mostrarMensaje = true;
@@ -466,6 +470,8 @@ export class ProductosComponent implements OnInit {
   }
 
   async eliminar() {
+    this.deshabilitarBotones = true;
+    this.service.mostrarSpinner = true;
 
     this.service.deleteEntity('productos', this.formEliminar.controls.id.value).subscribe(res => {
       this.type = res.error ? 'danger' : 'success';
@@ -475,6 +481,7 @@ export class ProductosComponent implements OnInit {
       setTimeout(() => {
         this.mostrarModalEliminar = res.error ? true : false;
         this.deshabilitarBotones = false;
+        this.service.mostrarSpinner = false;
         this.mostrarMensaje = false;
       } , 2000);
       this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
@@ -483,6 +490,7 @@ export class ProductosComponent implements OnInit {
         this.formFiltrosBK.controls.tipoProducto.value,
         0, this.pagination.pageSize);
     }, error => {
+      this.service.mostrarSpinner = false;
       this.type = 'danger';
       this.deshabilitarBotones = false;
       this.mensaje = 'Ha ocurrido un error al eliminar el registro';
