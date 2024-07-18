@@ -24,7 +24,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "docs",
-            "baseHref": "/gestor-frontend/",
+            "baseHref": "/gestor-frontenda/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
