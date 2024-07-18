@@ -32,6 +32,7 @@ import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {IconDirective} from '@coreui/icons-angular';
 import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {Services} from '../../../services/Services';
+import {DataUtils} from '../../../utils/DataUtils';
 
 @Component({
   selector: 'app-default-header',
@@ -51,7 +52,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   constructor(private router: Router,
               public functionsUtils: FunctionsUtils,
-              private services: Services) {
+              private services: Services, public dataUtils: DataUtils) {
     super();
 
   }
