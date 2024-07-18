@@ -198,7 +198,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
 
 
     if (!usuarioJson) {
-      // this.functionsUtils.navigateOption(this.router, 'login');
+      this.functionsUtils.navigateOption(this.router, 'login');
     }
 
     await this.existeUsuarioPrincipal();
