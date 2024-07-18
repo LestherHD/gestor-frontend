@@ -11,8 +11,8 @@ export class Services {
 
   // local
   // URL = 'http://localhost:8082';
-  URL = 'http://192.168.1.6:8082';
-  // URL = 'https://tienda-vir-backend-a6a9e03d645d.herokuapp.com';
+  // URL = 'http://192.168.1.6:8082';
+  URL = 'https://tienda-vir-backend-a6a9e03d645d.herokuapp.com';
 
   public eventEmitter: EventEmitter<void> = new EventEmitter();
   public mostrarSpinner: Boolean;
