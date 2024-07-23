@@ -190,6 +190,10 @@ export class FunctionsUtils {
     router.navigateByUrl(opcion);
   }
 
+  navigateOptionSkipLocationChange(router: Router, opcion: string): void {
+    router.navigateByUrl(opcion, { skipLocationChange: true });
+  }
+
   navigateOptionWithNavigationExtras(router: Router, opcion: string, navigationExtras: NavigationExtras): void {
     router.navigate([opcion], navigationExtras);
   }

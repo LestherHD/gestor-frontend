@@ -59,6 +59,9 @@
 
         <!--formControl para seleccionar la sucursal-->
         <div *ngIf="opcion == '2'">
+          <div style="margin: 10px auto -10px auto; max-width: 90%;">
+            <c-alert *ngIf="isError" color="{{typeAlert}}">{{mensajeError}}</c-alert>
+          </div>
           <div class="flex-container">
             <c-modal-body>Seleccione una sucursal
             </c-modal-body>
@@ -100,7 +103,7 @@
           <button (click)="logout()" cButton color="secondary">
             Cancelar
           </button>
-          <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones)) || (opcion == '2' && (listaSucursales && listaSucursales.length == 0))"  cButton color="primary">Continuar</button>
+          <button (click)="avanzar()" [disabled]="(opcion === '3' && (formCodigo.invalid || deshabilitarBotones)) || (opcion === '2' && (!listaSucursales || (listaSucursales && listaSucursales.length == 0))) || (opcion === '2' && deshabilitarBotones)"  cButton color="primary">Continuar</button>
         </c-modal-footer>
       </c-modal>
 

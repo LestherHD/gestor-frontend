@@ -10,6 +10,7 @@ import {PedidosRequestDTO} from '../../dto/PedidosRequestDTO';
 import {Sucursales} from '../../bo/Sucursales';
 import {CustomSpinnerComponent} from '../utils/custom-spinner/custom-spinner.component';
 import {
+  AlertComponent,
   ButtonDirective,
   ButtonGroupComponent,
   ButtonGroupModule,
@@ -26,12 +27,13 @@ import {DataUtils} from '../../utils/DataUtils';
 import {ModalCrudComponent} from '../utils/modal-crud/modal-crud.component';
 import {DetallePedido} from '../../bo/DetallePedido';
 import { NgxPaginationModule } from 'ngx-pagination';
+import {IconModule} from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-dashboard-pedidos',
   standalone: true,
   imports: [CustomSpinnerComponent, CardBodyComponent, CardComponent, NgbPagination, CommonModule, FormDirective, ReactiveFormsModule,
-  ButtonGroupComponent, ButtonGroupModule, ButtonDirective, ModalCrudComponent, FormControlDirective, TableDirective, NgxPaginationModule ],
+  ButtonGroupComponent, ButtonGroupModule, ButtonDirective, ModalCrudComponent, FormControlDirective, TableDirective, NgxPaginationModule, IconModule, AlertComponent ],
   templateUrl: './dashboard-pedidos.component.html',
   styleUrl: './dashboard-pedidos.component.scss'
 })
@@ -48,11 +50,18 @@ export class DashboardPedidosComponent {
   sucursalId: FormControl;
   estado: FormControl;
   mostrarModalCrud: boolean;
+  mostrarModalCambiarEstado: boolean;
 
   listDetallePedido: DetallePedido[];
   paginationDetail: NgbPagination;
   nombreAccion: string;
   pedido: Pedidos;
+  mostrarError: boolean;
+  typeAlert: string;
+  mensajeError: string;
+  deshabilitarBotones: boolean;
+
+
 
 
   constructor(private service: Services, public functionsUtils: FunctionsUtils, private router: Router,
@@ -63,6 +72,11 @@ export class DashboardPedidosComponent {
     this.pagination.maxSize = 6;
     this.listaSucursales = [];
     this.mostrarModalCrud = false;
+    this.pedido = null;
+    this.mostrarError = false;
+    this.typeAlert = '';
+    this.mensajeError = '';
+    this.deshabilitarBotones = false;
 
     this.paginationDetail = new NgbPagination();
     this.paginationDetail.page = 0;
@@ -89,30 +103,30 @@ export class DashboardPedidosComponent {
     };
 
     this.sucursalId = new FormControl('', Validators.required);
-    this.estado = new FormControl('N', Validators.required);
+    this.estado = new FormControl('', Validators.required);
     await this.service.getFromEntityAndMethodPromise("usuarios", "getByUsuarioOrCorreo", objRequest).then(
       res => {
         if (res && res.usuario){
           this.usuario = res.usuario;
-          if (this.usuario.principal === 'N'){
+          if (this.usuario.principal && this.usuario.principal === 'N'){
             this.sucursalId.setValue( this.usuario.sucursal.id);
+            this.estado.setValue('P')
+          } else if (this.usuario.principal === 'Y'){
+            this.estado.setValue('N');
           }
         }
       }).catch(error => {
       console.error(error);
     });
 
-    this.titleService.setTitle('Holandesa');
-    this.getValuesByPage(Number(this.sucursalId.value.value), this.estado.value, this.pagination.page, this.pagination.pageSize);
-
-    this.service.getAllItemsFromEntity('sucursales').subscribe((res: Sucursales[]) => {
+    await this.service.getAllItemsFromEntityPromise('sucursales').then((res: Sucursales[]) => {
       this.listaSucursales = res;
-    }, error => {
+    }).catch(error => {
       console.error(error);
     });
 
-
-
+    this.titleService.setTitle('Holandesa');
+    this.getValuesByPage(Number(this.sucursalId.value.value), this.estado.value, this.pagination.page, this.pagination.pageSize);
   }
 
   changePage(event: any): void {
@@ -121,26 +135,24 @@ export class DashboardPedidosComponent {
   }
 
   getValuesByPage(sucursalId: number, estado: string, pageValue: any, sizeValue: any): void{
-
+    this.service.mostrarSpinner = true;
     let sucursal: Sucursales = null;
-
-    if (this.listaSucursales && this.listaSucursales.length > 0) {
-      sucursal = this.listaSucursales.find(x => x.id === Number(this.sucursalId.value));
-    } else {
-
+    if (this.usuario && (!this.usuario.principal || this.usuario.principal === 'N')){
+      if (this.sucursalId.value){
+        if (this.listaSucursales && this.listaSucursales.length > 0) {
+          sucursal = this.listaSucursales.find(x => x.id === Number(this.sucursalId.value));
+        }
+      } else {
+        sucursal = new Sucursales(0, null, null, null);
+      }
     }
-
-    console.log('sucursal: ', sucursal);
 
     this.pagination.page = pageValue + 1;
     const request = new PedidosRequestDTO(new Pedidos(null, estado, null, null, null,
       null,sucursal, null, null, null, null), null, null,  pageValue, sizeValue);
 
-    this.service.mostrarSpinner = true;
     this.service.getFromEntityByPage('pedidos', request).subscribe( res => {
       this.listResponse = res.content;
-      if (this.listResponse && this.listResponse.length > 0){
-      }
       this.pagination.collectionSize = res.totalElements;
       this.service.mostrarSpinner = false;
     }, error1 => {
@@ -159,7 +171,9 @@ export class DashboardPedidosComponent {
   closeModal() {
     this.nombreAccion = '';
     this.mostrarModalCrud = false;
+    this.mostrarModalCambiarEstado = false;
     this.listDetallePedido = [];
+    this.pedido = null;
   }
 
   detallePedido(pedido: Pedidos) {
@@ -171,8 +185,38 @@ export class DashboardPedidosComponent {
     this.paginationDetail.collectionSize = this.listDetallePedido.length;
   }
 
-  changePageDetail(event: any): void {
-    this.paginationDetail.page = event;
+  actualizarEstado(estado: string){
+    this.service.mostrarSpinner = true;
+    this.deshabilitarBotones = true;
+    const pedidoActualizado = new Pedidos(this.pedido.id, estado, this.pedido.nombres, this.pedido.apellidos, this.pedido.telefono, this.pedido.departamento, this.pedido.sucursal, this.pedido.metodoPago, this.pedido.detallePedido, this.pedido.total, this.pedido.fecha);
+    this.service.editEntity('pedidos', pedidoActualizado).subscribe( res => {
+      this.typeAlert = 'success';
+      this.mensajeError = 'Cambio de estado exitoso';
+      this.service.mostrarSpinner = false;
+      this.mostrarError = true;
+      setTimeout(() => {
+        this.mostrarError = false;
+        this.getValuesByPage(Number(this.sucursalId.value.value), this.estado.value, this.pagination.page, this.pagination.pageSize);
+        this.closeModal();
+      } , 2000);
 
+    }, error => {
+      this.deshabilitarBotones = false;
+      this.typeAlert = 'danger';
+      this.mensajeError = 'Ha ocurrido un error al actualizar el estado';
+      this.mostrarError = true;
+      this.service.mostrarSpinner = false;
+      setTimeout(() => {
+        this.mostrarError = false;
+      } , 2000);
+      console.error(error);
+    });
+  }
+
+  mostrarCambioEstado(pedido: Pedidos) {
+    this.deshabilitarBotones = false;
+    this.pedido = pedido;
+    this.mostrarModalCambiarEstado = true;
+    this.nombreAccion = 'Cambiar estado de pedido';
   }
 }

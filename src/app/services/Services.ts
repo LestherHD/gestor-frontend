@@ -176,6 +176,16 @@ export class Services {
     return this.http.put(this.URL + '/' + entity, body, {headers});
   }
 
+  editEntityPromise(entity: string, body: any): Promise<any> {
+    const headers = new HttpHeaders({
+      'Access-Control-Allow-Headers' : 'Content-Type',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*'
+    });
+
+    return this.http.put(this.URL + '/' + entity, body, {headers}).toPromise();
+  }
+
   editEntityPartially(entity: string, body: any): Observable<any> {
     const headers = new HttpHeaders({
       'Access-Control-Allow-Headers' : 'Content-Type',

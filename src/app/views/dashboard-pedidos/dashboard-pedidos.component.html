@@ -1,10 +1,10 @@
-<div class="d-flex justify-content-center grupo-botones">
+<div class="d-flex justify-content-center grupo-botones" *ngIf="this.usuario && this.usuario.principal">
   <c-button-group aria-label="Basic outlined example" role="group" class="d-flex w-100">
-    <button cButton (click)="cambiarEstado('N')" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
+    <button cButton (click)="cambiarEstado('N')" *ngIf="this.usuario.principal === 'Y'" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
       Nuevos
     </button>
     <button cButton (click)="cambiarEstado('P')" [ngClass]="{'button-active': estado.value === 'P', 'button-inactive': estado.value !== 'P'}" class="flex-fill no-border">
-      En proceso
+      En sucursal
     </button>
     <button cButton (click)="cambiarEstado('E')" [ngClass]="{'button-active': estado.value === 'E', 'button-inactive': estado.value !== 'E'}" class="flex-fill no-border">
       Entregados
@@ -47,7 +47,7 @@
             <div class="justify-content-center" style="padding-top: 30px;">
               <button cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;" (click)="detallePedido(obj)">Detalle</button>
               <br>
-              <button cButton color="primary" class="btn-footer no-border w-75">Cambiar estado</button>
+              <button cButton color="primary" *ngIf="(usuario.principal === 'Y' && estado.value === 'N') || (usuario.principal === 'N' && estado.value === 'P')" class="btn-footer no-border w-75" (click)="mostrarCambioEstado(obj)">Cambiar estado</button>
             </div>
           </c-card-body>
 
@@ -75,29 +75,31 @@
 </div>
 <app-custom-spinner></app-custom-spinner>
 <app-modal-crud [modalSize]="'modal-xl'" [showModal]="mostrarModalCrud" (close)="closeModal()" [tittle]="nombreAccion" [showSubmit]="false">
-  <div class="d-flex justify-content-center" *ngIf="pedido">
-    <div class="col-12 ">
-      <div  class="d-flex justify-content-center">
-        <div class="col-4 row text-start">
-          <span class="fw-semibold">Cliente: </span>
-          <span>
-            {{this.pedido.nombres}} {{this.pedido.apellidos}}
-          </span>
-        </div>
-        <div class="col-4 row text-start">
-          <span class="fw-semibold">Fecha: </span>
-          <span>
-            {{functionsUtils.formatDateInTimeZone(this.pedido.fecha)}}
-          </span>
-        </div>
-        <div class="col-14 row text-center align-content-center">
-          <span class="fw-semibold">Total de pedido: </span>
-          <span>
-            Q{{functionsUtils.formatPrice(this.pedido.total)}}
-          </span>
-        </div>
+  <div class="d-flex justify-content-center row" *ngIf="pedido">
+    <div class="col-12 row">
+      <div class="col-6 row text-start">
+        <span class="fw-semibold">Cliente: </span>
+        <span>
+          {{this.pedido.nombres}} {{this.pedido.apellidos}}
+        </span>
       </div>
-      <br>
+      <div class="col-6 row text-start">
+        <span class="fw-semibold">Fecha: </span>
+        <span>
+          {{functionsUtils.formatDateInTimeZone(this.pedido.fecha)}}
+        </span>
+      </div>
+      <div class="col-6 row text-start mt-2">
+        <span class="fw-semibold">Total de pedido: </span>
+        <span>
+          Q{{functionsUtils.formatPrice(this.pedido.total)}}
+        </span>
+      </div>
+      <div class="col-6 row"></div>
+    </div>
+    <br>
+    <br>
+    <div class="col-12 mt-4">
       <div class="text-center scroll">
         <table [striped]="true" cTable>
           <thead>
@@ -126,6 +128,64 @@
                           [maxSize]="paginationDetail.maxSize"
                           [pageSize]="paginationDetail.pageSize"
                           [collectionSize]="paginationDetail.collectionSize"></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-modal-crud>
+<app-modal-crud [showModal]="mostrarModalCambiarEstado" (close)="closeModal()" [tittle]="nombreAccion" [showSubmit]="true" [disabledSubmit]="deshabilitarBotones" (submit)="actualizarEstado(pedido.estado === 'N' ? 'P' : pedido.estado === 'P' ? 'E' : '')">
+  <div class="row" *ngIf="pedido">
+    <c-alert *ngIf="mostrarError" color="{{typeAlert}}">{{mensajeError}}</c-alert>
+    <div class="col-12 row  mx-2">
+      <div class="col-6 row text-start">
+        <span class="fw-semibold">Cliente: </span>
+        <span>
+          {{this.pedido.nombres}} {{this.pedido.apellidos}}
+        </span>
+      </div>
+      <div class="col-6 row text-start">
+        <span class="fw-semibold">Fecha: </span>
+        <span>
+          {{functionsUtils.formatDateInTimeZone(this.pedido.fecha)}}
+        </span>
+      </div>
+      <div class="col-6 row text-start mt-2">
+        <span class="fw-semibold">Total de pedido: </span>
+        <span>
+          Q{{functionsUtils.formatPrice(this.pedido.total)}}
+        </span>
+      </div>
+      <div class="col-6 row"></div>
+    </div>
+    <div class="col-12 mt-2">
+      <div class="row align-items-center mt-3 justify-content-center">
+        <div class="col-4">
+          <c-card style="color: white;"
+                  [ngClass]="{
+                  'blue': pedido.estado === 'N',
+                  'yellow': pedido.estado === 'P',
+                  'green': pedido.estado === 'E'}">
+            <c-card-body>
+              <div class="d-flex justify-content-center">
+                {{pedido.estado === 'N' ? 'Nuevo' : pedido.estado === 'P' ? 'En sucursal' : ''}}
+              </div>
+            </c-card-body>
+          </c-card>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+          <svg cIcon name="cilArrowThickRight" size="3xl"></svg>
+        </div>
+        <div class="col-4">
+          <c-card style="color: white;"
+                  [ngClass]="{
+                  'yellow': pedido.estado === 'N',
+                  'green': pedido.estado === 'P'}">
+            <c-card-body>
+              <div class="d-flex justify-content-center">
+                {{pedido.estado === 'N' ? 'En sucursal' : pedido.estado === 'P' ? 'Entregado' : ''}}
+              </div>
+            </c-card-body>
+          </c-card>
         </div>
       </div>
     </div>

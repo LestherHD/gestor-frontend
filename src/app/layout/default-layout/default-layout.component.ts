@@ -175,12 +175,8 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
               telefono: new FormControl({value: this.infoUsuario.telefono, disabled: true}, Validators.required),
               principal: new FormControl({value: this.infoUsuario.principal, disabled: true}, Validators.required),
               sucursal: new FormControl({value: this.infoUsuario.nombreSucursal, disabled: true}, Validators.required)
-              // nombres: any, apellidos: any, usuario: any,
-              // correo: any, telefono: any, principal: any, sucursal: any
             });
-
             this.showModalUsuario = true;
-
           }
         }, error => {
           console.error(error);
@@ -195,7 +191,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
     });
 
     this.cargarListas();
-
 
     if (!usuarioJson) {
       this.functionsUtils.navigateOption(this.router, 'login');
@@ -263,12 +258,20 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
     if (this.opcion == '2') {
       if (this.sucursal && this.sucursal.value){
         this.usuario.principal = 'N';
+        this.deshabilitarBotones = true;
         this.usuario.sucursal = this.listaSucursales.find(x => x.id === Number(this.sucursal.value));
+        this.mensajeError = 'Sucursal asignada con éxito';
+        this.isError = true;
+        this.typeAlert = 'success';
         this.service.editEntity('usuarios', this.usuario).subscribe( res => {
-        }, error => {
+
+          this.showModal = false;
+          this.functionsUtils.navigateOption(this.router, 'login');
+          }, error => {
+          this.showModal = false;
           console.error(error);
         });
-        this.showModal = false;
+
       }
     }
     //Condición para confirmar código enviado a correo para aceptar que el usuario sea principal(usuario que parametrizará
@@ -295,14 +298,16 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
         setTimeout(() => {
           this.isConfirmed = res.confirmado;
           this.isError = false;
-          this.deshabilitarBotones = false;
           if (!this.isError && res.confirmado){
             this.usuario.principal = 'Y';
             this.service.editEntity('usuarios', this.usuario).subscribe( res => {
-            }, error => {
+              this.showModal = false;
+              this.functionsUtils.navigateOption(this.router, 'login');
+              }, error => {
+              this.showModal = false;
               console.error(error);
             });
-            this.showModal = false;
+
           }
         } , 3000);
 

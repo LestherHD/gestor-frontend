@@ -44,7 +44,7 @@ export const routes: Routes = [
         path: 'favorites',
         loadComponent: () => import('./favoritos/favoritos.component').then(m => m.FavoritosComponent),
         data: {
-          title: 'Favoritos'
+          title: 'Productos muestra'
         },
       }
     ]

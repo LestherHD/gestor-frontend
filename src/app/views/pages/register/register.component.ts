@@ -156,16 +156,6 @@ export class RegisterComponent implements OnInit{
     this.errorUniques = false;
     this.mostrarError = false;
     this.mensaje = '';
-    await this.service.getFromEntityAndMethodStringPromise('usuarios', 'getValidadorUniques', usuariosRequest).then( res => {
-      if (res) {
-        this.mostrarError = true;
-        this.mensaje = res;
-        this.errorUniques = true;
-      }
-    }).catch( error =>{
-      console.error(error)
-    })
-
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.errorUniques = false;
