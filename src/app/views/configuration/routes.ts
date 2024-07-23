@@ -39,8 +39,14 @@ export const routes: Routes = [
         data: {
           title: 'Productos'
         },
+      },
+      {
+        path: 'favorites',
+        loadComponent: () => import('./favoritos/favoritos.component').then(m => m.FavoritosComponent),
+        data: {
+          title: 'Favoritos'
+        },
       }
-
     ]
   }
 ];

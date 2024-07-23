@@ -272,7 +272,7 @@
   <c-accordion [flush]="true" >
     <p class="small" *ngIf="modo !== 3 && listaCaracteristicasSeleccionadas && listaCaracteristicasSeleccionadas.length > 0">
       <span style="font-weight: bold">Nota: </span>
-      Los valores deben de tener mínimo un caracter y máximo 70, de lo contrario se deshabilitará el botón Aceptar</p>
+      Los valores deben de tener mínimo 1 caracter y máximo 70, de lo contrario se deshabilitará el botón Agregar (botón del lado derecho del valor)</p>
     <c-accordion-item #item0="cAccordionItem" [visible]="false" *ngFor="let obj of listaCaracteristicasSeleccionadas">
       <ng-template cTemplateId="accordionHeaderTemplate">
         <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj);" [collapsed]="true" cAccordionButton>

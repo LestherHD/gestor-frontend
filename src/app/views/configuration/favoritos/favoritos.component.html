@@ -1,0 +1,120 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header class="card-header">
+
+        <div style="display: flex; justify-content: space-between;">
+          <strong>Sucursales</strong>
+          <div class="col-auto">
+            <span>Total: {{pagination.collectionSize}}</span>
+          </div>
+          <div>
+            <button cButton color="success" variant="outline" size="sm" (click)="modal(1, null)">
+              <svg cIcon name="cilPlus"></svg>
+            </button>
+          </div>
+        </div>
+      </c-card-header>
+      <c-card-body>
+        <c-container>
+          <div class="text-center scroll">
+            <table [striped]="true" cTable>
+              <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Tipo de producto</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Posición</th>
+                <th scope="col">Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of listResponse">
+                <td>{{item.id}}</td>
+                <td>{{item.producto.nombre}}</td>
+                <td>Q{{functionsUtils.formatPrice(item.producto.precio)}}</td>
+                <td>{{item.producto.tipoProducto.nombre}}</td>
+                <td>{{item.producto.estado == 'A' ? 'Activo' : 'Inactivo'}}</td>
+                <td>{{item.orden}}</td>
+                <td>
+                  <button cButton color="success" variant="outline" size="sm" (click)="modal(3, item)">
+                    <svg cIcon name="cilZoom"></svg>
+                  </button>
+                  <button cButton color="info" variant="outline" size="sm" (click)="modal(2, item)">
+                    <svg cIcon name="cilPencil"></svg>
+                  </button>
+                  <button cButton color="danger" variant="outline" size="sm" (click)="modalEliminar(item)">
+                    <svg cIcon name="cilTrash"></svg>
+                  </button>
+
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </c-container>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+<app-custom-spinner></app-custom-spinner>
+<app-modal-crud [showModal]="mostrarModalCrud" (close)="closeModal()" (submit)="guardar()" [tittle]="this.nombreAccion"
+                [disabledSubmit]="form.invalid || deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">
+  <div class="d-flex justify-content-center">
+    <div class="col-10 ">
+      <form cForm [formGroup]="form">
+        <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
+        <div class="col-auto">
+          <c-input-group class="mb-2" *ngIf="modo !== 1">
+            <div class="col-12">
+              <label class="fw-bold" for="id">Id</label>
+              <input id="id"
+                     autoComplete="id" formControlName="id" cFormControl/>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="producto">Producto {{modo === 1 ? '*' : ''}}</label>
+              <select id="producto" cSelect formControlName="productoId" (change)="cargarImagen($event.target, null)">
+                <option *ngFor="let producto of listProducts" [value]="producto.id">
+                  {{producto.nombre}}
+                </option>
+              </select>
+              <c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>
+            </div>
+            <div class="col-12 mt-3">
+              <div *ngIf="imagePreview" class="justify-content-center d-flex">
+                <img [src]="imagePreview" alt="Vista Previa" style="max-width: 350px; max-height: 270px;">
+              </div>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold" for="orden">Orden {{modo === 1 ? '*' : ''}}</label>
+              <input id="orden" (blur)="functionsUtils.removeSpaces('orden', form)"
+                     [maxLength]="1"
+                     [valid]="functionsUtils.numeroValido(form, 'orden', 1, 5, 1)"
+                     autoComplete="orden" formControlName="orden" cFormControl/>
+              <c-form-feedback [valid]="false">Valor inválido, ingrese un valor del 1 al 5.</c-form-feedback>
+            </div>
+          </c-input-group>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</app-modal-crud>
+
+<app-modal-delete [showModal]="mostrarModalEliminar" (close)="closeModalDelete()" (submit)="eliminar()" [tittle]="nombreAccion"
+                  [disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">
+  <div class="justify-content-center col-11">
+    <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
+    <form [formGroup]="formEliminar" *ngIf="formEliminar" >
+      <span style="word-wrap: break-word;">Confirmar eliminar el registro: {{this.formEliminar.controls.id.value}} - {{this.formEliminar.controls.nombre.value}}</span>
+    </form>
+  </div>
+</app-modal-delete>

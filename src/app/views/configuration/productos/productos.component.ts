@@ -270,6 +270,7 @@ export class ProductosComponent implements OnInit {
   }
 
   modal(modo: number, item: any): void {
+    this.resetForm();
     this.mostrarImagen = true;
     this.imageSrc = item ? item.imagen : '';
     this.mostrarAccordion = true;
@@ -356,6 +357,8 @@ export class ProductosComponent implements OnInit {
     this.deshabilitarBotones = true;
     this.mostrarMensaje = false;
     if (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0){
+      this.service.mostrarSpinner = false;
+      this.deshabilitarBotones = false;
       this.mostrarMensaje = true;
       this.type = 'danger';
       this.mensaje = 'Error, debe seleccionar al menos una característica y un valor para cada característica; mínimo 1 característica y 1 valor por característica y máximo 5 características y 5 valores por característica';
@@ -372,6 +375,8 @@ export class ProductosComponent implements OnInit {
         }
       });
       if (this.mostrarMensaje){
+        this.service.mostrarSpinner = false;
+        this.deshabilitarBotones = false;
         this.type = 'danger';
         this.mensaje = 'Error, debe seleccionar al menos una característica y un valor para cada característica; mínimo 1 característica y 1 valor por característica y máximo 5 características y 5 valores por característica';
         this.topElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -1,0 +1,43 @@
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+  color: rgb(0, 179, 186, 0.9) !important;
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+  background-color: rgb(0, 179, 186, 0.9) !important;
+  border-color: rgb(0, 179, 186, 0.5) !important;;
+}
+
+.scroll{
+  max-height: 55vh;
+  overflow: scroll;
+}
+
+/* Media query para celulares */
+@media only screen and (max-width: 767px) {
+  td{
+    word-wrap: break-word;
+    max-width: 50vw;
+  }
+}
+
+/* Media query para tabletas */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  td{
+    word-wrap: break-word;
+    max-width: 40vw;
+  }
+}
+
+/* Media query para dispositivos más grandes */
+@media only screen and (min-width: 1024px) {
+  td{
+    word-wrap: break-word;
+    max-width: 10vw;
+  }
+}
+
+li {
+  cursor: pointer;
+}
+
+

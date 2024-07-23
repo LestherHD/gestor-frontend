@@ -230,6 +230,33 @@ export class FunctionsUtils {
     return 0;
   }
 
+  numeroValido(form: FormGroup, name: string, minValue: number, maxValue: number, maxLengthValue: number): boolean{
+    const value = form.controls[name].value;
+
+      const min = minValue;
+      const max = maxValue;
+      const maxLength = maxLengthValue;
+
+      if (!/^\d+$/.test(value)) {
+        // No es un número entero
+        return false;
+      }
+
+      const numValue = Number(value);
+
+      if (numValue < min || numValue > max) {
+        // Fuera del rango permitido
+        return false;
+      }
+
+      if (value.length > maxLength) {
+        // Longitud máxima excedida
+        return false;
+      }
+
+      return true;
+  }
+
   campoRequeridoFormControl(formControl: FormControl): number {
     const value = formControl.value;
 
@@ -310,8 +337,19 @@ export class FunctionsUtils {
     return formattedDate;
   }
 
+  base64ToBlob(base64: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteArray = new Uint8Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteArray[i] = byteCharacters.charCodeAt(i);
+    }
+    return new Blob([byteArray], { type: 'image/jpeg' }); // Cambia 'image/jpeg' por el tipo correcto si es necesario
+  }
 
-  // const zonedDate = utcToZonedTime(date, guatemalaTimeZone);
+  // Crear una URL a partir del Blob
+  blobToUrl(blob: Blob): string {
+    return URL.createObjectURL(blob);
+  }
 
 
 
