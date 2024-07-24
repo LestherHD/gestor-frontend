@@ -48,8 +48,8 @@
                   <button cButton color="info" variant="outline" size="sm" (click)="modal(2, item)" *ngIf="item.estado === 'A'">
                     <svg cIcon name="cilPencil"></svg>
                   </button>
-                  <button cButton color="danger" variant="outline" size="sm" (click)="modalEliminar(item)" *ngIf="item.estado === 'A'">
-                    <svg cIcon name="cilTrash"></svg>
+                  <button cButton color="warning" variant="outline" size="sm" (click)="modalEliminar(item)" *ngIf="item.estado === 'A'">
+                    <svg cIcon name="cilBan"></svg>
                   </button>
 
                 </td>
@@ -199,7 +199,7 @@
   <div class="justify-content-center col-11">
     <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
     <form [formGroup]="formEliminar" *ngIf="formEliminar" >
-      <span style="word-wrap: break-word;">Confirmar eliminar el registro: {{this.formEliminar.controls.id.value}} - {{this.formEliminar.controls.nombre.value}}</span>
+      <span style="word-wrap: break-word;">Confirmar inactivar el registro: {{this.formEliminar.controls.id.value}} - {{this.formEliminar.controls.nombre.value}}</span>
     </form>
   </div>
 </app-modal-delete>

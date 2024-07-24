@@ -127,6 +127,7 @@ export class FavoritosComponent implements OnInit{
       productoId: new FormControl(item.producto.id, Validators.required),
       orden: new FormControl(item.orden, [onlyNumbersAndSpaces,  Validators.required])
     });
+    this.cargarImagen(null, item.producto.id);
   }
 
   llenarFormDisabled(item: any){
@@ -135,6 +136,8 @@ export class FavoritosComponent implements OnInit{
       productoId: new FormControl({value: item.producto.id, disabled: true}, Validators.required),
       orden: new FormControl({value: item.orden, disabled: true}, [onlyNumbersAndSpaces,  Validators.required])
     });
+
+    this.cargarImagen(null, item.producto.id);
   }
 
   llenarObjeto(form: any): ProductosFavoritos{
@@ -177,10 +180,9 @@ export class FavoritosComponent implements OnInit{
 
     this.formEliminar = new FormGroup({
       id: new FormControl({value: item.id, disabled: true}),
-      nombre: new FormControl({value: item.nombre, disabled: true})
+      nombre: new FormControl({value: item.producto.nombre, disabled: true})
     });
   }
-
 
   guardar() {
     this.service.mostrarSpinner = true;
@@ -287,8 +289,10 @@ export class FavoritosComponent implements OnInit{
   }
 
   getAll(){
+    this.service.mostrarSpinner = true;
     this.service.getAllItemsFromEntity('productosFavoritos').subscribe( (res: ProductosFavoritos[]) => {
       this.listResponse = res;
+      this.service.mostrarSpinner = false;
     });
   }
 
@@ -300,11 +304,12 @@ export class FavoritosComponent implements OnInit{
 
   cargarImagen(event: any, productId: number) {
     let prod = null;
-      if (event != null){
-        prod = this.listProducts.find(x => x.id === Number(event.value));
-      } else {
-        prod = this.listProducts.find(x => x.id === productId);
-      }
+    if (event != null){
+      prod = this.listProducts.find(x => x.id === Number(event.value));
+    } else {
+      prod = this.listProducts.find(x => x.id === productId);
+    }
+    console.log('prod.imagen: ', prod.imagen);
     const blob  = this.functionsUtils.base64ToBlob(prod.imagen);
     this.imagePreview = this.functionsUtils.blobToUrl(blob);
   }

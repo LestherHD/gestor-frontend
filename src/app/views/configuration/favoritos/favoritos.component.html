@@ -5,10 +5,7 @@
 
         <div style="display: flex; justify-content: space-between;">
           <strong>Productos muestra</strong>
-          <div class="col-auto">
-            <span>Total: {{pagination.collectionSize}}</span>
-          </div>
-          <div>
+          <div *ngIf="listResponse && listResponse.length < 5">
             <button cButton color="success" variant="outline" size="sm" (click)="modal(1, null)">
               <svg cIcon name="cilPlus"></svg>
             </button>

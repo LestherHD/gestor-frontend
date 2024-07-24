@@ -341,7 +341,7 @@ export class ProductosComponent implements OnInit {
   }
 
   modalEliminar(item: any): void {
-    this.nombreAccion = 'Eliminar';
+    this.nombreAccion = 'Inactivar';
     this.mostrarModalEliminar = true;
     this.deshabilitarBotones = false;
 
@@ -483,17 +483,22 @@ export class ProductosComponent implements OnInit {
       this.mensaje = res.mensaje;
       this.deshabilitarBotones = true;
       this.mostrarMensaje = true;
+      this.service.mostrarSpinner = false;
       setTimeout(() => {
         this.mostrarModalEliminar = res.error ? true : false;
         this.deshabilitarBotones = false;
-        this.service.mostrarSpinner = false;
         this.mostrarMensaje = false;
+        if (!res.error){
+          this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
+            this.formFiltrosBK.controls.nombre.value.toString(),
+            this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
+            this.formFiltrosBK.controls.tipoProducto.value,
+            0, this.pagination.pageSize);
+        }
       } , 2000);
-      this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
-        this.formFiltrosBK.controls.nombre.value.toString(),
-        this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
-        this.formFiltrosBK.controls.tipoProducto.value,
-        0, this.pagination.pageSize);
+
+
+
     }, error => {
       this.service.mostrarSpinner = false;
       this.type = 'danger';
