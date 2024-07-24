@@ -295,17 +295,24 @@ export class FunctionsUtils {
   }
 
   formatPrice(price: number): string {
-    // Si el número no tiene decimales, agregar ".00"
-    if (price % 1 === 0) {
-      return price.toFixed(2);
-    }
-    // Si tiene un solo decimal, agregar un cero adicional al final
-    if (price % 1 === 0.1) {
-      return price.toFixed(1) + '0';
-    }
-    // Si tiene dos decimales, retornar el número tal cual
-    return price.toFixed(2);
+    return price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
+
+  // formatPrice(price: number): string {
+  //   // Si el número no tiene decimales, agregar ".00"
+  //   if (price % 1 === 0) {
+  //     return price.toFixed(2);
+  //   }
+  //   // Si tiene un solo decimal, agregar un cero adicional al final
+  //   if (price % 1 === 0.1) {
+  //     return price.toFixed(1) + '0';
+  //   }
+  //   // Si tiene dos decimales, retornar el número tal cual
+  //   return price.toFixed(2);
+  // }
 
     parseDateString(dateString: Date): Date {
     // Separar la fecha y la hora

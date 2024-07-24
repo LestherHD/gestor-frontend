@@ -24,6 +24,7 @@ import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {UrlField} from '../../../bo/UrlField';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CustomSpinnerComponent} from '../../utils/custom-spinner/custom-spinner.component';
+import {Title} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-login',
@@ -40,7 +41,7 @@ export class LoginComponent implements OnInit{
 
   constructor(public service: Services,
               private router: Router,
-              public functionsUtils: FunctionsUtils) {
+              public functionsUtils: FunctionsUtils, private titleService: Title ) {
     this.mostrarError = false;
     localStorage.removeItem('usuario');
   }
@@ -53,7 +54,7 @@ export class LoginComponent implements OnInit{
       usuario: new FormControl('', Validators.required),
       contrasenia: new FormControl('', Validators.required)
     });
-
+    this.titleService.setTitle('Holandesa');
   }
 
   login() {

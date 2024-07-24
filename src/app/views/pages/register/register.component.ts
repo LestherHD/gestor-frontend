@@ -31,6 +31,7 @@ import {FunctionsUtils} from '../../../utils/FunctionsUtils';
 import {Router} from '@angular/router';
 import {UsuariosRequestDTO} from '../../../dto/UsuariosRequestDTO';
 import {CustomSpinnerComponent} from '../../utils/custom-spinner/custom-spinner.component';
+import {Title} from '@angular/platform-browser';
 
 function onlyNumbersAndSpaces(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -68,7 +69,7 @@ export class RegisterComponent implements OnInit{
 
   constructor(public service: Services,
               private router: Router,
-              public functionsUtils: FunctionsUtils) {
+              public functionsUtils: FunctionsUtils, private titleService: Title) {
     this.mostrarError = false;
     this.mensaje = "";
   }
@@ -90,7 +91,7 @@ export class RegisterComponent implements OnInit{
 
     this.contraseniasNoIguales = false;
     this.errorUniques = false;
-
+    this.titleService.setTitle('Holandesa');
   }
 
   validarRepetirContrasenia(event: KeyboardEvent){
