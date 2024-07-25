@@ -10,6 +10,6 @@
     <button [disabled]="disabledOthersButtons" (click)="onClose()" cButton color="secondary">
       Cancelar
     </button>
-    <button *ngIf="showSubmit" (click)="onSubmit()" [disabled]="disabledSubmit"  cButton color="primary">Aceptar</button>
+    <button *ngIf="showSubmit" (click)="onSubmit()" [disabled]="disabledSubmit"  cButton style="background-color: rgb(0, 179, 186); border: none;">Aceptar</button>
   </c-modal-footer>
 </c-modal>
