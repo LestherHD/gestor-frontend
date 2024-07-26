@@ -51,6 +51,9 @@
                   <button cButton color="warning" variant="outline" size="sm" (click)="modalEliminar(item)" *ngIf="item.estado === 'A'">
                     <svg cIcon name="cilBan"></svg>
                   </button>
+                  <button cButton color="primary" variant="outline" size="sm" (click)="modalActivar(item)" *ngIf="item.estado === 'I'">
+                    <svg cIcon name="cilToggleOn"></svg>
+                  </button>
 
                 </td>
               </tr>
@@ -204,6 +207,16 @@
   </div>
 </app-modal-delete>
 
+<app-modal-delete [showModal]="mostrarModalActivar" (close)="closeModalActivar()" (submit)="activar()" [tittle]="nombreAccion"
+                  [disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">
+  <div class="justify-content-center col-11">
+    <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
+    <form [formGroup]="formEliminar" *ngIf="formEliminar" >
+      <span style="word-wrap: break-word;">Confirmar activar el registro: {{this.formEliminar.controls.id.value}} - {{this.formEliminar.controls.nombre.value}}</span>
+    </form>
+  </div>
+</app-modal-delete>
+
 <app-modal-filters [showModal]="mostrarModalFiltro" (close)="closeModalFilters()" (submit)="filtrar()" [tittle]="nombreAccion"
                    [disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">
 
@@ -253,10 +266,27 @@
 
           <c-input-group class="mb-2">
             <div class="col-12">
-              <label class="fw-bold" for="tipoProducto">Tipo de producto</label>
+              <label class="fw-bold">Tipo de producto</label>
               <select cSelect formControlName="tipoProducto">
                 <option *ngFor="let obj of listaTipoProducto" [value]="obj.id">
                   {{obj.nombre}}
+                </option>
+              </select>
+            </div>
+          </c-input-group>
+
+          <c-input-group class="mb-2">
+            <div class="col-12">
+              <label class="fw-bold">Estado</label>
+              <select cSelect formControlName="estado">
+                <option [value]="''">
+                  --Todos--
+                </option>
+                <option [value]="'A'">
+                  Activo
+                </option>
+                <option [value]="'I'">
+                  Inactivo
                 </option>
               </select>
             </div>

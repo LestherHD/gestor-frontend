@@ -72,8 +72,8 @@ export class ProductosComponent implements OnInit {
   listaCaracteristicasProductoBK: ProductosCaracteristicas[];
   listaCaracteristicasProducto2: ProductosCaracteristicas[];
   form: FormGroup<{ id: any; nombre: any; descripcion: any; precio: any; imagen: any; tipoProducto: any;}>;
-  formFiltros: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any;}>;
-  formFiltrosBK: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any;}>;
+  formFiltros: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any; estado: any;}>;
+  formFiltrosBK: FormGroup<{ id: any; nombre: any; precioInicio: any; precioFin: any; tipoProducto: any; estado: any;}>;
 
   formEliminar: FormGroup<{ id: any; nombre: any}>;
 
@@ -89,6 +89,7 @@ export class ProductosComponent implements OnInit {
   mostrarModalFiltro: boolean;
   mostrarModalCrud: boolean;
   mostrarModalEliminar: boolean;
+  mostrarModalActivar: boolean;
 
   itemsLeft = ['1', '2', '3', '4', '5'];
   itemsRight = [];
@@ -112,6 +113,7 @@ export class ProductosComponent implements OnInit {
     this.mostrarModalFiltro = false;
     this.mostrarModalCrud = false;
     this.mostrarModalEliminar = false;
+    this.mostrarModalActivar = false;
     this.pagination = new NgbPagination();
     this.pagination.page = 0;
     this.pagination.pageSize = 10;
@@ -123,7 +125,7 @@ export class ProductosComponent implements OnInit {
     this.resetFormFiltros();
     this.formFiltrosBK = this.formFiltros;
     this.resetForm();
-    this.getValuesByPage('', '', null, null, null,
+    this.getValuesByPage('', '', null, null, null, null,
       this.pagination.page, this.pagination.pageSize);
 
     this.cargarListas();
@@ -140,12 +142,14 @@ export class ProductosComponent implements OnInit {
       nombre: new FormControl({value: this.formFiltros.controls.nombre.value.toString().trim(), disabled: true}),
       precioInicio: new FormControl({value: this.formFiltros.controls.precioInicio.value.toString().trim(), disabled: true}),
       precioFin: new FormControl({value: this.formFiltros.controls.precioFin.value.toString().trim(), disabled: true}),
-      tipoProducto: new FormControl({value: this.formFiltros.controls.tipoProducto.value.toString().trim(), disabled: true})
+      tipoProducto: new FormControl({value: this.formFiltros.controls.tipoProducto.value.toString().trim(), disabled: true}),
+      estado: new FormControl({value: this.formFiltros.controls.estado.value.toString().trim(), disabled: true}),
     });
     this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
       this.formFiltrosBK.controls.nombre.value.toString(),
       this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
       this.formFiltrosBK.controls.tipoProducto.value,
+      this.formFiltrosBK.controls.estado.value,
       0, this.pagination.pageSize);
   }
 
@@ -154,7 +158,8 @@ export class ProductosComponent implements OnInit {
     this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
       this.formFiltrosBK.controls.nombre.value.toString(),
       this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
-      this.formFiltrosBK.controls.tipoProducto.value, this.pagination.page, this.pagination.pageSize);
+      this.formFiltrosBK.controls.tipoProducto.value, this.formFiltrosBK.controls.estado.value,
+      this.pagination.page, this.pagination.pageSize);
   }
 
   changeSize(size: any): void {
@@ -163,17 +168,17 @@ export class ProductosComponent implements OnInit {
     this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
       this.formFiltrosBK.controls.nombre.value.toString(),
       this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
-      this.formFiltrosBK.controls.tipoProducto.value,
+      this.formFiltrosBK.controls.tipoProducto.value, this.formFiltrosBK.controls.estado.value,
        0, this.pagination.pageSize);
   }
 
-  getValuesByPage(idValue: any, nombreValue: string, precioInicio: any, precioFin: any, tipoProducto: any,
+  getValuesByPage(idValue: any, nombreValue: string, precioInicio: any, precioFin: any, tipoProducto: any, estado: any,
                   pageValue: any, sizeValue: any): void{
     this.pagination.page = pageValue + 1;
     const request = new ProductosRequestDTO(new Productos(idValue, nombreValue, '', 0, null,
       tipoProducto === '' ? null : (this.listaTipoProducto ? this.listaTipoProducto.find(x => x.id === Number(tipoProducto)) : null),
       precioInicio === '' || precioInicio === null ? null : Number(precioInicio),
-      precioFin === '' || precioFin === null ? null : Number(precioFin), null, null), pageValue, sizeValue);
+      precioFin === '' || precioFin === null ? null : Number(precioFin), null, estado ? estado : null), pageValue, sizeValue);
 
     this.service.mostrarSpinner = true;
     this.service.getFromEntityByPage('productos', request).subscribe( res => {
@@ -192,7 +197,8 @@ export class ProductosComponent implements OnInit {
       nombre: new FormControl(''),
       precioInicio: new FormControl(''),
       precioFin: new FormControl(''),
-      tipoProducto: new FormControl('')
+      tipoProducto: new FormControl(''),
+      estado: new FormControl('')
     });
   }
 
@@ -351,6 +357,17 @@ export class ProductosComponent implements OnInit {
     });
   }
 
+  modalActivar(item: any): void {
+    this.nombreAccion = 'Activar';
+    this.mostrarModalActivar = true;
+    this.deshabilitarBotones = false;
+
+    this.formEliminar = new FormGroup({
+      id: new FormControl({value: item.id, disabled: true}),
+      nombre: new FormControl({value: item.nombre, disabled: true})
+    });
+  }
+
 
   guardar() {
     this.service.mostrarSpinner = true;
@@ -413,7 +430,7 @@ export class ProductosComponent implements OnInit {
               this.getValuesByPage(this.formFiltros.controls.id.value.toString().trim(),
                 this.formFiltros.controls.nombre.value.toString(),
                 this.formFiltros.controls.precioInicio.value, this.formFiltros.controls.precioFin.value,
-                this.formFiltros.controls.tipoProducto.value,
+                this.formFiltros.controls.tipoProducto.value, this.formFiltros.controls.estado.value,
                 0, this.pagination.pageSize);
             }
           } , 2000);
@@ -453,7 +470,7 @@ export class ProductosComponent implements OnInit {
               this.getValuesByPage(this.formFiltros.controls.id.value.toString().trim(),
                 this.formFiltros.controls.nombre.value.toString(),
                 this.formFiltros.controls.precioInicio.value, this.formFiltros.controls.precioFin.value,
-                this.formFiltros.controls.tipoProducto.value,
+                this.formFiltros.controls.tipoProducto.value, this.formFiltros.controls.estado.value,
                 0, this.pagination.pageSize);
             }
           } , 2000);
@@ -492,7 +509,45 @@ export class ProductosComponent implements OnInit {
           this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
             this.formFiltrosBK.controls.nombre.value.toString(),
             this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
-            this.formFiltrosBK.controls.tipoProducto.value,
+            this.formFiltrosBK.controls.tipoProducto.value, this.formFiltrosBK.controls.estado.value,
+            0, this.pagination.pageSize);
+        }
+      } , 2000);
+
+
+
+    }, error => {
+      this.service.mostrarSpinner = false;
+      this.type = 'danger';
+      this.deshabilitarBotones = false;
+      this.mensaje = 'Ha ocurrido un error al eliminar el registro';
+      this.mostrarMensaje = true;
+      setTimeout(() => {
+        this.mostrarMensaje = false;
+      } , 2000);
+      console.error('Error al consumir delete');
+    });
+  }
+
+  async activar() {
+    this.deshabilitarBotones = true;
+    this.service.mostrarSpinner = true;
+
+    this.service.activarProducto('productos', 'activar', this.formEliminar.controls.id.value, null).subscribe(res => {
+      this.type = res.error ? 'danger' : 'success';
+      this.mensaje = res.mensaje;
+      this.deshabilitarBotones = true;
+      this.mostrarMensaje = true;
+      this.service.mostrarSpinner = false;
+      setTimeout(() => {
+        this.mostrarModalActivar = res.error ? true : false;
+        this.deshabilitarBotones = false;
+        this.mostrarMensaje = false;
+        if (!res.error){
+          this.getValuesByPage(this.formFiltrosBK.controls.id.value.toString().trim(),
+            this.formFiltrosBK.controls.nombre.value.toString(),
+            this.formFiltrosBK.controls.precioInicio.value, this.formFiltrosBK.controls.precioFin.value,
+            this.formFiltrosBK.controls.tipoProducto.value, this.formFiltrosBK.controls.estado.value,
             0, this.pagination.pageSize);
         }
       } , 2000);
@@ -530,6 +585,11 @@ export class ProductosComponent implements OnInit {
   closeModalDelete(){
     this.resetForm();
     this.mostrarModalEliminar = false;
+  }
+
+  closeModalActivar(){
+    this.resetForm();
+    this.mostrarModalActivar = false;
   }
 
   closeModalFilters(){
