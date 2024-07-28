@@ -373,18 +373,7 @@ export class ProductosComponent implements OnInit {
     this.service.mostrarSpinner = true;
     this.deshabilitarBotones = true;
     this.mostrarMensaje = false;
-    if (this.listaCaracteristicasSeleccionadas && this.listaCaracteristicasSeleccionadas.length === 0){
-      this.service.mostrarSpinner = false;
-      this.deshabilitarBotones = false;
-      this.mostrarMensaje = true;
-      this.type = 'danger';
-      this.mensaje = 'Error, debe seleccionar al menos una característica y un valor para cada característica; mínimo 1 característica y 1 valor por característica y máximo 5 características y 5 valores por característica';
-      this.topElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(() => {
-        this.mostrarMensaje = false;
-      } , 7000);
-      return;
-    } else if (this.listaCaracteristicasProducto){
+      if (this.listaCaracteristicasProducto){
       this.listaCaracteristicasSeleccionadas.forEach(car=> {
         const obj = this.listaCaracteristicasProducto.filter(x=> x.caracteristica.id === car.id);
         if (!obj || (obj && obj.length === 0)){
@@ -395,7 +384,7 @@ export class ProductosComponent implements OnInit {
         this.service.mostrarSpinner = false;
         this.deshabilitarBotones = false;
         this.type = 'danger';
-        this.mensaje = 'Error, debe seleccionar al menos una característica y un valor para cada característica; mínimo 1 característica y 1 valor por característica y máximo 5 características y 5 valores por característica';
+        this.mensaje = 'Error, si seleccina al menos una característica; debe ingresar mínimo entre 1 y 5 valores por característica, tomar en cuenta que máximo se pueden ingresar 5 características';
         this.topElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setTimeout(() => {
           this.mostrarMensaje = false;
