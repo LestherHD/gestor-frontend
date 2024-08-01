@@ -270,6 +270,159 @@ ngb-pagination ::ng-deep ul > li.active > a {
   }
 }
 
+@media (min-width: 1502px) {
+  .anchoPedido{
+    width: 28vw;
+  }
+
+  .anchoFecha1{
+    width: auto;
+  }
+
+  .anchoFecha2{
+    width: auto;
+  }
+
+  .anchoBoton{
+    width: auto;
+  }
+}
+
+@media (max-width: 1501px) {
+  .anchoPedido{
+    width: 18vw;
+  }
+
+  .anchoFecha1{
+    width: 25vw;
+  }
+
+  .anchoFecha2{
+    width: 24vw;
+  }
+
+  .anchoBoton{
+    width: 6vw;
+  }
+}
+
+@media (max-width: 1254px) {
+  .anchoPedido{
+    width: 25vw;
+  }
+
+  .anchoFecha1{
+    width: 20vw;
+  }
+
+  .anchoFecha2{
+    width: 20vw;
+  }
+
+  .anchoBoton{
+    width: 5vw;
+  }
+}
+
+@media (max-width: 1175px) {
+  .anchoPedido{
+    width: 10vw;
+  }
+
+  .anchoFecha1{
+    width: 20vw;
+  }
+
+  .anchoFecha2{
+    width: 20vw;
+  }
+
+  .anchoBoton{
+    width: 5vw;
+  }
+}
+
+@media (max-width: 991px) {
+  .anchoPedido{
+    width: 13vw;
+  }
+
+  .anchoFecha1{
+    width: 35vw;
+  }
+
+  .anchoFecha2{
+    width: 34vw;
+  }
+
+  .anchoBoton{
+    width: 8vw;
+  }
+}
+
+
+@media (max-width: 907px) {
+  .anchoPedido{
+    width: 15vw;
+  }
+
+  .anchoFecha1{
+    width: 33vw;
+  }
+
+  .anchoFecha2{
+    width: 32vw;
+  }
+
+  .anchoBoton{
+    width: 8vw;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .anchoPedido{
+    width: 100vw;
+  }
+
+  .anchoFecha1{
+    width: 35vw;
+  }
+
+  .anchoFecha2{
+    width: 35vw;
+  }
+
+  .anchoBoton{
+    width: 10vw;
+  }
+}
+
+
+
+@media (max-width: 500px) {
+
+  .anchoPedido{
+    width: 100vw;
+  }
+
+  .anchoFecha1{
+    width: 50vw;
+  }
+
+  .anchoFecha2{
+    width: 50vw;
+  }
+
+  .anchoBoton{
+    width: 10vw;
+  }
+
+}
+
+
+
+
 
 
 

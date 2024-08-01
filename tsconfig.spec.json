@@ -14,7 +14,8 @@
   "files": [
     "src/test.ts",
     ,
-    "node_modules/@types/node/globals.d.ts"
+    "node_modules/@types/node/globals.d.ts",
+    "node_modules/@types/node/dom-events.d.ts"
   ],
   "include": [
     "src/**/*.spec.ts",

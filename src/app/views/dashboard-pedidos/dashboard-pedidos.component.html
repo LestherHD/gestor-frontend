@@ -1,78 +1,148 @@
-<div class="d-flex justify-content-center grupo-botones" *ngIf="this.usuario && this.usuario.principal">
-  <c-button-group aria-label="Basic outlined example" role="group" class="d-flex w-100">
-    <button cButton (click)="cambiarEstado('N')" *ngIf="this.usuario.principal === 'Y'" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
-      Nuevos
-    </button>
-    <button cButton (click)="cambiarEstado('P')" [ngClass]="{'button-active': estado.value === 'P', 'button-inactive': estado.value !== 'P'}" class="flex-fill no-border">
-      En sucursal
-    </button>
-    <button cButton (click)="cambiarEstado('E')" [ngClass]="{'button-active': estado.value === 'E', 'button-inactive': estado.value !== 'E'}" class="flex-fill no-border">
-      Entregados
-    </button>
-  </c-button-group>
-</div>
-
-<div class="d-flex justify-content-center flex-column align-items-center">
-    <c-card-body class="card-container ancho-personalizado my-5" >
-      <c-card class="card-item" *ngFor="let obj of listResponse" style="color: white;"
-              [ngClass]="{
-                'blue': obj.estado === 'N',
-                'yellow': obj.estado === 'P',
-                'green': obj.estado === 'E'
-              }"
-      >
-        <div>
-          <div class="d-flex">
-            <h4 class="fw-bold m-2">{{obj.nombres + ', ' + obj.apellidos}}</h4>
-          </div>
-          <c-card-body class="card-body-custom text-center">
-            <div class="credits-container">
-              <div class="credits-item">
-                <span class="fw-bold">Departamento:</span>
-                <span>{{dataUtils.descripcionPorCodigo(obj.departamento)}}</span>
-              </div>
-              <div class="credits-item">
-                <span class="fw-bold">Sucursal:</span>
-                <span>{{obj.sucursal.nombre}}</span>
-              </div>
-              <div class="credits-item">
-                <span class="fw-bold">Fecha:</span>
-                <span>{{functionsUtils.formatDateInTimeZone(obj.fecha)}}</span>
-              </div>
-              <div class="credits-item">
-                <span class="fw-bold">Total:</span>
-                <span>{{'Q' + functionsUtils.formatPrice(obj.total)}}</span>
-              </div>
-            </div>
-            <div class="justify-content-center" style="padding-top: 30px;">
-              <button cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;" (click)="detallePedido(obj)">Detalle</button>
-              <br>
-              <button cButton color="primary" *ngIf="(usuario.principal === 'Y' && estado.value === 'N') || (usuario.principal === 'N' && estado.value === 'P')" class="btn-footer no-border w-75" (click)="mostrarCambioEstado(obj)">Cambiar estado</button>
-            </div>
-          </c-card-body>
-
-          <br>
+<c-col xs="12" lg="12">
+  <c-card class="mb-4">
+    <c-card-header>
+      <c-alert *ngIf="mostrarErrorFiltroPedidos" color="danger">{{mensajeErrorFiltroPedidos}}</c-alert>
+      <!--filtro grande-->
+      <div class="row col-12">
+        <div class="anchoPedido mt-2">
+          <span class="fw-semibold">Pedidos</span>
         </div>
-      </c-card>
-    </c-card-body>
-  <div class="d-flex justify-content-center" *ngIf="listResponse && listResponse.length">
-    <div class="col-auto">
-      <ngb-pagination [(page)]="pagination.page"
-                      (pageChange)="changePage($event-1)"
-                      [maxSize]="pagination.maxSize"
-                      [pageSize]="pagination.pageSize"
-                      [collectionSize]="pagination.collectionSize"></ngb-pagination>
-    </div>
-  </div>
-  <c-card class="my-5 ancho-personalizado" *ngIf="!listResponse || (listResponse && listResponse.length === 0)">
-    <c-card-body class="d-flex justify-content-center flex-column align-items-center align-content-center" >
-      <h4 *ngIf="estado">No existen pedidos:
-        <span class="fw-bold">{{estado.value === 'N' ? 'Nuevos' :
-        estado.value === 'P' ? 'En proceso' :
-          estado.value === 'E' ? 'Entregados' : ''}}</span></h4>
+        <div class="anchoFecha1">
+          <span>Fecha inicio: </span>
+          <p-calendar [(ngModel)]="startDatePedidos" dateFormat="dd/mm/yy" [locale]="es"></p-calendar>
+        </div>
+
+        <div class="anchoFecha2">
+          <span>Fecha fin: </span>
+          <p-calendar [(ngModel)]="endDatePedidos" dateFormat="dd/mm/yy" [locale]="es"></p-calendar>
+        </div>
+        <div class="anchoBoton">
+          <span style="color: transparent">_</span>
+          <button cButton  style="background-color: white; border-color: rgb(0, 0, 0, 0.4); color: rgb(0, 0, 0, 0.4) !important;" (click)="filtrarPedidos()" class="text-white btn-alto-ancho">
+            <svg cIcon name="cilZoom"></svg>
+          </button>
+        </div>
+      </div>
+    </c-card-header>
+    <c-card-body>
+      <div class="d-flex justify-content-center grupo-botones" *ngIf="this.usuario && this.usuario.principal">
+        <c-button-group aria-label="Basic outlined example" role="group" class="d-flex w-100">
+          <button cButton (click)="cambiarEstado('N')" *ngIf="this.usuario.principal === 'Y'" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
+            Nuevos
+          </button>
+          <button cButton (click)="cambiarEstado('P')" [ngClass]="{'button-active': estado.value === 'P', 'button-inactive': estado.value !== 'P'}" class="flex-fill no-border">
+            En sucursal
+          </button>
+          <button cButton (click)="cambiarEstado('E')" [ngClass]="{'button-active': estado.value === 'E', 'button-inactive': estado.value !== 'E'}" class="flex-fill no-border">
+            Entregados
+          </button>
+        </c-button-group>
+      </div>
+
+      <div class="d-flex justify-content-center flex-column align-items-center">
+        <c-card-body class="card-container ancho-personalizado my-2" >
+          <c-card class="card-item" *ngFor="let obj of listResponse" style="color: white;"
+                  [ngClass]="{
+              'blue': obj.estado === 'N',
+              'yellow': obj.estado === 'P',
+              'green': obj.estado === 'E'
+            }">
+            <div>
+              <div class="d-flex">
+                <h4 class="fw-bold m-2">{{obj.nombres + ', ' + obj.apellidos}}</h4>
+              </div>
+              <c-card-body class="card-body-custom text-center">
+                <div class="credits-container">
+                  <div class="credits-item">
+                    <span class="fw-bold">Departamento:</span>
+                    <span>{{dataUtils.descripcionPorCodigo(obj.departamento)}}</span>
+                  </div>
+                  <div class="credits-item">
+                    <span class="fw-bold">Sucursal:</span>
+                    <span>{{obj.sucursal.nombre}}</span>
+                  </div>
+                  <div class="credits-item">
+                    <span class="fw-bold">Fecha:</span>
+                    <span>{{functionsUtils.formatDateInTimeZone(obj.fecha)}}</span>
+                  </div>
+                  <div class="credits-item">
+                    <span class="fw-bold">Total:</span>
+                    <span>{{'Q' + functionsUtils.formatPrice(obj.total)}}</span>
+                  </div>
+                </div>
+                <div class="justify-content-center" style="padding-top: 30px;">
+                  <button cButton color="primary" class="btn-footer no-border w-75" style="margin-bottom: 5px;" (click)="detallePedido(obj)">Detalle</button>
+                  <br>
+                  <button cButton color="primary" *ngIf="(usuario.principal === 'Y' && estado.value === 'N') || (usuario.principal === 'N' && estado.value === 'P')" class="btn-footer no-border w-75" (click)="mostrarCambioEstado(obj)">Cambiar estado</button>
+                </div>
+              </c-card-body>
+            </div>
+          </c-card>
+        </c-card-body>
+
+        <div class="d-flex justify-content-center" *ngIf="listResponse && listResponse.length">
+          <div class="col-auto">
+            <ngb-pagination [(page)]="pagination.page"
+                            (pageChange)="changePage($event-1)"
+                            [maxSize]="pagination.maxSize"
+                            [pageSize]="pagination.pageSize"
+                            [collectionSize]="pagination.collectionSize"></ngb-pagination>
+          </div>
+        </div>
+        <c-card class="my-5 ancho-personalizado" *ngIf="!listResponse || (listResponse && listResponse.length === 0)">
+          <c-card-body class="d-flex justify-content-center flex-column align-items-center align-content-center" >
+            <h4 *ngIf="estado">No existen pedidos:
+              <span class="fw-bold">{{estado.value === 'N' ? 'Nuevos' :
+                estado.value === 'P' ? 'En proceso' :
+                  estado.value === 'E' ? 'Entregados' : ''}}</span></h4>
+          </c-card-body>
+        </c-card>
+      </div>
     </c-card-body>
   </c-card>
-</div>
+</c-col>
+
+<c-col xs="12" lg="12">
+  <c-card class="mb-4">
+    <c-card-header>
+      <c-alert *ngIf="mostrarErrorFiltroSucursales" color="danger">{{mensajeErrorFiltroSucursales}}</c-alert>
+      <!--filtro grande-->
+      <div class="row col-12">
+        <div class="anchoPedido mt-2">
+          <span class="fw-semibold">Ventas de sucursales</span>
+        </div>
+        <div class="anchoFecha1">
+          <span>Fecha inicio: </span>
+          <p-calendar [(ngModel)]="startDateSucursales" dateFormat="dd/mm/yy" [locale]="es"></p-calendar>
+        </div>
+
+        <div class="anchoFecha2">
+          <span>Fecha fin: </span>
+          <p-calendar [(ngModel)]="endDateSucursales" dateFormat="dd/mm/yy" [locale]="es"></p-calendar>
+        </div>
+        <div class="anchoBoton">
+          <span style="color: transparent">_</span>
+          <button cButton  style="background-color: white; border-color: rgb(0, 0, 0, 0.4); color: rgb(0, 0, 0, 0.4) !important;" (click)="filtrarVentasSucursales()" class="text-white btn-alto-ancho">
+            <svg cIcon name="cilZoom"></svg>
+          </button>
+        </div>
+      </div>
+    </c-card-header>
+    <c-card-body *ngIf="chartDoughnutData.labels && chartDoughnutData.labels.length > 0">
+      <span>Total: Q{{totalVendidoSucursales}}</span>
+      <c-chart type="doughnut" [data]="chartDoughnutData" [options]="options" />
+    </c-card-body>
+    <c-card class="my-5 ancho-personalizado" *ngIf="!chartDoughnutData.labels || (chartDoughnutData.labels && chartDoughnutData.labels.length === 0)">
+      <c-card-body class="d-flex justify-content-center flex-column align-items-center align-content-center" >
+        <h4 *ngIf="estado">No existen datos</h4>
+      </c-card-body>
+    </c-card>
+
+  </c-card>
+</c-col>
+
+
+
 <app-custom-spinner></app-custom-spinner>
 <app-modal-crud [modalSize]="'modal-xl'" [showModal]="mostrarModalCrud" (close)="closeModal()" [tittle]="nombreAccion" [showSubmit]="false">
   <div class="d-flex justify-content-center row" *ngIf="pedido">
