@@ -1,8 +1,8 @@
+<!--tarjetas de pedidos nuevos, en sucursal y entregados-->
 <c-col xs="12" lg="12">
   <c-card class="mb-4">
     <c-card-header>
       <c-alert *ngIf="mostrarErrorFiltroPedidos" color="danger">{{mensajeErrorFiltroPedidos}}</c-alert>
-      <!--filtro grande-->
       <div class="row col-12">
         <div class="anchoPedido mt-2">
           <span class="fw-semibold">Pedidos</span>
@@ -25,9 +25,9 @@
       </div>
     </c-card-header>
     <c-card-body>
-      <div class="d-flex justify-content-center grupo-botones" *ngIf="this.usuario && this.usuario.principal">
+      <div class="d-flex justify-content-center grupo-botones">
         <c-button-group aria-label="Basic outlined example" role="group" class="d-flex w-100">
-          <button cButton (click)="cambiarEstado('N')" *ngIf="this.usuario.principal === 'Y'" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
+          <button cButton (click)="cambiarEstado('N')" *ngIf="this.usuario && this.usuario.principal === 'Y'" [ngClass]="{'button-active': estado.value === 'N', 'button-inactive': estado.value !== 'N'}" class="flex-fill no-border">
             Nuevos
           </button>
           <button cButton (click)="cambiarEstado('P')" [ngClass]="{'button-active': estado.value === 'P', 'button-inactive': estado.value !== 'P'}" class="flex-fill no-border">
@@ -102,6 +102,7 @@
   </c-card>
 </c-col>
 
+<!--grafico de ventas de sucursales-->
 <c-col xs="12" lg="12">
   <c-card class="mb-4">
     <c-card-header>
@@ -133,6 +134,61 @@
       <c-chart type="doughnut" [data]="chartDoughnutData" [options]="options" />
     </c-card-body>
     <c-card class="my-5 ancho-personalizado" *ngIf="!chartDoughnutData.labels || (chartDoughnutData.labels && chartDoughnutData.labels.length === 0)">
+      <c-card-body class="d-flex justify-content-center flex-column align-items-center align-content-center" >
+        <h4 *ngIf="estado">No existen datos</h4>
+      </c-card-body>
+    </c-card>
+
+  </c-card>
+</c-col>
+
+<!--grafico de productos mas vendidos-->
+<c-col xs="12" lg="12">
+  <c-card class="mb-4">
+    <c-card-header>
+      <c-alert *ngIf="mostrarErrorFiltroProductos" color="danger">{{mensajeErrorFiltroProductos}}</c-alert>
+      <!--filtro grande-->
+      <div class="row col-12">
+        <div class="anchoPedido mt-2">
+          <span class="fw-semibold">Productos más vendidos</span>
+        </div>
+        <div class="anchoFecha1">
+          <span>Fecha inicio: </span>
+          <p-calendar [(ngModel)]="startDateProductos" dateFormat="dd/mm/yy" [locale]="es"></p-calendar>
+        </div>
+
+        <div class="anchoFecha2">
+          <span>Fecha fin: </span>
+          <p-calendar [(ngModel)]="endDateProductos" dateFormat="dd/mm/yy" [locale]="es"></p-calendar>
+        </div>
+        <div class="anchoBoton">
+          <span style="color: transparent">_</span>
+          <button cButton  style="background-color: white; border-color: rgb(0, 0, 0, 0.4); color: rgb(0, 0, 0, 0.4) !important;" (click)="filtrarVentasProductos()" class="text-white btn-alto-ancho">
+            <svg cIcon name="cilZoom"></svg>
+          </button>
+        </div>
+      </div>
+    </c-card-header>
+    <c-card-body>
+      <div class="d-flex justify-content-center grupo-botones">
+        <c-button-group aria-label="Basic outlined example" role="group" class="d-flex w-100">
+          <button cButton (click)="cambiarEstadoProducto('')" [ngClass]="{'button-active': estadoProductoBK === '', 'button-inactive': estadoProductoBK !== ''}" class="flex-fill no-border">
+            Todos
+          </button>
+          <button cButton (click)="cambiarEstadoProducto('A')" [ngClass]="{'button-active': estadoProductoBK === 'A', 'button-inactive': estadoProductoBK !== 'A'}" class="flex-fill no-border">
+            Activos
+          </button>
+          <button cButton (click)="cambiarEstadoProducto('I')" [ngClass]="{'button-active': estadoProductoBK === 'I', 'button-inactive': estadoProductoBK !== 'I'}" class="flex-fill no-border">
+            Inactivos
+          </button>
+        </c-button-group>
+      </div>
+    </c-card-body>
+    <c-card-body *ngIf="chartBarData.labels && chartBarData.labels.length > 0">
+      <span>Total: Q{{totalVendidoProductos}}</span>
+      <c-chart type="bar" [data]="chartBarData" [options]="options" />
+    </c-card-body>
+    <c-card class="my-5 ancho-personalizado" *ngIf="!chartBarData.labels || (chartBarData.labels && chartBarData.labels.length === 0)">
       <c-card-body class="d-flex justify-content-center flex-column align-items-center align-content-center" >
         <h4 *ngIf="estado">No existen datos</h4>
       </c-card-body>

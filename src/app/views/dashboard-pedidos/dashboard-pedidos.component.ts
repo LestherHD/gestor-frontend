@@ -96,6 +96,28 @@ export class DashboardPedidosComponent {
   mensajeErrorFiltroSucursales: string;
   totalVendidoSucursales: string;
 
+  chartBarData: ChartData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Gráfico de productos más vendidos',
+        backgroundColor: [],
+        data: []
+      }
+    ]
+  };
+
+  startDateProductos: Date;
+  endDateProductos: Date;
+  startDateProductosBK: Date;
+  endDateProductosBK: Date;
+  mostrarErrorFiltroProductos: boolean;
+  mensajeErrorFiltroProductos: string;
+  totalVendidoProductos: string;
+
+  estadoProducto: string = '';
+  estadoProductoBK: string = '';
+
   fixedColors: string[] = [
     '#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FF8333',
     '#33FF83', '#8333FF', '#FF3381', '#81FF33', '#3381FF',
@@ -151,6 +173,15 @@ export class DashboardPedidosComponent {
     this.endDateSucursales.setHours(0,0,0,0);
     this.startDateSucursalesBK = this.startDateSucursales;
     this.endDateSucursalesBK = this.endDateSucursales;
+
+    this.startDateProductos = new Date();
+    this.startDateProductos.setHours(0,0,0,0);
+    this.endDateProductos = new Date();
+    this.endDateProductos.setHours(0,0,0,0);
+    this.startDateProductosBK = this.startDateProductos;
+    this.endDateProductosBK = this.endDateProductos;
+    this.estadoProducto = '';
+    this.estadoProductoBK = '';
 
     this.config.setTranslation({
       dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
@@ -234,7 +265,7 @@ export class DashboardPedidosComponent {
 
     this.pagination.page = pageValue + 1;
     const request = new PedidosRequestDTO(new Pedidos(null, estado, null, null, null,
-      null,sucursal, null, null, null, null), startDatePedidosStr, endDatePedidosStr, null,pageValue, sizeValue);
+      null,sucursal, null, null, null, null), startDatePedidosStr, endDatePedidosStr, null, null, pageValue, sizeValue);
 
     this.service.getFromEntityByPage('pedidos', request).subscribe( res => {
       this.listResponse = res.content;
@@ -251,6 +282,12 @@ export class DashboardPedidosComponent {
     this.estado.setValue(estado);
     this.pagination.page = 0;
     this.getValuesByPage(Number(this.sucursalId.value), this.estado.value, this.startDatePedidosBK, this.endDatePedidosBK, this.pagination.page, this.pagination.pageSize);
+  }
+
+  cambiarEstadoProducto(estado: string) {
+    this.service.mostrarSpinner = true;
+    this.estadoProducto = estado;
+    this.llamarServicioProductos();
   }
 
   closeModal() {
@@ -341,18 +378,18 @@ export class DashboardPedidosComponent {
 
     const oneYearBeforeStartDate = new Date(fechaActual.getTime());
     oneYearBeforeStartDate.setFullYear(fechaActual.getFullYear() - 1);
-    this.mostrarErrorFiltroPedidos = false;
-    if (this.startDatePedidos > this.endDatePedidos) {
-      this.mostrarErrorFiltroPedidos = true;
-      this.mensajeErrorFiltroPedidos = 'Error, la fecha inicio no puede ser mayor a la fecha fin';
+    this.mostrarErrorFiltroSucursales = false;
+    if (this.startDateSucursales > this.endDateSucursales) {
+      this.mostrarErrorFiltroSucursales = true;
+      this.mensajeErrorFiltroSucursales = 'Error, la fecha inicio no puede ser mayor a la fecha fin';
       return;
-    } else if (this.startDatePedidos > fechaActual || this.endDatePedidos > fechaActual){
-      this.mostrarErrorFiltroPedidos = true;
-      this.mensajeErrorFiltroPedidos = 'Error, la fecha inicio y la fecha fin no pueden ser mayor a la fecha actual';
+    } else if (this.startDateSucursales > fechaActual || this.endDateSucursales > fechaActual){
+      this.mostrarErrorFiltroSucursales = true;
+      this.mensajeErrorFiltroSucursales = 'Error, la fecha inicio y la fecha fin no pueden ser mayor a la fecha actual';
       return;
-    } else if (this.startDatePedidos < oneYearBeforeStartDate){
-      this.mostrarErrorFiltroPedidos = true;
-      this.mensajeErrorFiltroPedidos = 'Rango de fecha inválido, no se puede filtrar más de un año de distancia entre ambas fechas';
+    } else if (this.startDateSucursales < oneYearBeforeStartDate){
+      this.mostrarErrorFiltroSucursales = true;
+      this.mensajeErrorFiltroSucursales = 'Rango de fecha inválido, no se puede filtrar más de un año de distancia entre ambas fechas';
       return;
     }
 
@@ -365,7 +402,7 @@ export class DashboardPedidosComponent {
     const startDatePedidosStr = this.startDateSucursalesBK.toISOString();
     const endDatePedidosStr = this.endDateSucursalesBK.toISOString();
 
-    const request = new PedidosRequestDTO(null, startDatePedidosStr, endDatePedidosStr, this.sucursalId.value ? this.sucursalId.value : null, null, null);
+    const request = new PedidosRequestDTO(null, startDatePedidosStr, endDatePedidosStr, this.sucursalId.value ? this.sucursalId.value : null, null, null, null);
 
     let labels: string[] = [];
     this.chartDoughnutData.labels = labels;
@@ -393,8 +430,72 @@ export class DashboardPedidosComponent {
     this.chartDoughnutData.datasets[0].data = data;
     this.chartDoughnutData.datasets[0].backgroundColor = backgroundColors;
 
-    console.log(this.chartDoughnutData);
+  }
+
+    filtrarVentasProductos(){
+
+    const fechaActual = new Date();
+    fechaActual.setHours(0,0,0,0);
+
+    const oneYearBeforeStartDate = new Date(fechaActual.getTime());
+    oneYearBeforeStartDate.setFullYear(fechaActual.getFullYear() - 1);
+    this.mostrarErrorFiltroProductos = false;
+    if (this.startDateProductos > this.endDateProductos) {
+      this.mostrarErrorFiltroProductos = true;
+      this.mensajeErrorFiltroProductos = 'Error, la fecha inicio no puede ser mayor a la fecha fin';
+      return;
+    } else if (this.startDateProductos > fechaActual || this.endDateProductos > fechaActual){
+      this.mostrarErrorFiltroProductos = true;
+      this.mensajeErrorFiltroProductos = 'Error, la fecha inicio y la fecha fin no pueden ser mayor a la fecha actual';
+      return;
+    } else if (this.startDateProductos < oneYearBeforeStartDate){
+      this.mostrarErrorFiltroProductos = true;
+      this.mensajeErrorFiltroProductos = 'Rango de fecha inválido, no se puede filtrar más de un año de distancia entre ambas fechas';
+      return;
+    }
+
+    this.service.mostrarSpinner = true;
+
+    this.startDateProductosBK = this.startDateProductos;
+    this.endDateProductosBK = this.endDateProductos;
+    this.llamarServicioProductos();
 
   }
+
+  async llamarServicioProductos(){
+    this.estadoProductoBK = this.estadoProducto;
+    const startDatePedidosStr = this.startDateProductosBK.toISOString();
+    const endDatePedidosStr = this.endDateProductosBK.toISOString();
+
+    const request = new PedidosRequestDTO(null, startDatePedidosStr, endDatePedidosStr, this.sucursalId.value ? this.sucursalId.value : null, this.estadoProducto ? this.estadoProducto : null, null, null);
+
+    let labels: string[] = [];
+    this.chartBarData.labels = labels;
+    let data: number[] = [];
+    let tamanio: number = 0;
+
+    await this.service.getFromEntityAndMethodPromise('pedidos', 'getInfoMostSelledProducts', request).then( res => {
+      this.service.mostrarSpinner = false;
+      tamanio = res.length;
+      let total = 0;
+      res.forEach(x => {
+        labels.push(x.nombreProducto);
+        data.push(x.total);
+        total += x.total;
+      });
+      this.totalVendidoProductos = this.functionsUtils.formatPrice(total);
+    }).catch(error => {
+      this.service.mostrarSpinner = false;
+      console.error(error);
+    });
+
+    const backgroundColors = this.fixedColors.slice(0, tamanio);
+
+    this.chartBarData.labels = labels;
+    this.chartBarData.datasets[0].data = data;
+    this.chartBarData.datasets[0].backgroundColor = backgroundColors;
+
+  }
+
 
 }
