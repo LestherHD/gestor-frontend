@@ -169,12 +169,12 @@ export class RecoverPasswordComponent implements OnInit{
       this.isError = res.error;
       this.mensajeError = res.respuesta;
       this.typeAlert = res.error && !res.confirmado ? 'danger' : 'success';
+      this.service.mostrarSpinner = false;
 
       setTimeout(() => {
         this.isConfirmed = res.confirmado;
         this.isError = false;
         this.service.deshabilitarBotones = false;
-        this.service.mostrarSpinner = false;
       } , 3000);
 
     }, error => {
@@ -203,10 +203,10 @@ export class RecoverPasswordComponent implements OnInit{
       this.isConfirmed = res.confirmado;
       this.mensajeError = res.respuesta;
       this.typeAlert = res.error && !this.isConfirmed ? 'danger' : 'success';
-
+      this.service.mostrarSpinner = false;
       if (this.isConfirmed) {
         setTimeout(() => {
-          this.service.mostrarSpinner = false;
+
           this.service.deshabilitarBotones = false;
           this.functionsUtils.navigateOption(this.router, '/login');
         } , 1600);
