@@ -42,7 +42,7 @@ import{a as ge}from"./chunk-XNTE45YH.js";import"./chunk-TWSSJELN.js";import{a as
                 `),t(35,"th",7),e(36,"Precio"),n(),e(37,`
                 `),t(38,"th",7),e(39,"Tipo de producto"),n(),e(40,`
                 `),t(41,"th",7),e(42,"Estado"),n(),e(43,`
-                `),t(44,"th",7),e(45,"Posici\xF3n"),n(),e(46,`
+                `),t(44,"th",7),e(45,"Orden"),n(),e(46,`
                 `),t(47,"th",7),e(48,"Acciones"),n(),e(49,`
               `),n(),e(50,`
               `),n(),e(51,`
