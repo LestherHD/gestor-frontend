@@ -7,8 +7,7 @@
             <form cForm [formGroup]="form" *ngIf="this.form">
               <h1>Registrarse</h1>
               <p class="text-body-secondary">Crea tu cuenta</p>
-              <c-alert *ngIf="mostrarError" color="danger">{{mensaje}}</c-alert>
-              <c-alert *ngIf="mostrarSuccess" color="success">{{mensaje}}</c-alert>
+              <c-alert *ngIf="mostrarError" color="{{tipoAlerta}}">{{mensaje}}</c-alert>
               <!--Nombres-->
               <c-input-group class="mb-2">
                 <div [cFormFloating]="true">
@@ -71,7 +70,7 @@
                 </div>
               </c-input-group>
               <div class="d-grid">
-                <button [disabled]="form.invalid || contraseniasNoIguales || errorUniques || service.deshabilitarBotones" cButton color="success" style="color: white"
+                <button [disabled]="form.invalid || contraseniasNoIguales || mostrarError || service.deshabilitarBotones" cButton color="success" style="color: white"
                  (click)="registrarse()">Crear cuenta</button>
               </div>
               <div style="margin: 0 auto; text-align: center;">
