@@ -46,6 +46,13 @@ export const routes: Routes = [
         data: {
           title: 'Productos muestra'
         },
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./usuarios/usuarios.component').then(m => m.UsuariosComponent),
+        data: {
+          title: 'Usuarios'
+        },
       }
     ]
   }

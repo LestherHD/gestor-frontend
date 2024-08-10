@@ -1,0 +1,233 @@
+<!--<c-row ngPreserveWhitespaces>-->
+  <!--<c-col xs="12">-->
+    <!--<c-card class="mb-4">-->
+      <!--<c-card-header class="card-header">-->
+
+        <!--<div style="display: flex; justify-content: space-between;">-->
+          <!--<strong>Usuarios</strong>-->
+          <!--<div class="col-auto">-->
+            <!--<span>Total: {{pagination.collectionSize}}</span>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<button cButton color="secondary" variant="outline" size="sm" (click)="showModalFilters()">-->
+              <!--<svg cIcon name="cilFilter"></svg>-->
+            <!--</button>-->
+            <!--<button cButton color="success" variant="outline" size="sm" (click)="modal(1, null)">-->
+              <!--<svg cIcon name="cilPlus"></svg>-->
+            <!--</button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</c-card-header>-->
+      <!--<c-card-body>-->
+        <!--<c-container>-->
+          <!--<div class="text-center scroll">-->
+            <!--<table [striped]="true" cTable>-->
+              <!--<thead>-->
+              <!--<tr>-->
+                <!--<th scope="col">Id</th>-->
+                <!--<th scope="col">Usuario</th>-->
+                <!--<th scope="col">Nombre</th>-->
+                <!--<th scope="col">Correo</th>-->
+                <!--<th scope="col">Teléfono</th>-->
+                <!--<th scope="col">Sucursal</th>-->
+                <!--<th scope="col">Es principal</th>-->
+                <!--<th scope="col">Acciones</th>-->
+              <!--</tr>-->
+              <!--</thead>-->
+              <!--<tbody>-->
+              <!--<tr *ngFor="let item of listResponse">-->
+                <!--<td>{{item.id}}</td>-->
+                <!--<td>{{item.usuario}}</td>-->
+                <!--<td>{{item.nombres + ', '+item.apellidos}}</td>-->
+                <!--<td>-->
+                  <!--<button cButton color="success" variant="outline" size="sm" (click)="modal(3, item)">-->
+                    <!--<svg cIcon name="cilZoom"></svg>-->
+                  <!--</button>-->
+                  <!--<button cButton color="info" variant="outline" size="sm" (click)="modal(2, item)">-->
+                    <!--<svg cIcon name="cilPencil"></svg>-->
+                  <!--</button>-->
+                  <!--<button cButton color="danger" variant="outline" size="sm" (click)="modalEliminar(item)">-->
+                    <!--<svg cIcon name="cilTrash"></svg>-->
+                  <!--</button>-->
+
+                <!--</td>-->
+              <!--</tr>-->
+              <!--</tbody>-->
+            <!--</table>-->
+          <!--</div>-->
+          <!--<div class="row col-12">-->
+            <!--<div class="col-12 col-md-6" style="margin-top: 1vh; text-align: center;">-->
+              <!--<div class="col-auto">-->
+                <!--<ngb-pagination [(page)]="pagination.page"-->
+                                <!--(pageChange)="changePage($event-1)"-->
+                                <!--[maxSize]="pagination.maxSize"-->
+                                <!--[pageSize]="pagination.pageSize"-->
+                                <!--[collectionSize]="pagination.collectionSize"></ngb-pagination>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-end align-items-center">-->
+              <!--<div class="col-auto">-->
+                <!--<span>Registros por página:</span>-->
+              <!--</div>-->
+              <!--<div class="col-auto">-->
+                <!--<select class="form-select form-select-sm" [(ngModel)]="pagination.pageSize" (change)="changeSize($event.target)">-->
+                  <!--<option value="5">5</option>-->
+                  <!--<option value="10">10</option>-->
+                  <!--<option value="20">20</option>-->
+                  <!--<option value="50">50</option>-->
+                  <!--<option value="100">100</option>-->
+                <!--</select>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</c-container>-->
+      <!--</c-card-body>-->
+    <!--</c-card>-->
+  <!--</c-col>-->
+<!--</c-row>-->
+<!--<app-custom-spinner></app-custom-spinner>-->
+<!--<app-modal-crud [showModal]="mostrarModalCrud" (close)="closeModal()" (submit)="guardar()" [tittle]="this.nombreAccion"-->
+                <!--[disabledSubmit]="form.invalid || deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="modo !== 3">-->
+  <!--<div class="d-flex justify-content-center">-->
+    <!--<div class="col-10 ">-->
+      <!--<form cForm [formGroup]="form">-->
+        <!--<c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>-->
+        <!--<div class="col-auto">-->
+          <!--<c-input-group class="mb-2" *ngIf="modo !== 1">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="id">Id</label>-->
+              <!--<input id="id"-->
+                     <!--autoComplete="id" formControlName="id" cFormControl/>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="nombre">Nombres {{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input id="nombre" (blur)="functionsUtils.removeSpaces('nombre', form)"-->
+                     <!--[maxLength]="70"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'nombre', 'CR') == 1 ? false : null"-->
+                     <!--autoComplete="nombre" formControlName="nombre" cFormControl/>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold">Apellidos{{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input (blur)="functionsUtils.removeSpaces('apellido', form)"-->
+                     <!--[maxLength]="60"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'apellido', 'CR') == 1 ? false : null"-->
+                     <!--formControlName="apellido" cFormControl/>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold">Usuario{{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input (blur)="functionsUtils.removeSpaces('usuario', form)"-->
+                     <!--[maxLength]="25"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'usuario', 'CR') == 1 ? false : null"-->
+                     <!--formControlName="usuario" cFormControl/>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold">Correo{{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input (blur)="functionsUtils.removeSpaces('correo', form)"-->
+                     <!--[maxLength]="60"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'correo', 'CR') == 1 ? false : null"-->
+                     <!--formControlName="correo" cFormControl/>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold">Telefono{{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input (blur)="functionsUtils.removeSpaces('telefono', form)"-->
+                     <!--[maxLength]="8"-->
+                     <!--[valid]="functionsUtils.campoRequerido(form, 'correo', 'CR') == 1 ? false : null"-->
+                     <!--formControlName="telefono" cFormControl/>-->
+              <!--<c-form-feedback [valid]="false">Campo requerido.</c-form-feedback>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" >Sucursal</label>-->
+              <!--<select cSelect formControlName="sucursal">-->
+                <!--<option *ngFor="let obj of listaSucursales" [value]="obj.id">-->
+                  <!--{{obj.nombre}}-->
+                <!--</option>-->
+              <!--</select>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" >Principal</label>-->
+              <!--<select cSelect formControlName="principal">-->
+                <!--<option [value]="''">-->
+                  <!--&#45;&#45;Todos&#45;&#45;-->
+                <!--</option>-->
+                <!--<option [value]="'Y'">-->
+                  <!--Sí-->
+                <!--</option>-->
+                <!--<option [value]="'N'">-->
+                  <!--No-->
+                <!--</option>-->
+              <!--</select>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+
+
+        <!--</div>-->
+      <!--</form>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</app-modal-crud>-->
+<!--<app-modal-delete [showModal]="mostrarModalEliminar" (close)="closeModalDelete()" (submit)="eliminar()" [tittle]="nombreAccion"-->
+                  <!--[disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">-->
+  <!--<div class="justify-content-center col-11">-->
+    <!--<c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>-->
+    <!--<form [formGroup]="formEliminar" *ngIf="formEliminar" >-->
+      <!--<span style="word-wrap: break-word;">Confirmar eliminar el registro: {{this.formEliminar.controls.id.value}} - {{this.formEliminar.controls.nombre.value}}</span>-->
+    <!--</form>-->
+  <!--</div>-->
+<!--</app-modal-delete>-->
+
+<!--<app-modal-filters [showModal]="mostrarModalFiltro" (close)="closeModalFilters()" (submit)="filtrar()" [tittle]="nombreAccion"-->
+                   <!--[disabledSubmit]="deshabilitarBotones" [disabledOthersButtons]="deshabilitarBotones" [showSubmit]="true">-->
+
+  <!--<div class="justify-content-center col-11">-->
+    <!--<c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>-->
+    <!--<form [formGroup]="formFiltros" *ngIf="formFiltros" >-->
+      <!--<form cForm [formGroup]="formFiltros">-->
+        <!--<div class="col-auto">-->
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="id">Id</label>-->
+              <!--<input (blur)="functionsUtils.removeSpaces('nombre', formFiltros)"-->
+                     <!--autoComplete="id" formControlName="id" cFormControl/>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+          <!--<c-input-group class="mb-2">-->
+            <!--<div class="col-12">-->
+              <!--<label class="fw-bold" for="nombre">Nombre {{modo === 1 ? '*' : ''}}</label>-->
+              <!--<input (blur)="functionsUtils.removeSpaces('nombre', formFiltros)"-->
+                     <!--[maxLength]="50"-->
+                     <!--autoComplete="nombre" formControlName="nombre" cFormControl/>-->
+            <!--</div>-->
+          <!--</c-input-group>-->
+
+        <!--</div>-->
+      <!--</form>-->
+    <!--</form>-->
+  <!--</div>-->
+<!--</app-modal-filters>-->

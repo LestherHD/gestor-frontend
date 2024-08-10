@@ -133,7 +133,7 @@ export class RegisterComponent implements OnInit{
     const correo = this.form.controls.correo.value.toString().trim().toLowerCase();
 
     return new Usuarios(Number(id), usuario, password, nombres, apellidos, correo, telefono, null,
-      null, 'N');
+      null);
   }
 
   campoRequerido(form: FormGroup, name: string): number{

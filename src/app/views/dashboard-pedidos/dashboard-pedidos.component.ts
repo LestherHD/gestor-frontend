@@ -237,6 +237,7 @@ export class DashboardPedidosComponent {
     this.getValuesByPage(Number(this.sucursalId.value), this.estado.value, this.startDatePedidosBK, this.endDatePedidosBK, this.pagination.page, this.pagination.pageSize);
 
     this.filtrarVentasSucursales();
+    this.filtrarVentasProductos();
   }
 
   changePage(event: any): void {
