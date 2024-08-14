@@ -222,7 +222,7 @@
 
   <div class="justify-content-center col-11">
     <c-alert *ngIf="mostrarMensaje" color="{{type}}">{{mensaje}}</c-alert>
-    <form [formGroup]="formFiltros" *ngIf="formFiltros" >
+    <div *ngIf="formFiltros" >
       <form cForm [formGroup]="formFiltros">
         <div class="col-auto">
           <c-input-group class="mb-2">
@@ -294,7 +294,7 @@
 
         </div>
       </form>
-    </form>
+    </div>
   </div>
 </app-modal-filters>
 
