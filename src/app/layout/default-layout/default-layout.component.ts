@@ -263,7 +263,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
         this.mensajeError = 'Sucursal asignada con éxito';
         this.isError = true;
         this.typeAlert = 'success';
-        this.service.editEntity('usuarios', this.usuario).subscribe( res => {
+        this.service.editEntityPartially('usuarios', this.usuario).subscribe( res => {
 
           this.showModal = false;
           this.functionsUtils.navigateOption(this.router, 'login');
@@ -300,7 +300,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
           this.isError = false;
           if (!this.isError && res.confirmado){
             this.usuario.principal = 'Y';
-            this.service.editEntity('usuarios', this.usuario).subscribe( res => {
+            this.service.editEntityPartially('usuarios', this.usuario).subscribe( res => {
               this.showModal = false;
               this.functionsUtils.navigateOption(this.router, 'login');
               }, error => {

@@ -193,7 +193,7 @@ export class Services {
       'Access-Control-Allow-Methods': '*'
     });
 
-    return this.http.patch(this.URL + '/' + entity + '/partiallyUpdate', body, {headers});
+    return this.http.patch(this.URL + '/' + entity, body, {headers});
   }
 
   deleteEntity(entity: string, id: number): Observable<any>{

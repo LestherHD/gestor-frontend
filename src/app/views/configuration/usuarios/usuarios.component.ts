@@ -68,7 +68,7 @@ function onlyNumbersAndSpaces(control: AbstractControl): ValidationErrors | null
 export class UsuariosComponent implements OnInit {
 
   listResponse: Usuarios[];
-  form: FormGroup<{ id: any; nombre: any; apellido: any; telefono: any; correo: any; usuario: any; contrasenia: any; sucursal: any;}>;
+  form: FormGroup<{ id: any; nombre: any; apellido: any; telefono: any; correo: any; usuario: any; contrasenia: any; sucursal: any; principal: any;}>;
   formFiltros: FormGroup<{ id: any; nombre: any; apellido: any; usuario: any; correo: any; telefono: any; sucursal: any; principal: any;}>;
   formFiltrosBK: FormGroup<{ id: any; nombre: any; apellido: any; usuario: any; correo: any; telefono: any; sucursal: any; principal: any;}>;
 
@@ -212,6 +212,7 @@ export class UsuariosComponent implements OnInit {
       usuario: new FormControl('', Validators.required),
       contrasenia: new FormControl('', Validators.required),
       sucursal: new FormControl('', Validators.required),
+      principal: new FormControl('')
     });
   }
 
@@ -223,8 +224,9 @@ export class UsuariosComponent implements OnInit {
       telefono: new FormControl(item.telefono, [Validators.required, onlyNumbersAndSpaces, Validators.minLength(8)]),
       correo: new FormControl(item.correo, [Validators.email, Validators.required]),
       usuario: new FormControl(item.usuario, Validators.required),
-      contrasenia: new FormControl(item.contrasenia, Validators.required),
-      sucursal: new FormControl(item.sucursal ? item.sucursal.id : null, Validators.required)
+      contrasenia: new FormControl(item.contrasenia),
+      sucursal: new FormControl(item.sucursal ? item.sucursal.id : null, item.principal === 'Y' ? null : Validators.required),
+      principal: new FormControl(item.principal)
     });
   }
 
@@ -237,16 +239,17 @@ export class UsuariosComponent implements OnInit {
       correo: new FormControl({value: item.correo, disabled: true}, Validators.required),
       usuario: new FormControl({value: item.usuario, disabled: true}, Validators.required),
       contrasenia: new FormControl({value: item.contrasenia, disabled: true}, Validators.required),
-      sucursal: new FormControl({value: item.sucursal ? item.sucursal.id : null, disabled: true}, Validators.required)
+      sucursal: new FormControl({value: item.sucursal ? item.sucursal.id : null, disabled: true}, Validators.required),
+      principal: new FormControl(item.principal)
     });
   }
 
   llenarObjeto(form: any): Usuarios{
     const sucursal = this.listaSucursales.find(x => x.id === Number(form.controls.sucursal.value));
     const obj = new Usuarios(form.controls.id.value,
-      form.controls.usuario.value.toString().trim(), form.controls.contrasenia.value.toString().trim(), form.controls.nombre.value.toString().trim(),
+      form.controls.usuario.value.toString().trim(), form.controls.contrasenia.value ? form.controls.contrasenia.value.toString().trim() : null, form.controls.nombre.value.toString().trim(),
       form.controls.apellido.value.toString().trim(),
-      form.controls.correo.value.toString().trim(), form.controls.telefono.value.toString().trim(), sucursal, 'N');
+      form.controls.correo.value.toString().trim(), form.controls.telefono.value.toString().trim(), sucursal, this.form.controls.principal.value ? this.form.controls.principal.value : 'N');
     return obj;
   }
 
@@ -293,6 +296,7 @@ export class UsuariosComponent implements OnInit {
       if (this.form && this.form.valid){
 
         const obj: Usuarios = this.llenarObjeto(this.form);
+        console.log(obj);
         this.service.saveEntity('usuarios', obj).subscribe( res => {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.respuesta;
@@ -328,7 +332,8 @@ export class UsuariosComponent implements OnInit {
     } else if (this.modo === 2){
       if (this.form && this.form.valid){
         const obj = this.llenarObjeto(this.form);
-        this.service.editEntity('usuarios', obj).subscribe( res => {
+        console.log(obj);
+        this.service.editEntityPartially('usuarios', obj).subscribe( res => {
           this.type = res.error ? 'danger' : 'success';
           this.mensaje = res.respuesta;
           this.deshabilitarBotones = true;
