@@ -133,7 +133,7 @@
               <label class="fw-bold" for="precio">Precio {{modo === 1 || modo === 2 ? '*' : ''}}</label>
               <input id="precio" (blur)="functionsUtils.removeSpaces('precio', form)"
                      [maxLength]="7"
-                     [valid]="functionsUtils.campoRequerido(form, 'precio', 'CR') == 1 || functionsUtils.campoRequerido(form, 'precio', 'DI') == 4 ? false : null"
+                     [valid]="(functionsUtils.campoRequerido(form, 'precio', 'CR') == 1 || functionsUtils.campoRequerido(form, 'precio', 'DI') == 4) && form.controls.precio.touched ? false : null"
                      autoComplete="precio" formControlName="precio" cFormControl/>
               <c-form-feedback *ngIf="functionsUtils.getValueMap('precio') == 1" [valid]="false">Campo requerido.</c-form-feedback>
               <c-form-feedback *ngIf="functionsUtils.getValueMap('precio') == 4" [valid]="false">Solo se permiten valores numéricos, máximo 4 enteros y 2 decimales</c-form-feedback>
@@ -303,6 +303,7 @@
     <p class="small" *ngIf="modo !== 3 && listaCaracteristicasSeleccionadas && listaCaracteristicasSeleccionadas.length > 0">
       <span style="font-weight: bold">Nota: </span>
       Los valores deben de tener mínimo 1 caracter y máximo 70, de lo contrario se deshabilitará el botón Agregar (botón del lado derecho del valor)</p>
+    <c-alert *ngIf="mostrarMensaje2" color="danger">{{mensaje2}}</c-alert>
     <c-accordion-item #item0="cAccordionItem" [visible]="false" *ngFor="let obj of listaCaracteristicasSeleccionadas">
       <ng-template cTemplateId="accordionHeaderTemplate">
         <button (click)="item0.toggleItem(); filtrarCaracteristicasProducto(obj);" [collapsed]="true" cAccordionButton>
@@ -310,23 +311,62 @@
         </button>
       </ng-template>
       <ng-template cTemplateId="accordionBodyTemplate">
+        <div class="col-12 row">
+          <div class="col-5">
+            <label >Valor: </label>
+          </div>
+          <div class="col-5">
+            <label >Precio: </label>
+          </div>
+        </div>
         <div *ngIf="listaCaracteristicasProducto2">
           <div class="col-12 col d-flex align-items-center" *ngFor="let obj2 of listaCaracteristicasProducto2" (show)="filtrarCaracteristicasProducto(obj)" >
-            <input [maxLength]="70" cFormControl type="text" [(ngModel)]="obj2.valor" class="form-control" [disabled]="modo === 3 || (deshabilitarFuncionalidadValores && mostrarMensaje)" style="z-index: 9999999999;"
-                   (blur)="removeSpacesString(obj2.valor, obj2)"
-                   [valid]="functionsUtils.campoRequeridoFormControl(valorCaracteristicaLista) == 1 ? false : null"
-            >
-            <button cButton  color="danger" variant="outline" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3" [disabled]="deshabilitarFuncionalidadValores && mostrarMensaje" style="z-index: 100;">
-              <svg cIcon name="cilTrash"></svg>
-            </button>
+            <div class="col-12 row">
+              <div class="col-5">
+                <input [maxLength]="70" cFormControl type="text" [(ngModel)]="obj2.valor" class="form-control" [disabled]="true" style="z-index: 9999999999;"
+                       (blur)="removeSpacesString(obj2.valor, obj2)"
+                       [valid]="functionsUtils.campoRequeridoFormControl(valorCaracteristicaLista) == 1 ? false : null"
+                >
+              </div>
+
+              <div class="col-5">
+                <input [maxLength]="7" cFormControl type="text" [(ngModel)]="obj2.precio" class="form-control" [disabled]="true" style="z-index: 9999999999;"
+                       (blur)="removeSpacesString(obj2.precio.toString(), obj2)"
+                       [valid]="functionsUtils.campoRequeridoFormControl(precioCaracteristicaLista) == 1 ? false : null"
+                >
+              </div>
+              <div class="col-2">
+                <button cButton  color="danger" variant="outline" (click)="eliminarCaracteristicaProducto(obj2)" *ngIf="modo !== 3" [disabled]="deshabilitarFuncionalidadValores && mostrarMensaje" style="z-index: 100;">
+                  <svg cIcon name="cilTrash"></svg>
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="col-12 col d-flex align-items-center" *ngIf="listaCaracteristicasProducto2 && listaCaracteristicasProducto2.length < 5 && modo !== 3">
-          <input [maxLength]="70" cFormControl type="text" [formControl]="valorCaracteristica" class="form-control" [disabled]="true" style="z-index: 9999999999; display: flex"
-                 (blur)="functionsUtils.removeSpacesFormControl(valorCaracteristica)">
-          <button cButton color="success" variant="outline" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value)" [disabled]="(deshabilitarFuncionalidadValores && mostrarMensaje) || valorCaracteristica.value.trim() === ''" style="z-index: 100;">
-            <svg cIcon name="cilPlus"></svg>
-          </button>
+
+          <div class="col-12 row">
+            <div class="col-5">
+              <input [maxLength]="70" cFormControl type="text" [formControl]="valorCaracteristica" class="form-control" [disabled]="true" style="z-index: 9999999999; display: flex"
+                     (blur)="functionsUtils.removeSpacesFormControl(valorCaracteristica)"
+                     [valid]="campoRequerido(valorCaracteristica, 'CR') == 1 && valorCaracteristica.touched ? false : null">
+              <c-form-feedback *ngIf="valorCaracteristica.touched" [valid]="false">Campo requerido.</c-form-feedback>
+            </div>
+
+            <div class="col-5">
+              <input [maxLength]="7" cFormControl type="text" [formControl]="precioCaracteristica" class="form-control" [disabled]="true" style="z-index: 9999999999; display: flex"
+                     (blur)="functionsUtils.removeSpacesFormControl(precioCaracteristica)"
+                     [valid]="campoRequerido(precioCaracteristica, 'DI') == 4 && precioCaracteristica.touched ? false : null">
+              <c-form-feedback *ngIf="precioCaracteristica.touched" [valid]="false">Solo se permiten valores numéricos, máximo 4 enteros y 2 decimales</c-form-feedback>
+            </div>
+            <div class="col-2">
+              <button cButton color="success" variant="outline" (click)="agregarCaracteristicaProducto(obj, valorCaracteristica.value, precioCaracteristica.value)" [disabled]="precioInvalido || (deshabilitarFuncionalidadValores && mostrarMensaje) || valorCaracteristica.value.trim() === '' || precioCaracteristica.value.trim() === ''" style="z-index: 100;">
+                <svg cIcon name="cilPlus"></svg>
+              </button>
+            </div>
+
+          </div>
         </div>
       </ng-template>
     </c-accordion-item>

@@ -82,6 +82,7 @@ export class ProductosComponent implements OnInit {
   modo: number;
   deshabilitarBotones = false;
   deshabilitarFuncionalidadValores = false;
+  precioInvalido = false;
   mostrarMensaje = false;
 
   public pagination: NgbPagination;
@@ -96,10 +97,16 @@ export class ProductosComponent implements OnInit {
 
   public valorCaracteristica: FormControl;
   public valorCaracteristicaLista: FormControl;
+
+  public precioCaracteristica: FormControl;
+  public precioCaracteristicaLista: FormControl;
+
   mostrarAccordion: boolean;
 
   imageSrc: string;
   mostrarImagen: boolean;
+  mostrarMensaje2: boolean;
+  mensaje2: string;
 
   constructor(public service: Services, public  dataUtils: DataUtils,
               public functionsUtils: FunctionsUtils, public cdr: ChangeDetectorRef) {
@@ -119,6 +126,8 @@ export class ProductosComponent implements OnInit {
     this.pagination.pageSize = 10;
     this.pagination.maxSize = 4;
     this.mostrarImagen = false;
+    this.mostrarMensaje2 = false;
+    this.mensaje2 = '';
   }
 
   ngOnInit(): void {
@@ -131,6 +140,9 @@ export class ProductosComponent implements OnInit {
     this.cargarListas();
     this.valorCaracteristica = new FormControl('');
     this.valorCaracteristicaLista = new FormControl('', Validators.required);
+
+    this.precioCaracteristica = new FormControl(null);
+    this.precioCaracteristicaLista= new FormControl(null, Validators.required);
     this.mostrarImagen = false;
   }
 
@@ -276,6 +288,8 @@ export class ProductosComponent implements OnInit {
   }
 
   modal(modo: number, item: any): void {
+    this.mostrarMensaje2 = false;
+    this.mensaje2 = '';
     this.resetForm();
     this.mostrarImagen = true;
     this.imageSrc = item ? item.imagen : '';
@@ -288,6 +302,7 @@ export class ProductosComponent implements OnInit {
     this.listaCaracteristicasSeleccionadas = [];
 
     this.valorCaracteristica = new FormControl('');
+    this.precioCaracteristica = new FormControl('');
 
     this.mostrarModalCrud = true;
     this.modo = modo;
@@ -622,16 +637,27 @@ export class ProductosComponent implements OnInit {
     this.filtrarCaracteristicasProducto(item.caracteristica);
   }
 
-  agregarCaracteristicaProducto(caracteristica: any, valor: string) {
-    const productoCaracteristica: ProductosCaracteristicas = new ProductosCaracteristicas(null, null, caracteristica, valor);
+  agregarCaracteristicaProducto(caracteristica: any, valor: string, precio: number) {
+    this.mostrarMensaje2 = false;
+    this.mensaje2 = '';
+    const productoCaracteristica: ProductosCaracteristicas = new ProductosCaracteristicas(null, null, caracteristica, valor, precio);
     productoCaracteristica.idTemporal = this.listaCaracteristicasProducto.length + 1;
+    if (this.listaCaracteristicasProducto.find(x => x.valor.toLowerCase() === valor.toLowerCase())) {
+      this.mostrarMensaje2 = true;
+      this.mensaje2 = 'Error, valor de característica repetido';
+      return;
+    }
     this.listaCaracteristicasProducto.push(productoCaracteristica);
     this.filtrarCaracteristicasProducto(caracteristica);
     this.valorCaracteristica.setValue('');
+    this.precioCaracteristica.setValue('');
+    this.valorCaracteristica.markAsUntouched();
+    this.precioCaracteristica.markAsUntouched();
   }
 
   filtrarCaracteristicasProducto(item: any){
     this.valorCaracteristica.setValue('');
+    this.precioCaracteristicaLista.setValue('');
     this.listaCaracteristicasProducto2 = this.listaCaracteristicasProducto.filter(x=> x.caracteristica.id === Number(item.id));
   }
 
@@ -673,5 +699,24 @@ export class ProductosComponent implements OnInit {
 
   recibirImagen(value: string){
     this.imageSrc = value;
+  }
+
+  campoRequerido(control: FormControl, tipo: string): number {
+    this.precioInvalido = false;
+    if (tipo === 'CR'){
+      if (control.value.trim() === '') {
+        this.precioInvalido = true;
+        return 1;
+      }
+    }
+
+    const pattern = /^\d{1,4}(\.\d{1,2})?$/;
+    if (!pattern.test(control.value) && tipo === 'DI') {
+      this.precioInvalido = true;
+      return 4;
+    }
+
+    return 0;
+    
   }
 }
