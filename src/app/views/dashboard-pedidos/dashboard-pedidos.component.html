@@ -210,9 +210,9 @@
         </span>
       </div>
       <div class="col-6 row text-start">
-        <span class="fw-semibold">Fecha: </span>
+        <span class="fw-semibold">Teléfono: </span>
         <span>
-          {{functionsUtils.formatDateInTimeZone(this.pedido.fecha)}}
+          {{this.pedido.telefono}}
         </span>
       </div>
       <div class="col-6 row text-start mt-2">
@@ -221,7 +221,12 @@
           Q{{functionsUtils.formatPrice(this.pedido.total)}}
         </span>
       </div>
-      <div class="col-6 row"></div>
+      <div class="col-6 row text-start">
+        <span class="fw-semibold">Fecha: </span>
+        <span>
+          {{functionsUtils.formatDateInTimeZone(this.pedido.fecha)}}
+        </span>
+      </div>
     </div>
     <br>
     <br>

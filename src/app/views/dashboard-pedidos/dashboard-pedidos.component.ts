@@ -305,6 +305,11 @@ export class DashboardPedidosComponent {
     this.mostrarModalCrud = true;
 
     this.listDetallePedido = pedido.detallePedido;
+    if (this.listDetallePedido && this.listDetallePedido.length > 0){
+      this.listDetallePedido.forEach(x => {
+        x.descripcion = '<span class="fw-semibold">' + x.producto.nombre + '</span><br>' + x.descripcion;
+      });
+    }
     this.paginationDetail.collectionSize = this.listDetallePedido.length;
   }
 

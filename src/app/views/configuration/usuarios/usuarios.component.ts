@@ -247,7 +247,7 @@ export class UsuariosComponent implements OnInit {
   llenarObjeto(form: any): Usuarios{
     const sucursal = this.listaSucursales.find(x => x.id === Number(form.controls.sucursal.value));
     const obj = new Usuarios(form.controls.id.value,
-      form.controls.usuario.value.toString().trim(), form.controls.contrasenia.value ? form.controls.contrasenia.value.toString().trim() : null, form.controls.nombre.value.toString().trim(),
+      form.controls.usuario.value.toString().trim(), form.controls.contrasenia.value ? this.service.hashMD5(form.controls.contrasenia.value.toString().trim()) : null, form.controls.nombre.value.toString().trim(),
       form.controls.apellido.value.toString().trim(),
       form.controls.correo.value.toString().trim(), form.controls.telefono.value.toString().trim(), sucursal, this.form.controls.principal.value ? this.form.controls.principal.value : 'N');
     return obj;
