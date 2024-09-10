@@ -6,9 +6,9 @@ import {Injectable} from '@angular/core';
 export class DataUtils {
 
   // local
-  // assetsRaiz = '';
+  assetsRaiz = '';
   // deploy
-  assetsRaiz = '/gestor-frontend';
+  // assetsRaiz = '/gestor-frontend';
 
   listaDepartamentos: { codigo: string, descripcion: string }[] = [
     { codigo: '1', descripcion: 'Guatemala' },
