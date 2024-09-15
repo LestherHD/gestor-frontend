@@ -10,7 +10,7 @@ import * as CryptoJS from 'crypto-js';
 export class Services {
 
   // local
-  URL = 'http://143.244.145.148:8082';
+  URL = '/api';
   // URL = 'http://localhost:8082';
   // URL = 'http://192.168.1.6:8082';
   // URL = 'https://tienda-vir-backend-42bcf420544c.herokuapp.com';
