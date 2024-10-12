@@ -10,9 +10,8 @@ import * as CryptoJS from 'crypto-js';
 export class Services {
 
   // local
-  URL = '/api';
-  // URL = 'http://localhost:8082';
-  // URL = 'http://192.168.1.6:8082';
+  //URL = '/api';
+  URL = 'http://localhost:8082/api';
   // URL = 'https://tienda-vir-backend-42bcf420544c.herokuapp.com';
 
   public eventEmitter: EventEmitter<void> = new EventEmitter();
