@@ -296,6 +296,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy{
         this.typeAlert = res.error && !res.confirmado ? 'danger' : 'success';
 
         setTimeout(() => {
+          this.deshabilitarBotones = false;
           this.isConfirmed = res.confirmado;
           this.isError = false;
           if (!this.isError && res.confirmado){
